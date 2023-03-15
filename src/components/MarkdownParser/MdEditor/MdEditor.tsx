@@ -33,6 +33,7 @@ export default function MdEditor(props: MdEditorProps) {
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
 		return (value: string | undefined) => {
+			dispatch(setSaved(false));
 			if (value) {
 				if (value.length <= 500) {
 					dispatch(updateMarkdown(value));
@@ -55,7 +56,6 @@ export default function MdEditor(props: MdEditorProps) {
 	}
 
 	useEffect(() => {
-		dispatch(setSaved(false));
 		const lastEditTime = Date.now();
 		const timeout = setTimeout(() => {
 			const now = Date.now();

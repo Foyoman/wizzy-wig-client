@@ -33,5 +33,6 @@
 
 	.toggle-sidebar {
 		@include icon;
+		transform: rotate(180deg);
 	}
 }
