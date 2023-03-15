@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import "./MarkdownParser.scss"
-import './github.scss';
 
 import Split from "react-split";
 
@@ -14,52 +13,21 @@ import MdEditor from "./MdEditor/MdEditor";
 
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
-// Full Parent Component
-
 interface MarkdownParserProps {
 	content?: string;
 	theme?: "light" | "dark" | undefined;
 	splitDirection?: "vertical" | "horizontal" | undefined;
-	updateSaveState?: (content: string) => void;
 }
 
 const MarkdownParser = ({ 
 	content = "",
 	theme = 'dark',
 	splitDirection = 'vertical',
-	updateSaveState,
 }: MarkdownParserProps) => {
-	const [markdown, setMarkdown] = useState(content);
-	const [saved, setSaved] = useState(true);
 	const [split, setSplit] = useState(splitDirection);
-	const [lastEditTime, setLastEditTime] = useState(0);
 	const [collapsedIndex, setCollapsedIndex] = useState<number>();
 	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
 	const markdownEl = useRef<HTMLDivElement>(null);
-
-	// handle change from child editor component
-	const handleEditorChange = (value: string) => {
-		setMarkdown(value);
-		setLastEditTime(Date.now());
-		setSaved(false);
-	}
-
-	// trigger autosave after 3 seconds of inactivity
-	useEffect(() => {
-		if (!updateSaveState || saved) return;
-		const timeout = setTimeout(() => {
-			const now = Date.now();
-			const timeSinceLastEdit = now - lastEditTime;
-			if(timeSinceLastEdit >= 3000) {
-				updateSaveState('yo');
-				setSaved(true);
-			}
-		}, 3000);
-
-		return () => {
-			clearTimeout(timeout);
-		};
-	}, [lastEditTime, saved, updateSaveState]);
 
 	// markdown and editor theming
 	let markdownTheme: { [key: string]: React.CSSProperties };

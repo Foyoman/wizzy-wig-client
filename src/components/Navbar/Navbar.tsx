@@ -1,12 +1,15 @@
-import React from "react";
 import './Navbar.scss';
 
 import ViewSidebarOutlinedIcon from '@mui/icons-material/ViewSidebarOutlined';
+import LinearProgress from '@mui/joy/LinearProgress';
 
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../../store/appSlice";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 export default function Navbar () {
+	const saved = useSelector((state: RootState) => state.app.saved);
 	const dispatch = useDispatch();
 
 	return (
@@ -15,6 +18,16 @@ export default function Navbar () {
 				className="toggle-sidebar" 
 				onClick={() => dispatch(toggleSidebar())}
 			/>
+			<div className='save-state'>
+				<p>{saved ? 'Saved' : 'Saving'}</p>
+				<LinearProgress 
+					color='neutral' 
+					variant='plain' 
+					size="sm" 
+					determinate={saved}
+					value={saved ? 100 : 33} 
+				/>
+			</div>
 		</div>
 	)
 }

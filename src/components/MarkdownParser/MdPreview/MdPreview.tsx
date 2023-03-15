@@ -1,4 +1,6 @@
 import React, { useMemo } from "react";
+import './MdPreview.scss';
+import './github.scss';
 
 import { useSelector } from 'react-redux';
 import type { RootState } from "../../../store/store";

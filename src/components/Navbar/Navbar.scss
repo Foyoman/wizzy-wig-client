@@ -13,10 +13,23 @@
 	background: #16191e;
 	display: flex;
 	align-items: center;
+	gap: var(--spacer-md);
 	padding: var(--spacer-xxs) var(--spacer-sm);
 	box-shadow: 0 10px 35px rgba(0,0,0,.1019607843);
 	overflow: visible;
 	height: 32px;
+
+	.save-state {
+		display: flex;
+		align-items: center;
+		gap: var(--spacer-xxs);
+		font-size: var(--text-xs);
+		color: #ACBAC780; // gh lighter grey .8
+
+		.MuiLinearProgress-root {
+			width: 20px
+		}
+	}
 
 	.toggle-sidebar {
 		@include icon;

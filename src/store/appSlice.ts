@@ -69,6 +69,7 @@ export interface AppState {
 	file: string;
 	markdown: string;
 	showSidebar: boolean;
+	saved: boolean;
 }
 
 const initialState: AppState = {
@@ -76,6 +77,7 @@ const initialState: AppState = {
 	file: "",
 	markdown: "",
 	showSidebar: true,
+	saved: true,
 }
 
 export const appSlice = createSlice({
@@ -111,10 +113,15 @@ export const appSlice = createSlice({
 		},
 		toggleSidebar: (
 			state,
-			// action: PayloadAction<boolean>
 		) => {
 			state.showSidebar = !state.showSidebar;
-		}
+		},
+		setSaved: (
+			state,
+			action: PayloadAction<boolean>
+		) => {
+			state.saved = action.payload;
+		},
 	}
 })
 
@@ -123,7 +130,8 @@ export const {
 	sortFs, 
 	updateFile, 
 	updateMarkdown, 
-	toggleSidebar 
+	toggleSidebar,
+	setSaved,
 } = appSlice.actions;
 
 export default appSlice.reducer;
