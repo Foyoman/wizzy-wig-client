@@ -1,0 +1,29 @@
+@function nest($base, $exponent) {
+	$result: $base * $exponent;
+	@return $result;
+}
+
+.sidebar-item {
+	color: var(--gh-lighter-grey);
+	// padding: 0 var(--spacer-xs);
+	cursor: default;
+	width: 100%;
+
+	.MuiTreeItem-content {
+		cursor: default;
+
+		.MuiTreeItem-label {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+
+	&:hover {
+		background-color: var(--color-canvas-default);
+	}
+
+	&.nested {
+		padding-left: var(--spacer-xs);
+	}
+}

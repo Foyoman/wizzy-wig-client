@@ -1,0 +1,190 @@
+@mixin icon {
+	position: absolute;
+	color: var(--gh-lighter-grey);
+	cursor: pointer;
+	transition: all .2s;
+	opacity: .6;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.md-parser {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+
+	.component {
+		overflow: hidden;
+		position: relative;
+
+		.split-icon {
+			@include icon;
+			top: var(--spacer-xxs);
+			left: var(--spacer-xxs);
+		}
+
+		.collapse-tab {
+			@include icon;
+			
+			&.vertical {
+				left: var(--spacer-xxs);
+			}
+			
+			&.horizontal {
+				top: var(--spacer-xxs);
+			}
+		}
+
+		&.md-preview {
+			.collapse-tab {
+				&.horizontal {
+					right: var(--spacer-lg);
+					transform: rotate(180deg);
+				}
+
+				&.vertical {
+					bottom: var(--spacer-xxs);
+					transform: rotate(-90deg);
+				}
+			}
+		}
+
+		&.md-editor {
+			.collapse-tab {
+				&.horizontal {
+					left: var(--spacer-lg);
+				}
+
+				&.vertical {
+					top: var(--spacer-xxs);
+					transform: rotate(90deg);
+				}
+			}
+		}
+	}
+
+	.md-preview {
+		.markdown-body {
+			overflow-y: auto;
+			height: 100%;
+			padding: var(--spacer-xl) !important;
+
+			pre {
+				position: relative;
+
+				.codeStyle {
+					code {
+						.linenumber {
+							font-style: normal !important;
+							max-width: 3.25rem !important;
+						}
+
+						&::before {
+							position: absolute;
+							top: var(--spacer-xxs);
+							right: var(--spacer-xs);
+							opacity: 0.6;
+							font-size: var(--text-xs);
+						}
+
+						&.language-js:before {
+							content: 'JavaScript';
+						}
+
+						&.language-jsx:before {
+							content: 'JSX';
+						}
+
+						&.language-json:before {
+							content: 'JSON';
+						}
+
+						&.language-ts:before {
+							content: 'TypeScript';
+						}
+
+						&.language-tsx:before {
+							content: 'TSX';
+						}
+
+						&.language-py:before {
+							content: 'Python';
+						}
+
+						&.language-java:before {
+							content: 'Java';
+						}
+
+						&.language-c:before {
+							content: 'C';
+						}
+
+						&.language-cpp:before {
+							content: 'C++';
+						}
+
+						&.language-csharp:before {
+							content: 'C#';
+						}
+
+						&.language-scss:before {
+							content: 'SCSS';
+						}
+
+						&.language-md:before {
+							content: 'Markdown';
+						}
+
+						&.language-shell:before {
+							content: 'Shell';
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+	.gutter {
+		background-color: var(--gh-neutral-grey);
+		background-repeat: no-repeat;
+		background-position: 50%;
+
+		&.gutter-horizontal {
+			width: 20px !important;
+			height: auto !important;
+			background-image: url("../../assets/images/horizontal-gutter.png");
+			cursor: col-resize;
+		}
+
+		&.gutter-vertical {
+			height: 20px !important;
+			width: auto !important;
+			background-image: url("../../assets/images/vertical-gutter.png");
+			cursor: row-resize;
+		}
+	}
+
+	.md-editor {
+		background-color: #1E1E1E;
+
+		.padding {
+			height: var(--spacer-xl);
+		}
+	}
+
+	&.light {
+		.gutter {
+			background-color: var(--gh-lighter-grey);
+		}
+
+		.md-editor {
+			.padding {
+				background-color: #fff;
+			}
+		}
+	}
+}

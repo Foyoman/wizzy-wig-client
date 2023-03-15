@@ -1,0 +1,53 @@
+@mixin icon {
+	color: var(--gh-lighter-grey);
+	cursor: pointer;
+	transition: all .2s;
+	opacity: .8;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.toolbar {
+	display: flex;
+	flex-direction: row-reverse;
+	padding: 0 var(--spacer-xxs);
+	gap: var(--spacer-sm);
+	margin-bottom: var(--spacer-sm);
+
+	.icon {
+		@include icon;
+	}
+
+	.toolbar-button {
+		padding: 0;
+		min-width: 0;
+	}
+}
+
+#sort-menu {
+	.MuiMenu-paper {
+		background-color: #1E1E1E;
+		color: var(--gh-lighter-grey);
+
+		.menu-item {
+			display: flex;
+			justify-content: space-between;
+			padding: var(--spacer-xs) var(--spacer-sm);
+		}
+
+		svg {
+			color: var(--gh-lighter-grey);
+		}
+
+		hr {
+			background: var(--gh-neutral-grey);
+			margin: var(--spacer-xxs) 0;
+		}
+
+		.MuiListItemIcon-root {
+			min-width: 30px;
+		}
+	}
+}
