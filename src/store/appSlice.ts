@@ -153,6 +153,7 @@ export const appSlice = createSlice({
 			_,
 		) => {
 			state.tabs.push(null as never);
+			state.selectedTab = state.tabs.length - 1;
 		},
 		closeTab: (
 			state,
@@ -160,16 +161,15 @@ export const appSlice = createSlice({
 		) => {
 			const index = action.payload;
 			state.tabs.splice(index, 1);
-			if (state.selectedTab === state.tabs.length) {
-				state.selectedTab -= 1;
-			}
-			if (state.tabs.length <= 1) {
-				state.selectedTab = 0;
-			}
 			if (!state.tabs.length) {
 				state.tabs = [null];
-				// state.selectedTab = 0;
+			} else if (index < state.selectedTab || state.selectedTab === state.tabs.length) {
+				state.selectedTab -= 1;
+			} else if (state.tabs.length <= 1) {
+				state.selectedTab = 0;
 			}
+			const fsFile = state.tabs[state.selectedTab];
+			if (fsFile) selectMdFile(fsFile);
 		}
 	}
 })

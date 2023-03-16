@@ -8,10 +8,11 @@ import { useSelector } from 'react-redux';
 import type { RootState } from "../store/store";
 
 export default function App() {
-  const file = useSelector((state: RootState) => state.app.file);
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
-  const selectedFsFile = useSelector((state: RootState) => state.app.selectedFsFile);
   const selectedMdFile = useSelector((state: RootState) => state.app.selectedMdFile);
+  const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
+  const tabs = useSelector((state: RootState) => state.app.tabs);
+
 
   const NoFile = () => {
     return (
@@ -33,7 +34,7 @@ export default function App() {
           <div 
             className={`md-container ${!showSidebar ? 'sidebar-hidden' : ''}`}
           >
-          { selectedMdFile ? 
+          { tabs[selectedTab] ? 
             <MarkdownParser content={selectedMdFile!.content} />
           : 
             <NoFile />
