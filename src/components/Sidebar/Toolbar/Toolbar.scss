@@ -11,7 +11,7 @@
 
 .toolbar {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	padding: 0 var(--spacer-xxs);
 	margin-bottom: var(--spacer-sm);
 	// max-width: calc(250px - var(--spacer-sm) * 2);
