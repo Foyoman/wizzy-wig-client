@@ -1,7 +1,7 @@
 import './Sidebar.scss';
 
 import FileSystem from "./FileSystem/FileSystem";
-import { FsFile } from "../../types/FileSystem";
+import { FsFile } from "../../types/FsTypes";
 
 import Toolbar from "./Toolbar/Toolbar";
 

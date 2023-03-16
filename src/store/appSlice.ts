@@ -4,7 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { fsFiles } from '../__mocks__/FileSystem';
 import { mdFiles } from '../__mocks__/MdFiles';
 
-import { FsFile, SortKeys, SortFunction } from '../types/FileSystem';
+import { FsFile, SortKeys, SortFunction } from '../types/FsTypes';
 import { MdFile } from '../types/MdFile';
 
 export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
@@ -75,6 +75,7 @@ export interface AppState {
 	selectedTab: number;
 	selectedFsFile: FsFile | null;
 	selectedMdFile: MdFile | null;
+	selectedFolder: FsFile | null;
 }
 
 const initialState: AppState = {
@@ -87,6 +88,7 @@ const initialState: AppState = {
 	selectedTab: 0,
 	selectedFsFile: null,
 	selectedMdFile: null,
+	selectedFolder: null,
 }
 
 export const appSlice = createSlice({
@@ -103,6 +105,15 @@ export const appSlice = createSlice({
 		) => {
 			const { items, sortKey, reverse } = action.payload;
 			state.fsFiles = sortFileSystem(items, sortKey, reverse);
+		},
+		selectFolder: (
+			state,
+			action: PayloadAction<FsFile>,
+		) => {
+			const fsFile = action.payload;
+			console.log(fsFile);
+			if (!fsFile.isFolder) return;
+			state.selectedFolder = fsFile;
 		},
 		selectMdFile: (
 			state,
@@ -177,6 +188,7 @@ export const appSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { 
 	sortFs, 
+	selectFolder,
 	selectMdFile,
 	updateMarkdown, 
 	toggleSidebar,

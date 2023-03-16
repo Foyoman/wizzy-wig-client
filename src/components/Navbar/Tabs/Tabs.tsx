@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { useDispatch } from 'react-redux';
 import { selectTab, newTab, closeTab, selectMdFile } from '../../../store/appSlice';
-import { FsFile } from '../../../types/FileSystem';
+import { FsFile } from '../../../types/FsTypes';
 
 export default function Tabs() {
 	const dispatch = useDispatch();

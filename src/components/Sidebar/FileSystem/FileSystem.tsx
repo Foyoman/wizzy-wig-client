@@ -5,10 +5,10 @@ import { TreeView, TreeItem } from "@mui/lab";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-import { FsFile } from "../../../types/FileSystem";
+import { FsFile } from "../../../types/FsTypes";
 
 import { useDispatch } from 'react-redux';
-import { selectTab, setTab, selectMdFile } from "../../../store/appSlice";
+import { setTab, selectMdFile, selectFolder } from "../../../store/appSlice";
 
 interface FileSystemProps {
 	items: FsFile[];
@@ -20,11 +20,14 @@ const FileSystem = (
 	const dispatch = useDispatch();
 
 	const handleClick = (item: FsFile) => {
-		console.log(item);
+		// console.log(item);
 		if (item.fileId && !item.isFolder) {
 			// dispatch(selectTab(item));
 			dispatch(setTab(item));
 			dispatch(selectMdFile(item));
+		} else if (item.isFolder) {
+			console.log('poo')
+			dispatch(selectFolder(item));
 		}
 	}
 

@@ -11,18 +11,25 @@
 
 .toolbar {
 	display: flex;
-	flex-direction: row-reverse;
+	justify-content: space-between;
 	padding: 0 var(--spacer-xxs);
-	gap: var(--spacer-sm);
 	margin-bottom: var(--spacer-sm);
+	// max-width: calc(250px - var(--spacer-sm) * 2);
 
-	.icon {
-		@include icon;
-	}
-
-	.toolbar-button {
-		padding: 0;
-		min-width: 0;
+	.tools {
+		display: flex;
+		justify-content: flex-end;
+		// flex-direction: row-reverse;
+		gap: var(--spacer-sm);
+	
+		.icon {
+			@include icon;
+		}
+	
+		.toolbar-button {
+			padding: 0;
+			min-width: 0;
+		}
 	}
 }
 

@@ -13,7 +13,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 
-import { FsFile, SortKeys, SortFunction } from "../../../types/FileSystem";
+import { FsFile, SortKeys, SortFunction } from "../../../types/FsTypes";
 import { useDispatch } from "react-redux";
 import { sortFs } from "../../../store/appSlice";
 
@@ -62,74 +62,75 @@ export default function Toolbar (
 
 	return (
 		<div className="toolbar">
-			<Button
-				className="toolbar-button"
-				aria-controls={open ? 'basic-menu' : undefined}
-				aria-haspopup="true"
-				aria-expanded={open ? 'true' : undefined}
-				onClick={handleClick}
-			>
-				<SortOutlinedIcon className="icon" />
-			</Button>
-			<Menu
-				id="sort-menu"
-				anchorEl={anchorEl}
-				open={open}
-				onClose={() => setAnchorEl(null)}
-				MenuListProps={{
-					'aria-labelledby': 'basic-button',
-				}}
-			>
-				<MenuList id="menu-list" dense>
-					<MenuItem 
-						className="menu-item" 
-						onClick={() => handleSelect(items, "title", false)}
-					>
-						<Checked visible={sort?.sortKey === "title" && !sort?.reverse} />
-						<ListItemText>File Name (A - Z)</ListItemText>
-					</MenuItem>
-					<MenuItem 
-						className="menu-item" 
-						onClick={() => handleSelect(items, "title", true)}
-					>
-						<Checked visible={sort?.sortKey === "title" && sort?.reverse} />
-						<ListItemText>File Name (Z - A)</ListItemText>
-					</MenuItem>
-					<Divider />
-					<MenuItem 
-						className="menu-item" 
-						onClick={() => handleSelect(items, "lastUpdated", false)}
-					>
-						<Checked visible={sort?.sortKey === "lastUpdated" && !sort?.reverse} />
-						<ListItemText>Date Modified (Newest First)</ListItemText>
-					</MenuItem>
-					<MenuItem 
-						className="menu-item" 
-						onClick={() => handleSelect(items, "lastUpdated", true)}
-					>
-						<Checked visible={sort?.sortKey === "lastUpdated" && sort?.reverse} />
-						<ListItemText>Date Modified (Oldest First)</ListItemText>
-					</MenuItem>
-					<Divider />
-					<MenuItem 
-						className="menu-item" 
-						onClick={() => handleSelect(items, "dateCreated", false)}
-					>
-						<Checked visible={sort?.sortKey === "dateCreated" && !sort?.reverse} />
-						<ListItemText>Date Created (Newest First)</ListItemText>
-					</MenuItem>
-					<MenuItem 
-						className="menu-item" 
-						onClick={() => handleSelect(items, "dateCreated", true)}
-					>
-						<Checked visible={sort?.sortKey === "dateCreated" && sort?.reverse} />
-						<ListItemText>Date Created (Oldest First)</ListItemText>
-					</MenuItem>
-				</MenuList>
-			</Menu>
-
-			<CreateNewFolderOutlinedIcon className="icon" />
-			<NoteAddOutlinedIcon className="icon" />
+			<div className="tools">
+				<NoteAddOutlinedIcon className="icon" />
+				<CreateNewFolderOutlinedIcon className="icon" />
+				<Button
+					className="toolbar-button"
+					aria-controls={open ? 'basic-menu' : undefined}
+					aria-haspopup="true"
+					aria-expanded={open ? 'true' : undefined}
+					onClick={handleClick}
+				>
+					<SortOutlinedIcon className="icon" />
+				</Button>
+				<Menu
+					id="sort-menu"
+					anchorEl={anchorEl}
+					open={open}
+					onClose={() => setAnchorEl(null)}
+					MenuListProps={{
+						'aria-labelledby': 'basic-button',
+					}}
+				>
+					<MenuList id="menu-list" dense>
+						<MenuItem 
+							className="menu-item" 
+							onClick={() => handleSelect(items, "title", false)}
+						>
+							<Checked visible={sort?.sortKey === "title" && !sort?.reverse} />
+							<ListItemText>File Name (A - Z)</ListItemText>
+						</MenuItem>
+						<MenuItem 
+							className="menu-item" 
+							onClick={() => handleSelect(items, "title", true)}
+						>
+							<Checked visible={sort?.sortKey === "title" && sort?.reverse} />
+							<ListItemText>File Name (Z - A)</ListItemText>
+						</MenuItem>
+						<Divider />
+						<MenuItem 
+							className="menu-item" 
+							onClick={() => handleSelect(items, "lastUpdated", false)}
+						>
+							<Checked visible={sort?.sortKey === "lastUpdated" && !sort?.reverse} />
+							<ListItemText>Date Modified (Newest First)</ListItemText>
+						</MenuItem>
+						<MenuItem 
+							className="menu-item" 
+							onClick={() => handleSelect(items, "lastUpdated", true)}
+						>
+							<Checked visible={sort?.sortKey === "lastUpdated" && sort?.reverse} />
+							<ListItemText>Date Modified (Oldest First)</ListItemText>
+						</MenuItem>
+						<Divider />
+						<MenuItem 
+							className="menu-item" 
+							onClick={() => handleSelect(items, "dateCreated", false)}
+						>
+							<Checked visible={sort?.sortKey === "dateCreated" && !sort?.reverse} />
+							<ListItemText>Date Created (Newest First)</ListItemText>
+						</MenuItem>
+						<MenuItem 
+							className="menu-item" 
+							onClick={() => handleSelect(items, "dateCreated", true)}
+						>
+							<Checked visible={sort?.sortKey === "dateCreated" && sort?.reverse} />
+							<ListItemText>Date Created (Oldest First)</ListItemText>
+						</MenuItem>
+					</MenuList>
+				</Menu>
+			</div>
 		</div>
 	)
 }
