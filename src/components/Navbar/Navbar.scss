@@ -20,14 +20,21 @@
 	height: 32px;
 
 	.save-state {
+		min-width: 64px;
 		display: flex;
 		align-items: center;
-		gap: var(--spacer-xxs);
+		justify-content: space-between;
+		// gap: var(--spacer-xxs);
 		font-size: var(--text-xs);
 		color: #ACBAC780; // gh lighter grey .8
 
 		.MuiLinearProgress-root {
-			width: 20px
+			transition: all .2s;
+			max-width: 20px;
+
+			&.saved {
+				color: #233042;
+			}
 		}
 	}
 

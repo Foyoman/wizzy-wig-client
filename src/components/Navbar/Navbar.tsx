@@ -21,11 +21,12 @@ export default function Navbar () {
 			<div className='save-state'>
 				<p>{saved ? 'Saved' : 'Saving'}</p>
 				<LinearProgress 
-					color='neutral' 
+					className={saved ? 'saved' : ''}
+					color={'neutral'} 
 					variant='plain' 
 					size="sm" 
 					determinate={saved}
-					value={saved ? 100 : 33} 
+					value={75} 
 				/>
 			</div>
 		</div>
