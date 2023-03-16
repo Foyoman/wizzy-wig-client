@@ -1,4 +1,5 @@
 import './Navbar.scss';
+import Tabs from './Tabs/Tabs';
 
 import ViewSidebarOutlinedIcon from '@mui/icons-material/ViewSidebarOutlined';
 import LinearProgress from '@mui/joy/LinearProgress';
@@ -31,9 +32,7 @@ export default function Navbar () {
 					/>
 				</div>
 			</div>
-			<div className='tabs'>
-
-			</div>
+			<Tabs />
 		</div>
 	)
 }

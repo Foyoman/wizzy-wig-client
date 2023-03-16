@@ -1,0 +1,100 @@
+$border-radius: 4px;
+
+@mixin icon {
+	color: var(--gh-lighter-grey);
+	cursor: pointer;
+	transition: all .2s;
+	opacity: .8;
+	
+	&:hover {
+		opacity: 1;
+		background: #444C5660; // neutral grey .6
+		border-radius: $border-radius;
+	}
+}
+
+.tab-bar {
+	padding: 0 var(--spacer-xxs);
+	display: flex;
+	align-items: center;
+	width: calc(100% - (250px - var(--spacer-sm)));
+	height: 100%;
+	border-left: 1px solid var(--color-canvas-default);
+	
+	.tabs {
+		padding-top: var(--spacer-xxs);
+		display: flex;
+		align-items: center;
+		height: 100%;
+		
+		.tab {
+			position: relative;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			height: 100%;
+			width: 120px;
+			cursor: default;
+			margin-right: calc(var(--spacer-xxs) * 2);
+			padding: 0 var(--spacer-xs) var(--spacer-xs);
+			padding-top: var(--spacer-xs);
+			border-top-left-radius: $border-radius;
+			border-top-right-radius: $border-radius;
+			font-size: var(--text-sm);
+			transition: all .2s;
+
+			p {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			.close-icon {
+				position: relative;
+				height: 14px;
+				width: 14px;
+			}
+
+			&::after {
+				position: absolute;
+				top: 0;
+				left: 0;
+				content: '';
+				width: calc(100% + var(--spacer-xxs));
+				height: calc(100% - var(--spacer-xs));
+				margin-top: calc(var(--spacer-xs) / 2);
+				// padding-right: calc(var(--spacer-xxs) * 2);
+				border-right: 1px solid var(--color-canvas-default);
+			}
+
+			&::before {
+				position: absolute;
+				top: 0;
+				left: 0;
+				content: '';
+				width: 100%;
+				height: calc(100% - var(--spacer-xs));
+				margin-top: calc(var(--spacer-xs) / 2);
+				border-radius: $border-radius;
+				transition: all .2s;
+			}
+
+			&:hover {
+				&::before {
+					background: #22272e60;
+					// margin-bottom: var(--spacer-xs);
+				}
+			}
+			
+			&.selected {
+				background: var(--color-canvas-default);
+				color: var(--gh-lighter-grey);
+			}
+		}
+	}
+
+	.new-tab-icon {
+		@include icon;
+		cursor: default;
+	}
+}
