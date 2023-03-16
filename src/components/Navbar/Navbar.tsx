@@ -14,20 +14,25 @@ export default function Navbar () {
 
 	return (
 		<div className="navbar">
-			<ViewSidebarOutlinedIcon 
-				className="toggle-sidebar" 
-				onClick={() => dispatch(toggleSidebar())}
-			/>
-			<div className='save-state'>
-				<p>{saved ? 'Saved' : 'Saving'}</p>
-				<LinearProgress 
-					className={saved ? 'saved' : ''}
-					color={'neutral'} 
-					variant='plain' 
-					size="sm" 
-					determinate={saved}
-					value={75} 
+			<div className='utils'>
+				<ViewSidebarOutlinedIcon 
+					className="toggle-sidebar" 
+					onClick={() => dispatch(toggleSidebar())}
 				/>
+				<div className='save-state'>
+					<p>{saved ? 'Saved' : 'Saving'}</p>
+					<LinearProgress 
+						className={saved ? 'saved' : ''}
+						color={'neutral'} 
+						variant='plain' 
+						size="sm" 
+						determinate={saved}
+						value={75} 
+					/>
+				</div>
+			</div>
+			<div className='tabs'>
+
 			</div>
 		</div>
 	)
