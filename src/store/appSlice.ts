@@ -70,6 +70,8 @@ export interface AppState {
 	markdown: string;
 	showSidebar: boolean;
 	saved: boolean;
+	tabs: FsFile[] | [];
+	selectedTab: FsFile | null;
 }
 
 const initialState: AppState = {
@@ -78,6 +80,8 @@ const initialState: AppState = {
 	markdown: "",
 	showSidebar: true,
 	saved: true,
+	tabs: [],
+	selectedTab: null,
 }
 
 export const appSlice = createSlice({
@@ -122,6 +126,19 @@ export const appSlice = createSlice({
 		) => {
 			state.saved = action.payload;
 		},
+		selectTab: (
+			state,
+			action: PayloadAction<FsFile>
+		) => {
+			state.selectedTab = action.payload;
+		},
+		setTab: (
+			state,
+			action: PayloadAction<{file: FsFile, index: number}>
+		) => {
+			const { file, index } = action.payload;
+			state.tabs[index] = file;
+		},
 	}
 })
 
@@ -132,6 +149,7 @@ export const {
 	updateMarkdown, 
 	toggleSidebar,
 	setSaved,
+	selectTab,
 } = appSlice.actions;
 
 export default appSlice.reducer;
