@@ -8,7 +8,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { FsFile } from "../../../types/FileSystem";
 
 import { useDispatch } from 'react-redux';
-import { updateFile } from "../../../store/appSlice";
+import { selectTab, setTab, selectMdFile } from "../../../store/appSlice";
 
 interface FileSystemProps {
 	items: FsFile[];
@@ -22,7 +22,9 @@ const FileSystem = (
 	const handleClick = (item: FsFile) => {
 		console.log(item);
 		if (item.fileId && !item.isFolder) {
-			dispatch(updateFile(item.fileId));
+			// dispatch(selectTab(item));
+			dispatch(setTab(item));
+			dispatch(selectMdFile(item));
 		}
 	}
 

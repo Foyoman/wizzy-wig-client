@@ -5,6 +5,7 @@ import { fsFiles } from '../__mocks__/FileSystem';
 import { mdFiles } from '../__mocks__/MdFiles';
 
 import { FsFile, SortKeys, SortFunction } from '../types/FileSystem';
+import { MdFile } from '../types/MdFile';
 
 export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
 	const [folders, files] = fileSystem.reduce(
@@ -70,8 +71,10 @@ export interface AppState {
 	markdown: string;
 	showSidebar: boolean;
 	saved: boolean;
-	tabs: FsFile[] | [];
-	selectedTab: FsFile | null;
+	tabs: Array<FsFile | null> | [];
+	selectedTab: number;
+	selectedFsFile: FsFile | null;
+	selectedMdFile: MdFile | null;
 }
 
 const initialState: AppState = {
@@ -80,8 +83,10 @@ const initialState: AppState = {
 	markdown: "",
 	showSidebar: true,
 	saved: true,
-	tabs: [],
-	selectedTab: null,
+	tabs: [null],
+	selectedTab: 0,
+	selectedFsFile: null,
+	selectedMdFile: null,
 }
 
 export const appSlice = createSlice({
@@ -99,13 +104,17 @@ export const appSlice = createSlice({
 			const { items, sortKey, reverse } = action.payload;
 			state.fsFiles = sortFileSystem(items, sortKey, reverse);
 		},
-		updateFile: (
-			state, 
-			action: PayloadAction<string>
+		selectMdFile: (
+			state,
+			action: PayloadAction<FsFile>,
 		) => {
+			const fsFile = action.payload;
 			for (const file of mdFiles) {
-				if (file.id === action.payload) {
-					state.file = file.content;
+				if (file.id === fsFile.fileId) {
+					state.selectedMdFile = file;
+					state.markdown = file.content;
+					// console.log(state.markdown);
+					console.log(file.content);
 				}
 			}
 		},
@@ -128,28 +137,54 @@ export const appSlice = createSlice({
 		},
 		selectTab: (
 			state,
-			action: PayloadAction<FsFile>
+			action: PayloadAction<number>
 		) => {
 			state.selectedTab = action.payload;
 		},
 		setTab: (
 			state,
-			action: PayloadAction<{file: FsFile, index: number}>
+			action: PayloadAction<FsFile>
 		) => {
-			const { file, index } = action.payload;
-			state.tabs[index] = file;
+			const fsFile = action.payload;
+			state.tabs[state.selectedTab] = fsFile;
 		},
+		newTab: (
+			state,
+			_,
+		) => {
+			state.tabs.push(null as never);
+		},
+		closeTab: (
+			state,
+			action: PayloadAction<number>
+		) => {
+			const index = action.payload;
+			state.tabs.splice(index, 1);
+			if (state.selectedTab === state.tabs.length) {
+				state.selectedTab -= 1;
+			}
+			if (state.tabs.length <= 1) {
+				state.selectedTab = 0;
+			}
+			if (!state.tabs.length) {
+				state.tabs = [null];
+				// state.selectedTab = 0;
+			}
+		}
 	}
 })
 
 // Action creators are generated for each case reducer function
 export const { 
 	sortFs, 
-	updateFile, 
+	selectMdFile,
 	updateMarkdown, 
 	toggleSidebar,
 	setSaved,
 	selectTab,
+	setTab,
+	newTab,
+	closeTab,
 } = appSlice.actions;
 
 export default appSlice.reducer;

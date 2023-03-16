@@ -13,10 +13,29 @@
 			width: 100%;
 			transition: all .2s;
 			max-width: calc(100% - 250px);
-			
+
 			&.sidebar-hidden {
 				margin-left: -250px;
 				max-width: 100%;
+			}
+
+			.no-file {
+				width: 100%;
+				height: 100%;
+				background: var(--color-canvas-default);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: var(--gh-lighter-grey);
+				text-align: center;
+
+				h1 {
+					margin-bottom: var(--spacer-md);
+				}
+
+				p {
+					color: var(--gh-lighter-grey-80);
+				}
 			}
 		}
 	}

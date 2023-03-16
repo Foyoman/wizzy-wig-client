@@ -37,7 +37,7 @@
 			align-items: center;
 			justify-content: space-between;
 			font-size: var(--text-xs);
-			color: #ACBAC780; // gh lighter grey .8
+			color: var(--gh-lighter-grey-80);
 	
 			.MuiLinearProgress-root {
 				transition: all .2s;

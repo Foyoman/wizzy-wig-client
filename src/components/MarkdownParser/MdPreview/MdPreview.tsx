@@ -44,7 +44,7 @@ interface MdPreviewProps {
 }
 
 export default function MdPreview({ theme }: MdPreviewProps) {
-	const content = useSelector((state: RootState) => state.app.markdown)
+	const content = useSelector((state: RootState) => state.app.markdown);
 	// syntax highlighter configuration for react-markdown
 	const MemoizedMarkdownComponents = useMemo(() => {
 		return {

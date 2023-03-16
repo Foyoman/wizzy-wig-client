@@ -2,7 +2,7 @@ $border-radius: 4px;
 
 @mixin icon {
 	color: var(--gh-lighter-grey);
-	cursor: pointer;
+	// cursor: pointer;
 	transition: all .2s;
 	opacity: .8;
 	
@@ -44,16 +44,23 @@ $border-radius: 4px;
 			transition: all .2s;
 
 			p {
+				z-index: 3;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
 			}
 
 			.close-icon {
+				@include icon;
+				color: var(--gh-lighter-grey-80);
 				position: relative;
 				z-index: 3;
 				height: 14px;
 				width: 14px;
+
+				&:hover {
+					color: var(--gh-lighter-grey);
+				}
 			}
 
 			&::after {
@@ -97,7 +104,7 @@ $border-radius: 4px;
 
 	.new-tab-icon {
 		@include icon;
-		cursor: default;
+		// cursor: default;
 		height: 20px;
 		width: 20px;
 	}
