@@ -66,6 +66,7 @@ export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
 }
 
 export interface AppState {
+	mdFiles: MdFile[];
 	fsFiles: FsFile[];
 	file: string;
 	markdown: string;
@@ -79,6 +80,7 @@ export interface AppState {
 }
 
 const initialState: AppState = {
+	mdFiles: mdFiles,
 	fsFiles: sortFileSystem(fsFiles, "title", false),
 	file: "",
 	markdown: "",
@@ -120,12 +122,10 @@ export const appSlice = createSlice({
 			action: PayloadAction<FsFile>,
 		) => {
 			const fsFile = action.payload;
-			for (const file of mdFiles) {
+			for (const file of state.mdFiles) {
 				if (file.id === fsFile.fileId) {
 					state.selectedMdFile = file;
 					state.markdown = file.content;
-					// console.log(state.markdown);
-					console.log(file.content);
 				}
 			}
 		},
@@ -182,11 +182,16 @@ export const appSlice = createSlice({
 			}
 			const fsFile = state.tabs[state.selectedTab];
 			if (fsFile) selectMdFile(fsFile);
-		}
+		},
+		// addFile: (
+		// 	state,
+		// 	action: PayloadAction<>,
+		// ) => {
+		// 	state.mdFiles.push()
+		// }
 	}
 })
 
-// Action creators are generated for each case reducer function
 export const { 
 	sortFs, 
 	selectFolder,

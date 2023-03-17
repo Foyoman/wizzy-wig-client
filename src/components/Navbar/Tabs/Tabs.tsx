@@ -20,6 +20,16 @@ export default function Tabs() {
 			tabBarEl.current!.scrollWidth - tabBarEl.current!.offsetWidth;
 	}, [tabs.length])
 
+	useEffect(() => {
+		tabBarEl.current!.addEventListener('wheel', handleScroll);
+	})
+
+	// allows tab-bar to be scrolled horizontally even with vertical scroll
+	const handleScroll = (e: WheelEvent) => {
+		e.preventDefault();
+		tabBarEl.current!.scrollLeft += e.deltaY;
+	}
+
 	interface TabProps {
 		fsFile?: FsFile;
 		title?: string;
@@ -62,7 +72,7 @@ export default function Tabs() {
 
 	return (
 		<div className="tab-container">
-			<div className='tab-bar' ref={tabBarEl}>
+			<div className='tab-bar' ref={tabBarEl} id='tab-bar'>
 				<div className='tabs'>
 				{tabs.map((file, index) => {
 					if (file) {

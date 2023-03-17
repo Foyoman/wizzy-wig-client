@@ -31,7 +31,6 @@ const FileSystem = (
 			}
 			dispatch(selectMdFile(item));
 		} else if (item.isFolder) {
-			console.log('poo')
 			dispatch(selectFolder(item));
 		}
 	}
