@@ -110,12 +110,12 @@ export const appSlice = createSlice({
 		},
 		selectFolder: (
 			state,
-			action: PayloadAction<FsFile>,
+			action: PayloadAction<FsFile | null>,
 		) => {
 			const fsFile = action.payload;
-			console.log(fsFile);
-			if (!fsFile.isFolder) return;
+			// if (!fsFile.isFolder) return;
 			state.selectedFolder = fsFile;
+			console.log(fsFile);
 		},
 		selectMdFile: (
 			state,

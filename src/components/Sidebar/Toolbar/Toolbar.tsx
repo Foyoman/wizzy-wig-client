@@ -14,8 +14,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 
 import { FsFile, SortKeys, SortFunction } from "../../../types/FsTypes";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sortFs } from "../../../store/appSlice";
+import { RootState } from "../../../store/store";
 
 interface ToolbarProps {
 	items: FsFile[],
@@ -32,6 +33,7 @@ export default function Toolbar (
 			sortKey: "title", reverse: false
 		});
 	const dispatch = useDispatch();
+	const selectedFolder = useSelector((state: RootState) => state.app.selectedFolder);
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -62,6 +64,11 @@ export default function Toolbar (
 
 	return (
 		<div className="toolbar">
+			<div className="selected-folder">
+				<p>
+					dir: { selectedFolder ? selectedFolder.title : 'root' }
+				</p>
+			</div>
 			<div className="tools">
 				<NoteAddOutlinedIcon className="icon" />
 				<CreateNewFolderOutlinedIcon className="icon" />

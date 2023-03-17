@@ -21,8 +21,14 @@ const FileSystem = (
 	const dispatch = useDispatch();
 	const tabs = useSelector((state: RootState) => state.app.tabs);
 
-	const handleClick = (item: FsFile) => {
-		if (item.fileId && !item.isFolder) {
+	const handleSelect = (
+		e: React.MouseEvent<HTMLLIElement, MouseEvent>, 
+		item: FsFile,
+		parent: FsFile | null,
+	) => {
+		e.stopPropagation();
+		if (!item.isFolder) {
+			dispatch(selectFolder(parent))
 			if (tabs.includes(item as never)) {
 				// if open tabs includes file, set tab to that file
 				dispatch(selectTab(tabs.indexOf(item as never)))
@@ -30,13 +36,14 @@ const FileSystem = (
 				dispatch(setTab(item));
 			}
 			dispatch(selectMdFile(item));
-		} else if (item.isFolder) {
+		} else {
 			dispatch(selectFolder(item));
 		}
 	}
 
 	const mapDirectory = (
 		items: FsFile[],
+		parent: FsFile | null,
 		nested: boolean,
 	) => {
 		return items.map((item) => {
@@ -48,10 +55,10 @@ const FileSystem = (
 						label={item.title} 
 						title={item.title}
 						className={`sidebar-item ${ nested && 'nested' }`}
-						onClick={() => handleClick(item)}
+						onClick={(e) => handleSelect(e, item, parent)}
 					>
 					{ item.children?.length ? 
-						mapDirectory(item.children, true) 
+						mapDirectory(item.children, item, true) 
 						: 
 						<span style={{ display: 'none' }} />
 					}
@@ -65,14 +72,14 @@ const FileSystem = (
 						label={item.title} 
 						title={item.title}
 						className={`sidebar-item ${ nested && 'nested' }`}
-						onClick={() => handleClick(item)}
+						onClick={(e) => handleSelect(e, item, parent)}
 					/>
 				)
 			}
 		})
 	}
 	
-	const mappedItems = mapDirectory(items, false);
+	const mappedItems = mapDirectory(items, null, false);
 
 	return (
 		<TreeView 
