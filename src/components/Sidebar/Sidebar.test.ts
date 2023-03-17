@@ -2,7 +2,7 @@
 import { sortFileSystem } from "../../store/appSlice";
 import { FsFile } from "../../types/FsTypes";
 
-import { fsFiles, fsFiles2 } from "../../__mocks__/FileSystem"
+import { fsFiles, fsFiles2 } from "../../__mocks__/FsFiles"
 
 const sortedFiles: FsFile[] = [
 	{

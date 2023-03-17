@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-import { fsFiles } from '../__mocks__/FileSystem';
+import { fsFiles } from '../__mocks__/FsFiles';
 import { mdFiles } from '../__mocks__/MdFiles';
 
 import { FsFile, SortKeys, SortFunction } from '../types/FsTypes';
@@ -157,6 +157,7 @@ export const appSlice = createSlice({
 			action: PayloadAction<FsFile>
 		) => {
 			const fsFile = action.payload;
+			// debugger;
 			state.tabs[state.selectedTab] = fsFile;
 		},
 		newTab: (

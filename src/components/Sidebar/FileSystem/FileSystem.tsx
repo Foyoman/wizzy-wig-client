@@ -7,8 +7,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { FsFile } from "../../../types/FsTypes";
 
-import { useDispatch } from 'react-redux';
-import { setTab, selectMdFile, selectFolder } from "../../../store/appSlice";
+import { useDispatch, useSelector } from 'react-redux';
+import { setTab, selectMdFile, selectFolder, selectTab } from "../../../store/appSlice";
+import { RootState } from "../../../store/store";
 
 interface FileSystemProps {
 	items: FsFile[];
@@ -18,12 +19,16 @@ const FileSystem = (
 	{ items	}: FileSystemProps
 ) => {
 	const dispatch = useDispatch();
+	const tabs = useSelector((state: RootState) => state.app.tabs);
 
 	const handleClick = (item: FsFile) => {
-		// console.log(item);
 		if (item.fileId && !item.isFolder) {
-			// dispatch(selectTab(item));
-			dispatch(setTab(item));
+			if (tabs.includes(item as never)) {
+				// if open tabs includes file, set tab to that file
+				dispatch(selectTab(tabs.indexOf(item as never)))
+			} else {
+				dispatch(setTab(item));
+			}
 			dispatch(selectMdFile(item));
 		} else if (item.isFolder) {
 			console.log('poo')
