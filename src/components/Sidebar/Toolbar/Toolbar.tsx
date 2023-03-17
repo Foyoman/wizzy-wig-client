@@ -15,7 +15,7 @@ import Divider from '@mui/material/Divider';
 
 import { FsFile, SortKeys, SortFunction } from "../../../types/FsTypes";
 import { useDispatch, useSelector } from "react-redux";
-import { sortFs } from "../../../store/appSlice";
+import { sortFs, addFile } from "../../../store/appSlice";
 import { RootState } from "../../../store/store";
 
 interface ToolbarProps {
@@ -36,7 +36,7 @@ export default function Toolbar (
 	const selectedFolder = useSelector((state: RootState) => state.app.selectedFolder);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -45,6 +45,10 @@ export default function Toolbar (
 		setSort({sortKey: sortKey, reverse: reverse});
     setAnchorEl(null);
   };
+
+	const handleNewFile = () => {
+		dispatch(addFile(""))
+	}
 
 	interface CheckedProps extends JSX.IntrinsicAttributes {
 		visible?: boolean;
@@ -70,14 +74,14 @@ export default function Toolbar (
 				</p>
 			</div>
 			<div className="tools">
-				<NoteAddOutlinedIcon className="icon" />
+				<NoteAddOutlinedIcon className="icon" onClick={handleNewFile} />
 				<CreateNewFolderOutlinedIcon className="icon" />
 				<Button
 					className="toolbar-button"
 					aria-controls={open ? 'basic-menu' : undefined}
 					aria-haspopup="true"
 					aria-expanded={open ? 'true' : undefined}
-					onClick={handleClick}
+					onClick={handleOpenMenu}
 				>
 					<SortOutlinedIcon className="icon" />
 				</Button>

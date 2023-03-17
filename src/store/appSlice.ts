@@ -113,7 +113,6 @@ export const appSlice = createSlice({
 			action: PayloadAction<FsFile | null>,
 		) => {
 			const fsFile = action.payload;
-			// if (!fsFile.isFolder) return;
 			state.selectedFolder = fsFile;
 			console.log(fsFile);
 		},
@@ -183,12 +182,29 @@ export const appSlice = createSlice({
 			const fsFile = state.tabs[state.selectedTab];
 			if (fsFile) selectMdFile(fsFile);
 		},
-		// addFile: (
-		// 	state,
-		// 	action: PayloadAction<>,
-		// ) => {
-		// 	state.mdFiles.push()
-		// }
+		addFile: (
+			state,
+			action: PayloadAction<string>,
+		) => {
+			// const fsFile = action.payload;
+			const tempId = "tempid" + Math.random();
+			const newFsFile: FsFile = {
+				title: "Untitled",
+				dateCreated: new Date(),
+				lastUpdated: new Date(),
+				isFolder: false,
+				fileId: tempId,
+			}
+			const newMdFile: MdFile = {
+				id: tempId,
+				content: "",
+			}
+			state.mdFiles.push(newMdFile);
+			state.tabs.push(newFsFile as never);
+			state.selectedTab = state.tabs.length - 1;
+			state.selectedMdFile = newMdFile;
+			state.markdown = "";
+		}
 	}
 })
 
@@ -203,6 +219,7 @@ export const {
 	setTab,
 	newTab,
 	closeTab,
+	addFile,
 } = appSlice.actions;
 
 export default appSlice.reducer;

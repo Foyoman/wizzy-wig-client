@@ -99,7 +99,7 @@ export default function Tabs() {
 			<div className="new-tab">
 				<AddOutlinedIcon 
 					className='new-tab-icon' 
-					onClick={() => dispatch(newTab(""))} 
+					onClick={() => dispatch(newTab(null))} 
 				/>
 			</div>
 		</div>
