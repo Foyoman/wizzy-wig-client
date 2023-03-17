@@ -12,10 +12,11 @@ import Check from '@mui/icons-material/Check';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
+import TextField from '@mui/material/TextField';
 
 import { FsFile, SortKeys, SortFunction } from "../../../types/FsTypes";
 import { useDispatch, useSelector } from "react-redux";
-import { sortFs, addFile } from "../../../store/appSlice";
+import { sortFs, createFile } from "../../../store/appSlice";
 import { RootState } from "../../../store/store";
 
 interface ToolbarProps {
@@ -25,29 +26,31 @@ interface ToolbarProps {
 export default function Toolbar (
 	{ items }: ToolbarProps
 ) {
-	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+	const [filterEl, setFilterEl] = useState<HTMLElement | null>(null);
+	const [createFileEl, setCreateFileEl] = useState<HTMLElement | null>(null);
 	const [sort, setSort] = 
 		useState<{
 			sortKey: SortKeys, reverse: boolean
 		} | null>({
 			sortKey: "title", reverse: false
 		});
+	const [title, setTitle] = useState<string | "">("");
 	const dispatch = useDispatch();
 	const selectedFolder = useSelector((state: RootState) => state.app.selectedFolder);
-  const open = Boolean(anchorEl);
-
-  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const filterOpen = Boolean(filterEl);
+	const createOpen = Boolean(createFileEl);
 
   const handleSelect: SortFunction = (items, sortKey, reverse) => {
 		dispatch(sortFs({items, sortKey, reverse}));
 		setSort({sortKey: sortKey, reverse: reverse});
-    setAnchorEl(null);
+    setFilterEl(null);
   };
 
-	const handleNewFile = () => {
-		dispatch(addFile(""))
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		console.log(title);
+		dispatch(createFile(title));
+		setTitle("");
 	}
 
 	interface CheckedProps extends JSX.IntrinsicAttributes {
@@ -74,22 +77,50 @@ export default function Toolbar (
 				</p>
 			</div>
 			<div className="tools">
-				<NoteAddOutlinedIcon className="icon" onClick={handleNewFile} />
+				<Button
+					className="toolbar-button"
+					aria-controls={createOpen ? 'basic-menu' : undefined}
+					aria-haspopup="true"
+					aria-expanded={createOpen ? 'true' : undefined}
+					onClick={(e) => setCreateFileEl(e.currentTarget)}
+				>
+					<NoteAddOutlinedIcon className="icon" />
+				</Button>
+				<Menu
+					className="dropdown-menu"
+					anchorEl={createFileEl}
+					open={createOpen}
+					onClose={() => setCreateFileEl(null)}
+					MenuListProps={{
+						'aria-labelledby': 'basic-button',
+					}}
+				>
+					<MenuItem className="menu-item">
+						<form onSubmit={handleSubmit}>
+							<input 
+								type="text" 
+								value={title} 
+								onChange={(e) => setTitle(e.target.value)} 
+								placeholder="title" 
+							/>
+						</form>
+					</MenuItem>
+				</Menu>
 				<CreateNewFolderOutlinedIcon className="icon" />
 				<Button
 					className="toolbar-button"
-					aria-controls={open ? 'basic-menu' : undefined}
+					aria-controls={filterOpen ? 'basic-menu' : undefined}
 					aria-haspopup="true"
-					aria-expanded={open ? 'true' : undefined}
-					onClick={handleOpenMenu}
+					aria-expanded={filterOpen ? 'true' : undefined}
+					onClick={(e) => setFilterEl(e.currentTarget)}
 				>
 					<SortOutlinedIcon className="icon" />
 				</Button>
 				<Menu
-					id="sort-menu"
-					anchorEl={anchorEl}
-					open={open}
-					onClose={() => setAnchorEl(null)}
+					className="dropdown-menu"
+					anchorEl={filterEl}
+					open={filterOpen}
+					onClose={() => setFilterEl(null)}
 					MenuListProps={{
 						'aria-labelledby': 'basic-button',
 					}}

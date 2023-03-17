@@ -42,7 +42,19 @@
 	}
 }
 
-#sort-menu {
+.dropdown-menu {
+	color: var(--gh-lighter-grey-80);
+	input {
+		border: none;
+		background: #1E1E1E;
+		color: var(--gh-lighter-grey);
+
+		&:focus-visible {
+			border: none;
+			outline: none;
+		}
+	}
+
 	.MuiMenu-paper {
 		background-color: #1E1E1E;
 		color: var(--gh-lighter-grey);

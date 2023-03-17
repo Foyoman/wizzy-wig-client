@@ -182,14 +182,14 @@ export const appSlice = createSlice({
 			const fsFile = state.tabs[state.selectedTab];
 			if (fsFile) selectMdFile(fsFile);
 		},
-		addFile: (
+		createFile: (
 			state,
 			action: PayloadAction<string>,
 		) => {
-			// const fsFile = action.payload;
+			const title = action.payload;
 			const tempId = "tempid" + Math.random();
 			const newFsFile: FsFile = {
-				title: "Untitled",
+				title: title ? title : "Untitled",
 				dateCreated: new Date(),
 				lastUpdated: new Date(),
 				isFolder: false,
@@ -219,7 +219,7 @@ export const {
 	setTab,
 	newTab,
 	closeTab,
-	addFile,
+	createFile,
 } = appSlice.actions;
 
 export default appSlice.reducer;
