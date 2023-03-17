@@ -4,66 +4,10 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { fsFiles } from '../__mocks__/FsFiles';
 import { mdFiles } from '../__mocks__/MdFiles';
 
-import { FsFile, SortKeys, SortFunction } from '../types/FsTypes';
+import { FsFile, SortKeys } from '../types/FsTypes';
 import { MdFile } from '../types/MdFile';
 
-export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
-	const [folders, files] = fileSystem.reduce(
-		(acc, item) => {
-			if (item.isFolder) {
-				acc[0].push(item);
-			} else {
-				acc[1].push(item);
-			}
-			return acc;
-		},
-		[[], []] as [FsFile[], FsFile[]]
-	);
-
-	const sortedFolders = folders
-		.map((folder) => {
-			const sortedChildren = sortFileSystem(folder.children || [], sortKey, reverse);
-			return { ...folder, children: sortedChildren };
-		})
-		.sort((a, b) => { 
-			if (sortKey === "title") {
-				return a.title.localeCompare(b.title)
-			} else {
-				const dateA = a[sortKey];
-				const dateB = b[sortKey];
-				if (dateA < dateB) {
-					return 1;
-				}
-				if (dateA > dateB) {
-					return -1;
-				}
-				return 0;
-			}
-		});
-	
-	let sortedFiles: FsFile[];
-	if (sortKey === "title") {
-		sortedFiles = files.sort((a, b) => a.title.localeCompare(b.title));
-	} else {
-		sortedFiles = files.sort((a, b) => {
-			const dateA = a[sortKey];
-			const dateB = b[sortKey];
-			if (dateA < dateB) {
-				return 1;
-			}
-			if (dateA > dateB) {
-				return -1;
-			}
-			return 0;
-		});
-	}
-
-	if (reverse) {
-		return [...sortedFolders.reverse(), ...sortedFiles.reverse()];
-	} else {
-		return [...sortedFolders, ...sortedFiles];
-	}
-}
+import { sortFileSystem, appendChild, appendById } from './helpers';
 
 export interface AppState {
 	mdFiles: MdFile[];
@@ -114,7 +58,7 @@ export const appSlice = createSlice({
 		) => {
 			const fsFile = action.payload;
 			state.selectedFolder = fsFile;
-			console.log(fsFile);
+			// console.log(fsFile);
 		},
 		selectMdFile: (
 			state,
@@ -200,8 +144,12 @@ export const appSlice = createSlice({
 				content: "",
 			}
 			state.mdFiles.push(newMdFile);
-			state.tabs.push(newFsFile as never);
-			state.selectedTab = state.tabs.length - 1;
+			if (state.tabs[state.selectedTab]) {
+				state.tabs.push(newFsFile as never);
+				state.selectedTab = state.tabs.length - 1;
+			} else {
+				state.tabs[state.selectedTab] = newFsFile;
+			}
 			state.selectedMdFile = newMdFile;
 			state.markdown = "";
 		}

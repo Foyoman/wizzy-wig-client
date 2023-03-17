@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import './Toolbar.scss';
 
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
@@ -28,17 +28,30 @@ export default function Toolbar (
 ) {
 	const [filterEl, setFilterEl] = useState<HTMLElement | null>(null);
 	const [createFileEl, setCreateFileEl] = useState<HTMLElement | null>(null);
+	const filterOpen = Boolean(filterEl);
+	const createOpen = Boolean(createFileEl);
+	const inputRef = useRef<HTMLInputElement | null>(null);
+	const [title, setTitle] = useState<string | "">("");
 	const [sort, setSort] = 
 		useState<{
 			sortKey: SortKeys, reverse: boolean
 		} | null>({
 			sortKey: "title", reverse: false
 		});
-	const [title, setTitle] = useState<string | "">("");
 	const dispatch = useDispatch();
 	const selectedFolder = useSelector((state: RootState) => state.app.selectedFolder);
-  const filterOpen = Boolean(filterEl);
-	const createOpen = Boolean(createFileEl);
+
+	const handleCreateOpen = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		setCreateFileEl(e.currentTarget);
+		setTimeout(() => {
+			inputRef.current?.focus();
+		}, 1)
+	}
+
+	const handleClose = () => {
+		setCreateFileEl(null);
+		setTitle("");
+	}
 
   const handleSelect: SortFunction = (items, sortKey, reverse) => {
 		dispatch(sortFs({items, sortKey, reverse}));
@@ -51,6 +64,7 @@ export default function Toolbar (
 		console.log(title);
 		dispatch(createFile(title));
 		setTitle("");
+    setCreateFileEl(null);
 	}
 
 	interface CheckedProps extends JSX.IntrinsicAttributes {
@@ -61,7 +75,7 @@ export default function Toolbar (
     return (
       <ListItemIcon 
 				style={{ 
-					visibility: visible ? 'visible' : 'hidden' 
+					visibility: visible ? 'visible' : 'hidden'
 				}}
 			>
         <Check />
@@ -82,7 +96,7 @@ export default function Toolbar (
 					aria-controls={createOpen ? 'basic-menu' : undefined}
 					aria-haspopup="true"
 					aria-expanded={createOpen ? 'true' : undefined}
-					onClick={(e) => setCreateFileEl(e.currentTarget)}
+					onClick={handleCreateOpen}
 				>
 					<NoteAddOutlinedIcon className="icon" />
 				</Button>
@@ -90,7 +104,7 @@ export default function Toolbar (
 					className="dropdown-menu"
 					anchorEl={createFileEl}
 					open={createOpen}
-					onClose={() => setCreateFileEl(null)}
+					onClose={handleClose}
 					MenuListProps={{
 						'aria-labelledby': 'basic-button',
 					}}
@@ -98,6 +112,9 @@ export default function Toolbar (
 					<MenuItem className="menu-item">
 						<form onSubmit={handleSubmit}>
 							<input 
+								// autoFocus
+								id="input-el"
+								ref={inputRef}
 								type="text" 
 								value={title} 
 								onChange={(e) => setTitle(e.target.value)} 

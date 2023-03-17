@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-mocks-import */
-import { sortFileSystem } from "../../store/appSlice";
+import { sortFileSystem } from "../../store/helpers";
 import { FsFile } from "../../types/FsTypes";
 
 import { fsFiles, fsFiles2 } from "../../__mocks__/FsFiles"
