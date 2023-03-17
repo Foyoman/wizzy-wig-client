@@ -1,5 +1,5 @@
 export interface FsFile {
-	id?: number;
+	id?: string;
 	title: string;
 	dateCreated: Date;
 	lastUpdated: Date;

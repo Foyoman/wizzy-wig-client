@@ -20,7 +20,7 @@ const FileSystem = (
 ) => {
 	const dispatch = useDispatch();
 	const tabs = useSelector((state: RootState) => state.app.tabs);
-
+	
 	const handleSelect = (
 		e: React.MouseEvent<HTMLLIElement, MouseEvent>, 
 		item: FsFile,
@@ -88,6 +88,7 @@ const FileSystem = (
 			defaultCollapseIcon={<ExpandMoreIcon />}
 			defaultExpandIcon={<ChevronRightIcon />}
 			sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+			onClick={() => dispatch(selectFolder(null))}
 		>
 			{ mappedItems }
 		</TreeView>

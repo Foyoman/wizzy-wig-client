@@ -132,7 +132,9 @@ export const appSlice = createSlice({
 		) => {
 			const title = action.payload;
 			const tempId = "tempid" + Math.random();
+			const tempId2 = "tempid2" + Math.random();
 			const newFsFile: FsFile = {
+				id: tempId2,
 				title: title ? title : "Untitled",
 				dateCreated: new Date(),
 				lastUpdated: new Date(),
@@ -143,6 +145,11 @@ export const appSlice = createSlice({
 				id: tempId,
 				content: "",
 			}
+			console.log(state.fsFiles);
+			console.log(state.selectedFolder);
+			// debugger
+			appendById(state.fsFiles, newFsFile, state.selectedFolder as FsFile);
+			sortFileSystem(state.fsFiles, "title", false);
 			state.mdFiles.push(newMdFile);
 			if (state.tabs[state.selectedTab]) {
 				state.tabs.push(newFsFile as never);

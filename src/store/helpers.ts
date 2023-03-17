@@ -70,19 +70,23 @@ export const appendChild = (item: FsFile, child: FsFile) => {
 }
 
 export const appendById = (
-	id: FsFile['id'],
 	items: FsFile[],
 	child: FsFile,
+	parent?: FsFile,
 ): FsFile | null => {
-	for (const item of items) {
-		if (item.id === id) {
-			appendChild(item, child);
-		}
-
-		if (item.isFolder && item.children) {
-			const foundItem = appendById(id, item.children, child);
-			if (foundItem) {
-				appendChild(foundItem, child);
+	if (!parent) { 
+		items.push(child);
+	} else {
+		for (const item of items) {
+			if (item.id === parent.id) {
+				appendChild(item, child);
+			}
+	
+			if (item.isFolder && item.children) {
+				const foundItem = appendById(item.children, child, parent);
+				if (foundItem) {
+					appendChild(foundItem, child);
+				}
 			}
 		}
 	}
