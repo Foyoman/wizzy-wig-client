@@ -13,99 +13,121 @@ $border-radius: 4px;
 	}
 }
 
-.tab-bar {
-	padding: 0 var(--spacer-xxs);
+.tab-container {
 	display: flex;
 	align-items: center;
 	width: calc(100% - (250px - var(--spacer-sm)));
 	height: 100%;
-	border-left: 1px solid var(--color-canvas-default);
-	
-	.tabs {
-		padding-top: var(--spacer-xxs);
+	overflow-x: auto;
+
+	.new-tab {
 		display: flex;
 		align-items: center;
-		height: 100%;
-		
-		.tab {
-			position: relative;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			height: 100%;
-			width: 120px;
-			cursor: default;
-			margin-right: calc(var(--spacer-xxs) * 2);
-			padding: 0 var(--spacer-xs) var(--spacer-xs);
-			padding-top: var(--spacer-xs);
-			border-top-left-radius: $border-radius;
-			border-top-right-radius: $border-radius;
-			font-size: var(--text-sm);
-			transition: all .2s;
+		padding: 0 var(--spacer-xxs);
+		border-left: 1px solid var(--color-canvas-default);
 
-			p {
-				z-index: 3;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-
-			.close-icon {
-				@include icon;
-				color: var(--gh-lighter-grey-80);
-				position: relative;
-				z-index: 3;
-				height: 14px;
-				width: 14px;
-
-				&:hover {
-					color: var(--gh-lighter-grey);
-				}
-			}
-
-			&::after {
-				position: absolute;
-				top: 0;
-				left: 0;
-				content: '';
-				width: calc(100% + var(--spacer-xxs));
-				height: calc(100% - var(--spacer-xs));
-				margin-top: calc(var(--spacer-xs) / 2);
-				// padding-right: calc(var(--spacer-xxs) * 2);
-				border-right: 1px solid var(--color-canvas-default);
-			}
-
-			&::before {
-				position: absolute;
-				top: 0;
-				left: 0;
-				content: '';
-				width: 100%;
-				height: calc(100% - var(--spacer-xs));
-				margin-top: calc(var(--spacer-xs) / 2);
-				border-radius: $border-radius;
-				transition: all .2s;
-			}
-
-			&:hover {
-				&::before {
-					background: #22272e60;
-					color: var(--gh-lighter-grey);
-					// margin-bottom: var(--spacer-xs);
-				}
-			}
-			
-			&.selected {
-				background: var(--color-canvas-default);
-				color: var(--gh-lighter-grey);
-			}
+		.new-tab-icon {
+			@include icon;
+			height: 20px;
+			width: 20px;
 		}
 	}
 
-	.new-tab-icon {
-		@include icon;
-		// cursor: default;
-		height: 20px;
-		width: 20px;
+	.tab-bar {
+		padding: 0 0 0 var(--spacer-xxs);
+		display: inline-flex;
+		align-items: center;
+		height: 100%;
+		border-left: 1px solid var(--color-canvas-default);
+		overflow-x: auto;
+	
+		&::-webkit-scrollbar {
+			display: none;
+		}
+		
+		.tabs {
+			padding-top: var(--spacer-xxs);
+			display: flex;
+			align-items: center;
+			height: 100%;
+			
+			.tab {
+				position: relative;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				height: 100%;
+				width: 120px;
+				cursor: default;
+				margin-right: calc(var(--spacer-xxs) * 2);
+				padding: 0 var(--spacer-xs) var(--spacer-xs);
+				padding-top: var(--spacer-xs);
+				border-top-left-radius: $border-radius;
+				border-top-right-radius: $border-radius;
+				font-size: var(--text-sm);
+				transition: all .2s;
+
+				&.last-index {
+					margin-right: var(--spacer-xxs);
+
+					&::after {
+						border-right: none;
+					}
+				}
+	
+				p {
+					z-index: 3;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+	
+				.close-icon {
+					@include icon;
+					color: var(--gh-lighter-grey-80);
+					position: relative;
+					z-index: 3;
+					height: 14px;
+					width: 14px;
+	
+					&:hover {
+						color: var(--gh-lighter-grey);
+					}
+				}
+
+				&::before, &::after {
+					content: '';
+					position: absolute;
+					top: 0;
+					left: 0;
+					height: calc(100% - var(--spacer-xs));
+					margin-top: calc(var(--spacer-xs) / 2);
+				}
+	
+				&::after {
+					width: calc(100% + var(--spacer-xxs));
+					border-right: 1px solid var(--color-canvas-default);
+				}
+	
+				&::before {
+					width: 100%;
+					border-radius: $border-radius;
+					transition: all .2s;
+				}
+	
+				&:hover {
+					&::before {
+						background: #22272e60;
+						color: var(--gh-lighter-grey);
+						// margin-bottom: var(--spacer-xs);
+					}
+				}
+				
+				&.selected {
+					background: var(--color-canvas-default);
+					color: var(--gh-lighter-grey);
+				}
+			}
+		}
 	}
 }
