@@ -1,39 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-import { fsFiles } from '../__mocks__/FsFiles';
-import { mdFiles } from '../__mocks__/MdFiles';
+import { files } from '../__mocks__/Files';
 
-import { FsFile, SortKeys } from '../types/FsTypes';
-import { MdFile } from '../types/MdFile';
+import { File, SortKeys } from '../types/FileTypes';
 
-import { sortFileSystem, appendChild, appendById } from './helpers';
+import { sortFileSystem, findById } from './helpers';
 
 export interface AppState {
-	mdFiles: MdFile[];
-	fsFiles: FsFile[];
+	files: File[];
 	file: string;
 	markdown: string;
 	showSidebar: boolean;
 	saved: boolean;
-	tabs: Array<FsFile | null> | [];
+	tabs: Array<File | null> | [];
 	selectedTab: number;
-	selectedFsFile: FsFile | null;
-	selectedMdFile: MdFile | null;
-	selectedFolder: FsFile | null;
+	selectedFile: File | null;
+	selectedFolder: File | null;
 }
 
 const initialState: AppState = {
-	mdFiles: mdFiles,
-	fsFiles: sortFileSystem(fsFiles, "title", false),
+	files: sortFileSystem(files, "title", false),
 	file: "",
 	markdown: "",
 	showSidebar: true,
 	saved: true,
 	tabs: [null],
 	selectedTab: 0,
-	selectedFsFile: null,
-	selectedMdFile: null,
+	selectedFile: null,
 	selectedFolder: null,
 }
 
@@ -44,33 +38,28 @@ export const appSlice = createSlice({
 		sortFs: (
 			state, 
 			action: PayloadAction<{ 
-				items: FsFile[], 
+				items: File[], 
 				sortKey: SortKeys, 
 				reverse: boolean 
 			}>
 		) => {
 			const { items, sortKey, reverse } = action.payload;
-			state.fsFiles = sortFileSystem(items, sortKey, reverse);
+			state.files = sortFileSystem(items, sortKey, reverse);
 		},
 		selectFolder: (
 			state,
-			action: PayloadAction<FsFile | null>,
+			action: PayloadAction<File | null>,
 		) => {
-			const fsFile = action.payload;
-			state.selectedFolder = fsFile;
-			// console.log(fsFile);
+			const file = action.payload;
+			state.selectedFolder = file;
 		},
-		selectMdFile: (
+		selectFile: (
 			state,
-			action: PayloadAction<FsFile>,
+			action: PayloadAction<File>,
 		) => {
-			const fsFile = action.payload;
-			for (const file of state.mdFiles) {
-				if (file.id === fsFile.fileId) {
-					state.selectedMdFile = file;
-					state.markdown = file.content;
-				}
-			}
+			const file = action.payload;
+			state.selectedFile = file;
+			state.markdown = file.content || "";
 		},
 		updateMarkdown: (
 			state, 
@@ -93,21 +82,25 @@ export const appSlice = createSlice({
 			state,
 			action: PayloadAction<number>
 		) => {
+			// select tab by index
 			state.selectedTab = action.payload;
 		},
 		setTab: (
 			state,
-			action: PayloadAction<FsFile>
+			action: PayloadAction<File>
 		) => {
-			const fsFile = action.payload;
-			// debugger;
-			state.tabs[state.selectedTab] = fsFile;
+			const file = action.payload;
+			// set current tab to the selected file
+			state.tabs[state.selectedTab] = file;
+			selectFile(file);
 		},
 		newTab: (
 			state,
 			_,
 		) => {
+			// push a new tab into the tabs array. null to render it as the `open a file` state
 			state.tabs.push(null as never);
+			// set the current tab to the newly created tab
 			state.selectedTab = state.tabs.length - 1;
 		},
 		closeTab: (
@@ -115,49 +108,59 @@ export const appSlice = createSlice({
 			action: PayloadAction<number>
 		) => {
 			const index = action.payload;
+			// remove the tab from the tabs array by index
 			state.tabs.splice(index, 1);
+
+			// keeps at least one tab open set to `open a file` state
 			if (!state.tabs.length) {
 				state.tabs = [null];
+				// if closing a tab before the selected tab, move the selected tab index down to maintain it as the open tab
+				// or if the tab you're closing is the last tab and it is also selected, move the selected tab to the new last tab
 			} else if (index < state.selectedTab || state.selectedTab === state.tabs.length) {
 				state.selectedTab -= 1;
+				// if only one tab remains after closing a tab, make sure the selected tab stays on this last tab
 			} else if (state.tabs.length <= 1) {
 				state.selectedTab = 0;
 			}
-			const fsFile = state.tabs[state.selectedTab];
-			if (fsFile) selectMdFile(fsFile);
+
+			// if the new current tab is an open file, switch the content to the new current tab
+			// ^ I guess the above isn't asynchronous - mutable. obviously?
+			const file = state.tabs[state.selectedTab];
+			if (file) selectFile(file);
 		},
 		createFile: (
 			state,
 			action: PayloadAction<string>,
 		) => {
+			// set up new file
 			const title = action.payload;
 			const tempId = "tempid" + Math.random();
-			const tempId2 = "tempid2" + Math.random();
-			const newFsFile: FsFile = {
-				id: tempId2,
+			const newFile: File = {
+				id: tempId,
 				title: title ? title : "Untitled",
 				dateCreated: new Date(),
 				lastUpdated: new Date(),
 				isFolder: false,
-				fileId: tempId,
-			}
-			const newMdFile: MdFile = {
-				id: tempId,
 				content: "",
 			}
-			console.log(state.fsFiles);
-			console.log(state.selectedFolder);
-			// debugger
-			appendById(state.fsFiles, newFsFile, state.selectedFolder as FsFile);
-			sortFileSystem(state.fsFiles, "title", false);
-			state.mdFiles.push(newMdFile);
+
+			// append new file to the file system
+			findById(state.files, "append", state.selectedFolder as File, newFile);
+			state.selectedFile = newFile;
+
+			// sort file system after appendage
+			sortFileSystem(state.files, "title", false);
+
+			// if the current tab is an open file, open the new file in a new tab
 			if (state.tabs[state.selectedTab]) {
-				state.tabs.push(newFsFile as never);
+				state.tabs.push(newFile as never);
 				state.selectedTab = state.tabs.length - 1;
 			} else {
-				state.tabs[state.selectedTab] = newFsFile;
+				// if the current tab is null open the new file in the current tab
+				state.tabs[state.selectedTab] = newFile;
 			}
-			state.selectedMdFile = newMdFile;
+
+			// file initialises empty
 			state.markdown = "";
 		}
 	}
@@ -166,7 +169,7 @@ export const appSlice = createSlice({
 export const { 
 	sortFs, 
 	selectFolder,
-	selectMdFile,
+	selectFile,
 	updateMarkdown, 
 	toggleSidebar,
 	setSaved,

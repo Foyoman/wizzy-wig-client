@@ -9,7 +9,7 @@ import type { RootState } from "../store/store";
 
 export default function App() {
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
-  const selectedMdFile = useSelector((state: RootState) => state.app.selectedMdFile);
+  const markdown = useSelector((state: RootState) => state.app.markdown);
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
@@ -35,7 +35,7 @@ export default function App() {
             className={`md-container ${!showSidebar ? 'sidebar-hidden' : ''}`}
           >
           { tabs[selectedTab] ? 
-            <MarkdownParser content={selectedMdFile!.content} />
+            <MarkdownParser content={markdown} />
           : 
             <NoFile />
           }

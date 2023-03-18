@@ -1,6 +1,6 @@
-import { FsFile } from "../types/FsTypes";
+import { File } from "../types/FileTypes";
 
-export const fsFiles: FsFile[] = [
+export const files: File[] = [
 	{
 		id: '0',
 		title: 'angela',
@@ -8,6 +8,7 @@ export const fsFiles: FsFile[] = [
 		lastUpdated: new Date('01-01-2021 00:03:44'),
 		fileId: 'dsk238',
 		isFolder: false,
+		content: "angela's file"
 	},
 	{
 		id: '1',
@@ -29,6 +30,7 @@ export const fsFiles: FsFile[] = [
 						dateCreated: new Date('01-01-2022 00:03:44'),
 						lastUpdated: new Date('01-01-2023 00:03:44'),
 						isFolder: false,
+						content: "zeppo's file"
 					},
 					{
 						id: '3',
@@ -36,6 +38,7 @@ export const fsFiles: FsFile[] = [
 						dateCreated: new Date('01-01-2003 00:03:44'),
 						lastUpdated: new Date('01-01-2004 00:03:44'),
 						isFolder: false,
+						content: "chico's file"
 					},
 					{
 						id: '32423',
@@ -43,6 +46,7 @@ export const fsFiles: FsFile[] = [
 						dateCreated: new Date('01-01-1983 00:03:44'),
 						lastUpdated: new Date('01-01-2004 00:03:44'),
 						isFolder: false,
+						content: "hotdogs and all that"
 					},
 					{
 						id: '821',
@@ -57,6 +61,7 @@ export const fsFiles: FsFile[] = [
 								dateCreated: new Date('01-01-1983 00:03:44'),
 								lastUpdated: new Date('01-01-2004 00:03:44'),
 								isFolder: false,
+								content: "django unchained"
 							},	
 						]
 					},
@@ -87,6 +92,7 @@ export const fsFiles: FsFile[] = [
 												dateCreated: new Date('01-01-2011 00:03:44'),
 												lastUpdated: new Date('01-01-2012 00:03:44'),
 												isFolder: false,
+												content: "doors the who and all that"
 											},	
 										]
 									},
@@ -103,6 +109,7 @@ export const fsFiles: FsFile[] = [
 												dateCreated: new Date('01-01-2011 00:03:44'),
 												lastUpdated: new Date('01-01-2012 00:03:44'),
 												isFolder: false,
+												content: "derrick rose and his acl"
 											},	
 										]
 									},
@@ -121,6 +128,7 @@ export const fsFiles: FsFile[] = [
 		lastUpdated: new Date('01-01-2019 00:03:44'),
 		isFolder: false,
 		fileId: "ts1",
+		content: 'this aint it chief'
 	},
 	{
 		id: '5',
@@ -135,6 +143,7 @@ export const fsFiles: FsFile[] = [
 				dateCreated: new Date('01-01-1999 00:03:44'),
 				lastUpdated: new Date('01-01-2000 00:03:44'),
 				isFolder: false,
+				content: 'subfile poop'
 			}
 		]
 	},
@@ -147,7 +156,7 @@ export const fsFiles: FsFile[] = [
 	}
 ]
 
-export const fsFiles2: FsFile[] = [
+export const files2: File[] = [
 	{
 		id: '0',
 		title: 'angela',
@@ -155,6 +164,7 @@ export const fsFiles2: FsFile[] = [
 		lastUpdated: new Date('01-01-2020 00:03:44'),
 		fileId: 'dsk238',
 		isFolder: false,
+		content: "hey hey its me"
 	},
 	{
 		id: '0',
@@ -163,6 +173,7 @@ export const fsFiles2: FsFile[] = [
 		lastUpdated: new Date('01-01-2000 00:03:44'),
 		fileId: 'dsk238',
 		isFolder: false,
+		content: "angela's file"
 	},
 	{
 		id: '0',
@@ -171,5 +182,6 @@ export const fsFiles2: FsFile[] = [
 		lastUpdated: new Date('01-01-2010 00:03:44'),
 		fileId: 'dsk238',
 		isFolder: false,
+		content: "angela's second file? witf"
 	},
 ]

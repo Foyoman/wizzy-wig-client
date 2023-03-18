@@ -14,13 +14,13 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 
-import { FsFile, SortKeys, SortFunction } from "../../../types/FsTypes";
+import { File, SortKeys, SortFunction } from "../../../types/FileTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { sortFs, createFile } from "../../../store/appSlice";
 import { RootState } from "../../../store/store";
 
 interface ToolbarProps {
-	items: FsFile[],
+	items: File[],
 }
 
 export default function Toolbar (

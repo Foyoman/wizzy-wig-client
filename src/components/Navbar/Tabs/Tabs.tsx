@@ -5,8 +5,8 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { useDispatch } from 'react-redux';
-import { selectTab, newTab, closeTab, selectMdFile } from '../../../store/appSlice';
-import { FsFile } from '../../../types/FsTypes';
+import { selectTab, newTab, closeTab, selectFile } from '../../../store/appSlice';
+import { File } from '../../../types/FileTypes';
 
 export default function Tabs() {
 	const dispatch = useDispatch();
@@ -31,18 +31,17 @@ export default function Tabs() {
 	}
 
 	interface TabProps {
-		fsFile?: FsFile;
+		file?: File;
 		title?: string;
 		selected: boolean;
 		index: number;
 	}
 	
-	const Tab = ({fsFile, title = "New tab", selected, index}: TabProps) => {
+	const Tab = ({file, title = "New tab", selected, index}: TabProps) => {
 		const handleSelect = (index: number) => {
-			// setSelected(index);
 			dispatch(selectTab(index));
-			if (fsFile) {
-				dispatch(selectMdFile(fsFile));
+			if (file) {
+				dispatch(selectFile(file));
 			}
 		}
 
@@ -78,7 +77,7 @@ export default function Tabs() {
 					if (file) {
 						return (
 							<Tab 
-								fsFile={file} 
+								file={file} 
 								title={file.title} 
 								selected={index === selectedTab} 
 								index={index}

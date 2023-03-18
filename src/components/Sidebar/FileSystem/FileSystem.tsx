@@ -5,14 +5,14 @@ import { TreeView, TreeItem } from "@mui/lab";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-import { FsFile } from "../../../types/FsTypes";
+import { File } from "../../../types/FileTypes";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setTab, selectMdFile, selectFolder, selectTab } from "../../../store/appSlice";
+import { setTab, selectFolder, selectTab, selectFile } from "../../../store/appSlice";
 import { RootState } from "../../../store/store";
 
 interface FileSystemProps {
-	items: FsFile[];
+	items: File[];
 }
 
 const FileSystem = (
@@ -23,8 +23,8 @@ const FileSystem = (
 	
 	const handleSelect = (
 		e: React.MouseEvent<HTMLLIElement, MouseEvent>, 
-		item: FsFile,
-		parent: FsFile | null,
+		item: File,
+		parent: File | null,
 	) => {
 		e.stopPropagation();
 		if (!item.isFolder) {
@@ -35,15 +35,15 @@ const FileSystem = (
 			} else {
 				dispatch(setTab(item));
 			}
-			dispatch(selectMdFile(item));
+			dispatch(selectFile(item));
 		} else {
 			dispatch(selectFolder(item));
 		}
 	}
 
 	const mapDirectory = (
-		items: FsFile[],
-		parent: FsFile | null,
+		items: File[],
+		parent: File | null,
 		nested: boolean,
 	) => {
 		return items.map((item) => {

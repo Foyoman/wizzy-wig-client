@@ -1,4 +1,4 @@
-import { SortFunction, FsFile } from "../types/FsTypes";
+import { SortFunction, File } from "../types/FileTypes";
 
 export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
 	const [folders, files] = fileSystem.reduce(
@@ -10,7 +10,7 @@ export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
 			}
 			return acc;
 		},
-		[[], []] as [FsFile[], FsFile[]]
+		[[], []] as [File[], File[]]
 	);
 
 	const sortedFolders = folders
@@ -34,7 +34,7 @@ export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
 			}
 		});
 	
-	let sortedFiles: FsFile[];
+	let sortedFiles: File[];
 	if (sortKey === "title") {
 		sortedFiles = files.sort((a, b) => a.title.localeCompare(b.title));
 	} else {
@@ -58,7 +58,7 @@ export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
 	}
 }
 
-export const appendChild = (item: FsFile, child: FsFile) => {
+export const appendChild = (item: File, child: File) => {
 	if (!item.isFolder) {
     throw new Error(`Item with id: ${item.id} is not a folder.`);
   }
@@ -69,26 +69,65 @@ export const appendChild = (item: FsFile, child: FsFile) => {
 	}
 }
 
-export const appendById = (
-	items: FsFile[],
-	child: FsFile,
-	parent?: FsFile,
-): FsFile | null => {
-	if (!parent) { 
+export const findById = (
+	items: File[],
+	key: "update" | "append",
+	needle: File,
+	child?: File,
+): File | null => {
+	const append = key === "append";
+	const update = key === "update";
+	if (append && !needle && child) { 
 		items.push(child);
 	} else {
 		for (const item of items) {
-			if (item.id === parent.id) {
-				appendChild(item, child);
+			if (item.id === needle.id) {
+				if (append && child) {
+					appendChild(item, child);
+				} else if (update) {
+					needle.content = item.content;
+				} else {
+					return item;
+				}
 			}
 	
 			if (item.isFolder && item.children) {
-				const foundItem = appendById(item.children, child, parent);
+				const foundItem = findById(item.children, key, needle, child);
 				if (foundItem) {
-					appendChild(foundItem, child);
+					if (append && child) {
+						appendChild(foundItem, child);
+					} else if (update && needle) {
+						foundItem.content = needle.content;
+					} else {
+						return foundItem;
+					}
 				}
 			}
-		}
-	}
+		} 
+	} 
 	return null;
 }
+
+// export const findById = (
+// 	items: File[],
+// 	child: File,
+// 	parent?: File,
+// ): File | null => {
+// 	if (!parent) { 
+// 		items.push(child);
+// 	} else {
+// 		for (const item of items) {
+// 			if (item.id === parent.id) {
+// 				appendChild(item, child);
+// 			}
+	
+// 			if (item.isFolder && item.children) {
+// 				const foundItem = appendById(item.children, child, parent);
+// 				if (foundItem) {
+// 					appendChild(foundItem, child);
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return null;
+// }
