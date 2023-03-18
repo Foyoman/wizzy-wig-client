@@ -30,6 +30,15 @@ export default function Tabs() {
 		tabBarEl.current!.scrollLeft += e.deltaY;
 	}
 
+	const handleAuxClick = (
+		e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+		index: number
+	) => {
+		if (e.button === 1) {
+			dispatch(closeTab(index));
+		}
+	}
+
 	interface TabProps {
 		file?: File;
 		title?: string;
@@ -56,6 +65,7 @@ export default function Tabs() {
 		return (
 			<div 
 				onClick={() => handleSelect(index)} 
+				onAuxClick={(e) => handleAuxClick(e, index)}
 				className={`
 					tab  
 					${ selected ? 'selected' : ''}
