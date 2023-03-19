@@ -85,7 +85,6 @@ export const appSlice = createSlice({
 			const fileToUpdate = state.selectedFile;
 			findById(state.files, "update", fileToUpdate as File, null, state.markdown);
 			state.saveState = "saved";
-			debugger;
 		},
 		selectTab: (
 			state,

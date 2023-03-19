@@ -83,29 +83,32 @@ export const findById = (
 		return;
 	}
 
+	const helper = (
+		item: File, 
+		append: boolean, 
+		update: boolean, 
+		child?: File | null, 
+		updatedContent?: File["content"],
+	) => {
+		if (append && child) {
+			appendChild(item, child);
+		} else if (update && updatedContent) {
+			item.content = updatedContent;
+			return items;
+		} else {
+			return item;
+		}
+	}
+
 	for (const item of items) {
 		if (item.id === needle.id) {
-			if (append && child) {
-				appendChild(item, child);
-			} else if (update && updatedContent) {
-				item.content = updatedContent;
-				return items;
-			} else {
-				return item;
-			}
+			helper(item, append, update, child, updatedContent);
 		}
 
 		if (item.isFolder && item.children) {
 			const foundItem = findById(item.children, key, needle, child, updatedContent);
 			if (foundItem) {
-				if (append && child) {
-					appendChild(foundItem, child);
-				} else if (update && needle) {
-					foundItem.content = updatedContent;
-					return items;
-				} else {
-					return foundItem;
-				}
+				helper(foundItem, append, update, child, updatedContent);
 			}
 		}
 	} 
