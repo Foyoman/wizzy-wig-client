@@ -5,12 +5,15 @@ import { files } from '../__mocks__/Files';
 import { File, SortKeys } from '../types/FileTypes';
 import { sortFileSystem, findById } from './helpers';
 
+import { debounce } from 'lodash';
+
 type SaveStates = "saved" | "modified" | "saving";
 
 export interface AppState {
 	files: File[];
 	file: string;
 	markdown: string;
+	runDebounce: boolean;
 	showSidebar: boolean;
 	saveState: SaveStates;
 	tabs: Array<File | null> | [];
@@ -23,6 +26,7 @@ const initialState: AppState = {
 	files: sortFileSystem(files, "title", false),
 	file: "",
 	markdown: "",
+	runDebounce: true,
 	showSidebar: true,
 	saveState: "saved",
 	tabs: [null],
@@ -60,12 +64,19 @@ export const appSlice = createSlice({
 			const file = action.payload;
 			state.selectedFile = file;
 			state.markdown = file.content || "";
+			state.runDebounce = false;
 		},
 		updateMarkdown: (
 			state, 
 			action: PayloadAction<string>
 		) => {
 			state.markdown = action.payload;
+		},
+		setDebounce: (
+			state,
+			action: PayloadAction<boolean>
+		) => {
+			state.runDebounce = action.payload;
 		},
 		toggleSidebar: (
 			state,
@@ -85,6 +96,18 @@ export const appSlice = createSlice({
 			const fileToUpdate = state.selectedFile;
 			findById(state.files, "update", fileToUpdate as File, null, state.markdown);
 			state.saveState = "saved";
+		},
+		verifiedDebounce: (
+			state,
+			action: PayloadAction<{ file: File, value: string }>,
+		) => {
+			const { file, value } = action.payload;
+			const verified = file.id === state.selectedFile?.id;
+			if (verified) {
+				state.markdown = value;
+			} else {
+				console.log('debounce interrupted');
+			}
 		},
 		selectTab: (
 			state,
@@ -181,9 +204,11 @@ export const {
 	selectFolder,
 	selectFile,
 	updateMarkdown, 
+	setDebounce,
 	toggleSidebar,
 	setSaveState,
 	saveFile,
+	verifiedDebounce,
 	selectTab,
 	setTab,
 	newTab,

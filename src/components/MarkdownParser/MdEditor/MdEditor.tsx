@@ -1,12 +1,15 @@
-import { useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { debounce } from "lodash";
-import Editor, { useMonaco } from "@monaco-editor/react";
+import Editor, { EditorProps, useMonaco } from "@monaco-editor/react";
+
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 
 import { useDispatch } from "react-redux";
-import { updateMarkdown } from "../../../store/appSlice";
+import { updateMarkdown, verifiedDebounce } from "../../../store/appSlice";
 import { setSaveState, saveFile } from "../../../store/appSlice";
 import { useSelector } from 'react-redux';
 import type { RootState } from "../../../store/store";
+import { File } from "../../../types/FileTypes";
 
 interface MdEditorProps {
 	content: string | undefined;
@@ -15,7 +18,7 @@ interface MdEditorProps {
 
 export default function MdEditor(props: MdEditorProps) {
 	const { content, theme } = props;
-	const markdown = useSelector((state: RootState) => state.app.markdown);
+	const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
 	const dispatch = useDispatch();
 	const monaco = useMonaco();
 
@@ -26,25 +29,30 @@ export default function MdEditor(props: MdEditorProps) {
 
 	// debounce updating markdown to improve performance
 	const debouncedSetMarkdown = debounce((value: string) => {
+		// dispatch(fileVerification(fileToVerify))
 		console.log('running debounced set markdown...');
-		dispatch(updateMarkdown(value));
+		dispatch(verifiedDebounce({ file: selectedFile!, value: value }));
+		// dispatch(updateMarkdown(value));
 	}, 1000);
 
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
-		return (value: string | undefined) => {
+		return (value: string | undefined, e?: editor.IModelContentChangedEvent) => {
+			// console.log(e);
+			// dispatch(saveFile(null));
 			dispatch(setSaveState("modified"));
-			if (value) {
-				if (value.length <= 500) {
-					dispatch(updateMarkdown(value));
-				} else {
-					debouncedSetMarkdown(value);
-				}
-			} else {
+			if (value === "") {
 				dispatch(updateMarkdown(""));
+			} else if (value) {
+				if (value.length > 500) {
+					debouncedSetMarkdown(value);
+					// dispatch(verifiedDebounce({ file: selectedFile!, value: value }))
+				} else {
+					dispatch(updateMarkdown(value));
+				}
 			}
 		};
-	}, [debouncedSetMarkdown, dispatch]);
+	}, [debouncedSetMarkdown, dispatch, selectedFile]);
 
 	// trigger autosave after 3 seconds of inactivity
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,10 +69,10 @@ export default function MdEditor(props: MdEditorProps) {
 		const timeout = setTimeout(() => {
 			const now = Date.now();
 			const timeSinceLastEdit = now - lastEditTime;
-			if(timeSinceLastEdit >= 3000) {
+			if(timeSinceLastEdit >= 1000) {
 				triggerSave();
 			}
-		}, 3000);
+		}, 1000);
 
 		return () => {
 			clearTimeout(timeout);
@@ -80,7 +88,7 @@ export default function MdEditor(props: MdEditorProps) {
 				defaultValue=""
 				theme={theme}
 				value={content}
-				onChange={handleInputChange}
+				onChange={(value, e) => handleInputChange(value, e)}
 				options={{
 					selectOnLineNumbers: true,
 					wordWrap: "on",
