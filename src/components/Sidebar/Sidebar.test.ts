@@ -120,7 +120,7 @@ describe('file system functions', () => {
 	// });
 	it('updates a file', () => {
 		// eslint-disable-next-line testing-library/await-async-query
-		expect(findById(testFs, "update", testNeedle, null, "jest")).toStrictEqual(testResult);
+		expect(findById(testFs, "update", testNeedle, null, "jest", true)).toStrictEqual(testResult);
 		// findById(state.files, "update", fileToUpdate as File, null, state.markdown);
 	});
 })

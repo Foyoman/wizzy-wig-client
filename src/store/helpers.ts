@@ -75,10 +75,11 @@ export const findById = (
 	needle: File,
 	child?: File | null,
 	updatedContent?: File["content"],
+	emit?: boolean,
 ): any => {
 	const append = key === "append";
 	const update = key === "update";
-	
+
 	if (append && !needle && child) { 
 		items.push(child);
 		return items;
@@ -102,10 +103,6 @@ export const findById = (
 	}
 
 	for (const item of items) {
-		console.log('item id:');
-		console.log(item.id);
-		console.log('needle id:');
-		console.log(needle.id);
 		if (item.id === needle.id) {
 			helper(item, append, update, child, updatedContent);
 		}
@@ -117,8 +114,8 @@ export const findById = (
 			}
 		}
 	} 
-	
-	return null;
+
+	if (emit) return items;
 }
 
 // export const findById = (
