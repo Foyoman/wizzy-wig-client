@@ -21,9 +21,11 @@
 	height: 32px;
 	
 	.utils {
-    padding: var(--spacer-xxs) 0;
+		width: calc(250px - var(--spacer-sm));
+    padding: var(--spacer-xxs) var(--spacer-sm) 0 var(--spacer-xxs);
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		gap: var(--spacer-md);
 
 		.toggle-sidebar {
@@ -32,7 +34,7 @@
 		}
 	
 		.save-state {
-			min-width: 86px;
+			// min-width: 86px;
 			display: flex;
 			gap: var(--spacer-xs);
 			align-items: center;
@@ -42,14 +44,11 @@
 	
 			.MuiLinearProgress-root {
 				transition: all .2s;
-				max-width: 20px;
+				width: 20px;
 	
 				&.saved {
 					color: var(--brand-navy);
-				}
-
-				&.modified {
-					
+					transform: translateX(25%);
 				}
 			}
 		}

@@ -27,7 +27,7 @@ export default function Navbar () {
 						variant='plain' 
 						size='sm'
 						determinate={saveState === 'saved'}
-						value={saveState === 'saved' ? 100 : 75} 
+						value={75} 
 					/>
 					<p>{saveState}</p>
 				</div>

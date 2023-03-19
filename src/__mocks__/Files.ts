@@ -6,7 +6,6 @@ export const files: File[] = [
 		title: 'angela',
 		dateCreated: new Date('01-01-2012 00:03:44'),
 		lastUpdated: new Date('01-01-2021 00:03:44'),
-		fileId: 'dsk238',
 		isFolder: false,
 		content: "angela's file"
 	},
@@ -127,7 +126,6 @@ export const files: File[] = [
 		dateCreated: new Date('01-01-2017 00:03:44'),
 		lastUpdated: new Date('01-01-2019 00:03:44'),
 		isFolder: false,
-		fileId: "ts1",
 		content: 'this aint it chief'
 	},
 	{
@@ -162,7 +160,6 @@ export const files2: File[] = [
 		title: 'angela',
 		dateCreated: new Date('01-01-1995 00:03:44'),
 		lastUpdated: new Date('01-01-2020 00:03:44'),
-		fileId: 'dsk238',
 		isFolder: false,
 		content: "hey hey its me"
 	},
@@ -171,7 +168,6 @@ export const files2: File[] = [
 		title: 'angela',
 		dateCreated: new Date('01-01-1990 00:03:44'),
 		lastUpdated: new Date('01-01-2000 00:03:44'),
-		fileId: 'dsk238',
 		isFolder: false,
 		content: "angela's file"
 	},
@@ -180,7 +176,6 @@ export const files2: File[] = [
 		title: 'angela',
 		dateCreated: new Date('01-01-2000 00:03:44'),
 		lastUpdated: new Date('01-01-2010 00:03:44'),
-		fileId: 'dsk238',
 		isFolder: false,
 		content: "angela's second file? witf"
 	},

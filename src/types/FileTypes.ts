@@ -5,7 +5,6 @@ export interface File {
 	lastUpdated: Date;
 	isFolder: boolean;
 	content?: string | null;
-	fileId?: string;
 	children?: File[] | null;
 }
 
