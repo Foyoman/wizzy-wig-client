@@ -78,9 +78,10 @@ export const findById = (
 ): any => {
 	const append = key === "append";
 	const update = key === "update";
+	
 	if (append && !needle && child) { 
 		items.push(child);
-		return;
+		return items;
 	}
 
 	const helper = (
@@ -92,7 +93,7 @@ export const findById = (
 	) => {
 		if (append && child) {
 			appendChild(item, child);
-		} else if (update && updatedContent) {
+		} else if (update) {
 			item.content = updatedContent;
 			return items;
 		} else {
@@ -101,18 +102,22 @@ export const findById = (
 	}
 
 	for (const item of items) {
+		console.log('item id:');
+		console.log(item.id);
+		console.log('needle id:');
+		console.log(needle.id);
 		if (item.id === needle.id) {
-			helper(item, append, update, child, updatedContent);
+			return helper(item, append, update, child, updatedContent);
 		}
 
 		if (item.isFolder && item.children) {
 			const foundItem = findById(item.children, key, needle, child, updatedContent);
 			if (foundItem) {
-				helper(foundItem, append, update, child, updatedContent);
+				return helper(foundItem, append, update, child, updatedContent);
 			}
 		}
 	} 
-
+	
 	return null;
 }
 
