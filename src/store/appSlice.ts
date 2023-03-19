@@ -67,6 +67,8 @@ export const appSlice = createSlice({
 			const verified = file.id === state.selectedFile?.id;
 			if (verified) {
 				state.markdown = value;
+			} else {
+				console.log('file verification failed');
 			}
 		},
 		toggleSidebar: (

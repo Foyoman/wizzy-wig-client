@@ -47,7 +47,6 @@ export default function MdEditor(props: MdEditorProps) {
 	}, [debouncedSetMarkdown, dispatch, selectedFile]);
 
 	// trigger autosave after 3 seconds of inactivity
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		const lastEditTime = Date.now();
 		const timeout = setTimeout(() => {
