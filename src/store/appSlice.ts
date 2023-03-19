@@ -138,39 +138,41 @@ export const appSlice = createSlice({
 		},
 		createFile: (
 			state,
-			action: PayloadAction<string>,
+			action: PayloadAction<[string, "file" | "folder"]>,
 		) => {
 			// set up new file
-			const title = action.payload;
+			const [ title, key ] = action.payload;
 			const tempId = "tempid" + Math.random();
 			const newFile: File = {
 				id: tempId,
 				title: title ? title : "Untitled",
 				dateCreated: new Date(),
 				lastUpdated: new Date(),
-				isFolder: false,
-				content: "",
+				isFolder: key === "folder",
+				content: key === "file" ? "" : null,
+				children: key === "folder" ? [] : null,
 			}
 
 			// append new file to the file system
 			findById(state.files, "append", state.selectedFolder as File, newFile);
-			state.selectedFile = newFile;
-
+			
 			// sort file system after appendage
-			sortFileSystem(state.files, "title", false);
-
-			// if the current tab is an open file, open the new file in a new tab
-			if (state.tabs[state.selectedTab]) {
-				state.tabs.push(newFile as never);
-				state.selectedTab = state.tabs.length - 1;
-			} else {
-				// if the current tab is null open the new file in the current tab
-				state.tabs[state.selectedTab] = newFile;
+			state.files = sortFileSystem(state.files, "title", false);
+			
+			if (key === "file") {
+				// if the current tab is an open file, open the new file in a new tab
+				if (state.tabs[state.selectedTab]) {
+					state.tabs.push(newFile as never);
+					state.selectedTab = state.tabs.length - 1;
+				} else {
+					// if the current tab is null open the new file in the current tab
+					state.tabs[state.selectedTab] = newFile;
+				}
+				state.selectedFile = newFile;
+				// file initialises empty
+				state.markdown = "";
 			}
-
-			// file initialises empty
-			state.markdown = "";
-		}
+		},
 	}
 })
 

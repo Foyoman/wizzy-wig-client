@@ -27,44 +27,71 @@ export default function Toolbar (
 	{ items }: ToolbarProps
 ) {
 	const [filterEl, setFilterEl] = useState<HTMLElement | null>(null);
-	const [createFileEl, setCreateFileEl] = useState<HTMLElement | null>(null);
 	const filterOpen = Boolean(filterEl);
-	const createOpen = Boolean(createFileEl);
-	const inputRef = useRef<HTMLInputElement | null>(null);
-	const [title, setTitle] = useState<string | "">("");
+
+	const [createFileEl, setCreateFileEl] = useState<HTMLElement | null>(null);
+	const [fileTitle, setFileTitle] = useState<string | "">("");
+	const createFileOpen = Boolean(createFileEl);
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+	const [createFolderEl, setCreateFolderEl] = useState<HTMLElement | null>(null);
+	const [folderTitle, setFolderTitle] = useState<string | "">("");
+	const createFolderOpen = Boolean(createFolderEl);
+	const folderInputRef = useRef<HTMLInputElement | null>(null);
+
 	const [sort, setSort] = 
 		useState<{
 			sortKey: SortKeys, reverse: boolean
 		} | null>({
 			sortKey: "title", reverse: false
 		});
+
 	const dispatch = useDispatch();
 	const selectedFolder = useSelector((state: RootState) => state.app.selectedFolder);
 
-	const handleCreateOpen = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const handleCreateFile = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		setCreateFileEl(e.currentTarget);
 		setTimeout(() => {
-			inputRef.current?.focus();
-		}, 1)
+			fileInputRef.current?.focus();
+		}, 1);
 	}
 
-	const handleClose = () => {
+	const handleCreateFolder = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		setCreateFolderEl(e.currentTarget);
+		setTimeout(() => {
+			folderInputRef.current?.focus();
+		}, 1);
+	}
+
+	const handleCreateFileClose = () => {
 		setCreateFileEl(null);
-		setTitle("");
+		setFileTitle("");
+	}
+
+	const handleCreateFolderClose = () => {
+		setCreateFolderEl(null);
+		setFolderTitle("");
 	}
 
   const handleSelect: SortFunction = (items, sortKey, reverse) => {
 		dispatch(sortFs({items, sortKey, reverse}));
 		setSort({sortKey: sortKey, reverse: reverse});
     setFilterEl(null);
-  };
+  }
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>, key: "file" | "folder") => {
 		e.preventDefault();
-		console.log(title);
-		dispatch(createFile(title));
-		setTitle("");
-    setCreateFileEl(null);
+		let title: string;
+		if (key === "file") {
+			title = fileTitle;
+			setCreateFileEl(null);
+			setFileTitle("");
+		} else {
+			title = folderTitle;
+			setCreateFolderEl(null);
+			setFolderTitle("");
+		}
+		dispatch(createFile([title, key]));
 	}
 
 	interface CheckedProps extends JSX.IntrinsicAttributes {
@@ -91,39 +118,73 @@ export default function Toolbar (
 				</p>
 			</div>
 			<div className="tools">
+				{/* create new file */}
 				<Button
 					className="toolbar-button"
-					aria-controls={createOpen ? 'basic-menu' : undefined}
+					aria-controls={createFileOpen ? 'basic-menu' : undefined}
 					aria-haspopup="true"
-					aria-expanded={createOpen ? 'true' : undefined}
-					onClick={handleCreateOpen}
+					aria-expanded={createFileOpen ? 'true' : undefined}
+					onClick={handleCreateFile}
 				>
 					<NoteAddOutlinedIcon className="icon" />
 				</Button>
 				<Menu
 					className="dropdown-menu"
 					anchorEl={createFileEl}
-					open={createOpen}
-					onClose={handleClose}
+					open={createFileOpen}
+					onClose={handleCreateFileClose}
 					MenuListProps={{
 						'aria-labelledby': 'basic-button',
 					}}
 				>
 					<MenuItem className="menu-item">
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={(e) => handleSubmit(e, "file")}>
 							<input 
 								// autoFocus
 								id="input-el"
-								ref={inputRef}
+								ref={fileInputRef}
 								type="text" 
-								value={title} 
-								onChange={(e) => setTitle(e.target.value)} 
+								value={fileTitle} 
+								onChange={(e) => setFileTitle(e.target.value)} 
 								placeholder="title" 
 							/>
 						</form>
 					</MenuItem>
 				</Menu>
-				<CreateNewFolderOutlinedIcon className="icon" />
+				{/* create new folder */}
+				<Button
+					className="toolbar-button"
+					aria-controls={createFolderOpen ? 'basic-menu' : undefined}
+					aria-haspopup="true"
+					aria-expanded={createFolderOpen ? 'true' : undefined}
+					onClick={handleCreateFolder}
+				>
+					<CreateNewFolderOutlinedIcon className="icon" />
+				</Button>
+				<Menu
+					className="dropdown-menu"
+					anchorEl={createFolderEl}
+					open={createFolderOpen}
+					onClose={handleCreateFolderClose}
+					MenuListProps={{
+						'aria-labelledby': 'basic-button',
+					}}
+				>
+					<MenuItem className="menu-item">
+						<form onSubmit={(e) => handleSubmit(e, "folder")}>
+							<input 
+								// autoFocus
+								id="input-el"
+								ref={folderInputRef}
+								type="text" 
+								value={folderTitle} 
+								onChange={(e) => setFolderTitle(e.target.value)} 
+								placeholder="title" 
+							/>
+						</form>
+					</MenuItem>
+				</Menu>
+				{/* filter menu */}
 				<Button
 					className="toolbar-button"
 					aria-controls={filterOpen ? 'basic-menu' : undefined}

@@ -4,9 +4,9 @@ export interface File {
 	dateCreated: Date;
 	lastUpdated: Date;
 	isFolder: boolean;
-	content?: string;
+	content?: string | null;
 	fileId?: string;
-	children?: File[];
+	children?: File[] | null;
 }
 
 export type SortKeys = "title" | "dateCreated" | "lastUpdated";
