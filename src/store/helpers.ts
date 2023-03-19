@@ -107,13 +107,13 @@ export const findById = (
 		console.log('needle id:');
 		console.log(needle.id);
 		if (item.id === needle.id) {
-			return helper(item, append, update, child, updatedContent);
+			helper(item, append, update, child, updatedContent);
 		}
 
 		if (item.isFolder && item.children) {
 			const foundItem = findById(item.children, key, needle, child, updatedContent);
 			if (foundItem) {
-				return helper(foundItem, append, update, child, updatedContent);
+				helper(foundItem, append, update, child, updatedContent);
 			}
 		}
 	} 
