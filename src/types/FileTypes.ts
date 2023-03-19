@@ -15,3 +15,5 @@ export type SortFunction = (
 	sortKey: SortKeys,
 	reverse: boolean
 ) => any;
+
+export type SaveStates = "saved" | "modified" | "saving";

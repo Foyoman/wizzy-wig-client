@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import MarkdownParser from './MarkdownParser/MarkdownParser';
 import Navbar from './Navbar/Navbar';
 import './App.scss';
@@ -9,10 +10,15 @@ import type { RootState } from "../store/store";
 
 export default function App() {
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
-  const markdown = useSelector((state: RootState) => state.app.markdown);
+  const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
+  // const markdown = useSelector((state: RootState) => state.app.markdown);
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
+  const [content, setContent] = useState<string | undefined>(selectedFile?.content as string | undefined);
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
+  useEffect(() => {
+    setContent(selectedFile?.content as string | undefined)
+  }, [selectedFile]);
 
   const NoFile = () => {
     return (
@@ -35,7 +41,7 @@ export default function App() {
             className={`md-container ${!showSidebar ? 'sidebar-hidden' : ''}`}
           >
           { tabs[selectedTab] ? 
-            <MarkdownParser content={markdown} />
+            <MarkdownParser content={content} />
           : 
             <NoFile />
           }
