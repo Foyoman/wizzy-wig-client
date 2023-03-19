@@ -233,7 +233,7 @@ describe('sort file system', () => {
 	// });
 	it('updates a file', () => {
 		// eslint-disable-next-line testing-library/await-async-query
-		expect(findById(sortedDateCreated, "update", needle, null, "updatedcontent")).toBe(updated);
+		expect(findById(sortedDateCreated, "update", needle, null, "updatedcontent")).toStrictEqual(updated);
 	});
 })
 

@@ -75,37 +75,41 @@ export const findById = (
 	needle: File,
 	child?: File | null,
 	updatedContent?: File["content"],
-): File | null => {
+): any => {
 	const append = key === "append";
 	const update = key === "update";
 	if (append && !needle && child) { 
 		items.push(child);
-	} else {
-		for (const item of items) {
-			if (item.id === needle.id) {
+		return;
+	}
+
+	for (const item of items) {
+		if (item.id === needle.id) {
+			if (append && child) {
+				appendChild(item, child);
+			} else if (update && updatedContent) {
+				item.content = updatedContent;
+				return items;
+			} else {
+				return item;
+			}
+		}
+
+		if (item.isFolder && item.children) {
+			const foundItem = findById(item.children, key, needle, child, updatedContent);
+			if (foundItem) {
 				if (append && child) {
-					appendChild(item, child);
-				} else if (update && child) {
-					item.content = updatedContent;
+					appendChild(foundItem, child);
+				} else if (update && needle) {
+					foundItem.content = updatedContent;
+					return items;
 				} else {
-					return item;
+					return foundItem;
 				}
 			}
-	
-			if (item.isFolder && item.children) {
-				const foundItem = findById(item.children, key, needle, child);
-				if (foundItem) {
-					if (append && child) {
-						appendChild(foundItem, child);
-					} else if (update && needle) {
-						foundItem.content = updatedContent;
-					} else {
-						return foundItem;
-					}
-				}
-			}
-		} 
+		}
 	} 
+
 	return null;
 }
 
