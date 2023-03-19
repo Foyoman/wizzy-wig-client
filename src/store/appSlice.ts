@@ -7,7 +7,6 @@ import { sortFileSystem, findById } from './helpers';
 
 export interface AppState {
 	files: File[];
-	file: string;
 	markdown: string;
 	showSidebar: boolean;
 	saveState: SaveStates;
@@ -19,7 +18,6 @@ export interface AppState {
 
 const initialState: AppState = {
 	files: sortFileSystem(files, "title", false),
-	file: "",
 	markdown: "",
 	showSidebar: true,
 	saveState: "saved",
@@ -64,6 +62,7 @@ export const appSlice = createSlice({
 			action: PayloadAction<{ value: string, file: File }>
 		) => {
 			const { value, file } = action.payload;
+			// prevents a bug where debounce will overwrite between switching files
 			const verified = file.id === state.selectedFile?.id;
 			if (verified) {
 				state.markdown = value;
@@ -109,7 +108,6 @@ export const appSlice = createSlice({
 		},
 		newTab: (
 			state,
-			_,
 		) => {
 			// push a new tab into the tabs array. null to render it as the `open a file` state
 			state.tabs.push(null as never);
