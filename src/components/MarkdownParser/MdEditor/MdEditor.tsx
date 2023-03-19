@@ -5,8 +5,8 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 
 import { useDispatch } from "react-redux";
-import { updateMarkdown, verifiedDebounce } from "../../../store/appSlice";
-import { setSaveState, saveFile } from "../../../store/appSlice";
+import { updateMarkdown } from "../../../store/appSlice";
+import { saveFile } from "../../../store/appSlice";
 import { useSelector } from 'react-redux';
 import type { RootState } from "../../../store/store";
 
@@ -17,8 +17,8 @@ interface MdEditorProps {
 
 export default function MdEditor(props: MdEditorProps) {
 	const { content, theme } = props;
-	const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
 	const markdown = useSelector((state: RootState) => state.app.markdown);
+	const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
 	const dispatch = useDispatch();
 	const monaco = useMonaco();
 
@@ -30,7 +30,7 @@ export default function MdEditor(props: MdEditorProps) {
 	// debounce updating markdown to improve performance
 	const debouncedSetMarkdown = debounce((value: string) => {
 		console.log('running debounced set markdown...');
-		dispatch(verifiedDebounce({ file: selectedFile!, value: value }));
+		dispatch(updateMarkdown({ value: value, file: selectedFile! }));
 	}, 1000);
 
 	// handle monaco editor changes
@@ -55,7 +55,6 @@ export default function MdEditor(props: MdEditorProps) {
 			const timeSinceLastEdit = now - lastEditTime;
 			if (timeSinceLastEdit >= 1000) {
 				dispatch(saveFile(markdown));
-				// console.log('save here')
 			}
 		}, 1000);
 

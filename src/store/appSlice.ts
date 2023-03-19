@@ -67,7 +67,6 @@ export const appSlice = createSlice({
 			const verified = file.id === state.selectedFile?.id;
 			if (verified) {
 				state.markdown = value;
-				state.saveState = "modified";
 			}
 		},
 		toggleSidebar: (
@@ -90,19 +89,6 @@ export const appSlice = createSlice({
 			findById(state.files, "update", state.selectedFile as File, null, action.payload);
 		},
 		// prevents a bug where debounce would run after switching files, overwriting the file switched to and causing infinite loops 
-		verifiedDebounce: (
-			state,
-			action: PayloadAction<{ file: File, value: string }>,
-		) => {
-			const { file, value } = action.payload;
-			const verified = file.id === state.selectedFile?.id;
-			console.log(file.id, state.selectedFile?.id)
-			if (verified) {
-				state.markdown = value;
-			} else {
-				console.log("debounce cancelled");
-			}
-		},
 		selectTab: (
 			state,
 			action: PayloadAction<number>
@@ -201,7 +187,6 @@ export const {
 	toggleSidebar,
 	setSaveState,
 	saveFile,
-	verifiedDebounce,
 	selectTab,
 	setTab,
 	newTab,
