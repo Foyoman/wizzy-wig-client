@@ -71,9 +71,10 @@ export const appendChild = (item: File, child: File) => {
 
 export const findById = (
 	items: File[],
-	key: "update" | "append",
+	key: "append" | "update",
 	needle: File,
-	child?: File,
+	child?: File | null,
+	updatedContent?: File["content"],
 ): File | null => {
 	const append = key === "append";
 	const update = key === "update";
@@ -84,8 +85,8 @@ export const findById = (
 			if (item.id === needle.id) {
 				if (append && child) {
 					appendChild(item, child);
-				} else if (update) {
-					needle.content = item.content;
+				} else if (update && child) {
+					item.content = updatedContent;
 				} else {
 					return item;
 				}
@@ -97,7 +98,7 @@ export const findById = (
 					if (append && child) {
 						appendChild(foundItem, child);
 					} else if (update && needle) {
-						foundItem.content = needle.content;
+						foundItem.content = updatedContent;
 					} else {
 						return foundItem;
 					}

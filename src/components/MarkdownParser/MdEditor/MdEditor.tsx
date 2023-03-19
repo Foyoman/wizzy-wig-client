@@ -4,7 +4,7 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 
 import { useDispatch } from "react-redux";
 import { updateMarkdown } from "../../../store/appSlice";
-import { setSaved } from "../../../store/appSlice";
+import { setSaveState, saveFile } from "../../../store/appSlice";
 import { useSelector } from 'react-redux';
 import type { RootState } from "../../../store/store";
 
@@ -33,7 +33,7 @@ export default function MdEditor(props: MdEditorProps) {
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
 		return (value: string | undefined) => {
-			dispatch(setSaved(false));
+			dispatch(setSaveState("modified"));
 			if (value) {
 				if (value.length <= 500) {
 					dispatch(updateMarkdown(value));
@@ -48,11 +48,12 @@ export default function MdEditor(props: MdEditorProps) {
 
 	// trigger autosave after 3 seconds of inactivity
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const saveFile = (_: string) => {
+	const triggerSave = () => {
 		console.log('saving content...');
-		const now = new Date();
-		console.log('last saved at: ' + now);
-		dispatch(setSaved(true));
+		dispatch(setSaveState("saving"));
+		dispatch(saveFile(null));
+		// const now = new Date();
+		// console.log('last saved at: ' + now);
 	}
 
 	useEffect(() => {
@@ -61,14 +62,14 @@ export default function MdEditor(props: MdEditorProps) {
 			const now = Date.now();
 			const timeSinceLastEdit = now - lastEditTime;
 			if(timeSinceLastEdit >= 3000) {
-				saveFile(markdown);
+				triggerSave();
 			}
 		}, 3000);
 
 		return () => {
 			clearTimeout(timeout);
 		};
-	}, [dispatch, markdown, saveFile]);
+	}, [dispatch, triggerSave]);
 
 	const MemoizedEditor = useMemo(() => {
 		return (

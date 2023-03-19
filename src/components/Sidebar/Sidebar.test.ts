@@ -159,24 +159,67 @@ const sortedDateCreated: File[] = [
 		title: 'angela',
 		dateCreated: new Date('01-01-1990 00:03:44'),
 		lastUpdated: new Date('01-01-2000 00:03:44'),
-		fileId: 'dsk238',
+		fileId: 'friend',
 		isFolder: false,
+		content: 'angelas content'
 	},
 	{
-		id: '0',
-		title: 'angela',
+		id: '1',
+		title: 'joe',
 		dateCreated: new Date('01-01-1995 00:03:44'),
 		lastUpdated: new Date('01-01-2020 00:03:44'),
-		fileId: 'dsk238',
+		fileId: 'good',
 		isFolder: false,
+		content: 'joe mama'
 	},
+	{
+		id: '2',
+		title: 'bianca',
+		dateCreated: new Date('01-01-2000 00:03:44'),
+		lastUpdated: new Date('01-01-2010 00:03:44'),
+		fileId: 'danger',
+		isFolder: false,
+		content: 'biancas content'
+	},
+]
+
+const needle: File = {
+	id: '1',
+	title: 'joe',
+	dateCreated: new Date('01-01-1995 00:03:44'),
+	lastUpdated: new Date('01-01-2020 00:03:44'),
+	fileId: 'good',
+	isFolder: false,
+	content: 'joe mama'
+}
+
+const updated: File[] = [
 	{
 		id: '0',
 		title: 'angela',
+		dateCreated: new Date('01-01-1990 00:03:44'),
+		lastUpdated: new Date('01-01-2000 00:03:44'),
+		fileId: 'friend',
+		isFolder: false,
+		content: 'angelas content'
+	},
+	{
+		id: '1',
+		title: 'joe',
+		dateCreated: new Date('01-01-1995 00:03:44'),
+		lastUpdated: new Date('01-01-2020 00:03:44'),
+		fileId: 'good',
+		isFolder: false,
+		content: 'updatedcontent'
+	},
+	{
+		id: '2',
+		title: 'bianca',
 		dateCreated: new Date('01-01-2000 00:03:44'),
 		lastUpdated: new Date('01-01-2010 00:03:44'),
-		fileId: 'dsk238',
+		fileId: 'danger',
 		isFolder: false,
+		content: 'biancas content'
 	},
 ]
 
@@ -188,5 +231,9 @@ describe('sort file system', () => {
 	// it('sorts by date created, seperating files and folders', () => {
 	// 	expect(sortFileSystem(files2, "dateCreated", false)).toBe(sortedDateCreated);
 	// });
+	it('updates a file', () => {
+		// eslint-disable-next-line testing-library/await-async-query
+		expect(findById(sortedDateCreated, "update", needle, null, "updatedcontent")).toBe(updated);
+	});
 })
 

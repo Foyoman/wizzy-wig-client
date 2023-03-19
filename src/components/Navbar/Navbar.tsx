@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 
 export default function Navbar () {
-	const saved = useSelector((state: RootState) => state.app.saved);
+	const saveState = useSelector((state: RootState) => state.app.saveState);
 	const dispatch = useDispatch();
 
 	return (
@@ -19,17 +19,17 @@ export default function Navbar () {
 				<ViewSidebarOutlinedIcon 
 					className="toggle-sidebar" 
 					onClick={() => dispatch(toggleSidebar())}
-				/>
+					/>
 				<div className='save-state'>
-					<p>{saved ? 'Saved' : 'Saving'}</p>
 					<LinearProgress 
-						className={saved ? 'saved' : ''}
+						className={saveState}
 						color={'neutral'} 
 						variant='plain' 
-						size="sm" 
-						determinate={saved}
-						value={75} 
+						size='sm'
+						determinate={saveState === 'saved'}
+						value={saveState === 'saved' ? 100 : 75} 
 					/>
+					<p>{saveState}</p>
 				</div>
 			</div>
 			<Tabs />

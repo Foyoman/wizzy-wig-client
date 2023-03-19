@@ -2,17 +2,17 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 import { files } from '../__mocks__/Files';
-
 import { File, SortKeys } from '../types/FileTypes';
-
 import { sortFileSystem, findById } from './helpers';
+
+type SaveStates = "saved" | "modified" | "saving";
 
 export interface AppState {
 	files: File[];
 	file: string;
 	markdown: string;
 	showSidebar: boolean;
-	saved: boolean;
+	saveState: SaveStates;
 	tabs: Array<File | null> | [];
 	selectedTab: number;
 	selectedFile: File | null;
@@ -24,7 +24,7 @@ const initialState: AppState = {
 	file: "",
 	markdown: "",
 	showSidebar: true,
-	saved: true,
+	saveState: "saved",
 	tabs: [null],
 	selectedTab: 0,
 	selectedFile: null,
@@ -72,11 +72,20 @@ export const appSlice = createSlice({
 		) => {
 			state.showSidebar = !state.showSidebar;
 		},
-		setSaved: (
+		setSaveState: (
 			state,
-			action: PayloadAction<boolean>
+			action: PayloadAction<SaveStates>
 		) => {
-			state.saved = action.payload;
+			state.saveState = action.payload;
+		},
+		saveFile: (
+			state,
+			_,
+		) => {
+			const fileToUpdate = state.selectedFile;
+			findById(state.files, "update", fileToUpdate as File, null, state.markdown);
+			state.saveState = "saved";
+			debugger;
 		},
 		selectTab: (
 			state,
@@ -172,7 +181,8 @@ export const {
 	selectFile,
 	updateMarkdown, 
 	toggleSidebar,
-	setSaved,
+	setSaveState,
+	saveFile,
 	selectTab,
 	setTab,
 	newTab,
