@@ -8,6 +8,8 @@ import Sidebar from './Sidebar/Sidebar';
 import { useSelector } from 'react-redux';
 import type { RootState } from "../store/store";
 
+// import test from '../files/test.md';
+
 export default function App() {
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
   const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
@@ -19,6 +21,12 @@ export default function App() {
   useEffect(() => {
     setContent(selectedFile?.content as string | undefined)
   }, [selectedFile]);
+
+  // useEffect(() => {
+  //   fetch(test).then((response) => response.text()).then((text) => {
+  //     console.log(text);
+  //   })
+  // })
 
   const NoFile = () => {
     return (
