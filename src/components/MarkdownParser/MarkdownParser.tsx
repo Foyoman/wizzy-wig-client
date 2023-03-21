@@ -22,7 +22,7 @@ interface MarkdownParserProps {
 const MarkdownParser = ({ 
 	content = "",
 	theme = 'dark',
-	splitDirection = 'vertical',
+	splitDirection = 'horizontal',
 }: MarkdownParserProps) => {
 	const [split, setSplit] = useState(splitDirection);
 	const [collapsedIndex, setCollapsedIndex] = useState<number>();

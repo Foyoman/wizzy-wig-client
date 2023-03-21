@@ -54,7 +54,12 @@ export const appSlice = createSlice({
 			}>
 		) => {
 			const { items, sortKey, reverse } = action.payload;
-			state.files = sortFileSystem(items, sortKey, reverse);
+			state.files = sortFileSystem(items, sortKey, reverse); // or user's sort pref
+		},
+		getStaticProps: (
+			state,
+		) => {
+			state.files = sortFileSystem(fileSys, 'title', true);
 		},
 		selectFolder: (
 			state,
