@@ -54,17 +54,26 @@ let fileSys: File[] = [
 	}
 ]
 
-const populateFiles = (files: File[] = fileSys) => {
-	files.forEach((file) => {
+const fileToString = async (file: any) => {
+	const content = await fetch(file);
+	const string = await content.text();
+	return string;
+}
+
+const populateFiles = async (files: File[] = fileSys) => {
+	for (const file of files) {
 		if (!file.isFolder) {
-			const mdFile = require(`../files/${file.id}.md`);
-			fetch(mdFile).then((response) => response.text()).then((string) => {
-				findById(files, "update", { id: file.id } as File, null, string, false);
+			const mdFile = await import(`../files/${file.id}.md`);
+			const response = await fetch(mdFile.default);
+			const string = await response.text();
+			file.content = string;
+			await fetch(mdFile).then((response) => response.text()).then((string) => {
+				file.content = 'wait';
 			});
 		} else if (file.isFolder && file.children) {
-			populateFiles(file.children);
+			await populateFiles(file.children);
 		}
-	})
+	}
 };
 
 populateFiles(fileSys);
