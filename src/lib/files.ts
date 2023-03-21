@@ -1,3 +1,6 @@
+import path from 'path';
+import matter from 'gray-matter';
+
 import { File } from "../types/FileTypes";
 import { findById } from "../store/helpers";
 
@@ -54,52 +57,24 @@ let fileSys: File[] = [
 	}
 ]
 
-// const populateFiles = async (files: File[] = fileSys) => {
-// 	for (let file of files) {
-// 		if (!file.isFolder) {
-// 			const mdFile = await import(`../files/${file.id}.md`);
-// 			await fetch(mdFile).then((response) => response.text()).then((string) => {
-// 				file.content = 'wait';
-// 			});
-// 		} else if (file.isFolder && file.children) {
-// 			await populateFiles(file.children);
-// 		}
-// 	}
-// };
-
-// const populateFiles = async (files: File[] = fileSys) => {
-//   for (let file of files) {
-//     if (!file.isFolder) {
-//       const mdFile = await import(`../files/${file.id}.md`);
-//       const response = await fetch(mdFile.default);
-//       const string = await response.text();
-//       file.content = string;
-//     } else if (file.isFolder && file.children) {
-//       await populateFiles(file.children);
-//     }
-//   }
-// };
-
-// await populateFiles(fileSys);
+async function getFileContents(filePath: string) {
+  const response = await fetch(filePath);
+  const fileContents = await response.text();
+  return fileContents;
+}
 
 const populateFiles = async (files: File[] = fileSys) => {
-	for (const file of files) {
+	for (let file of files) {
 		if (!file.isFolder) {
-			const mdFile = await import(`../files/${file.id}.md`);
-			await fetch(mdFile).then((response) => response.text()).then((string) => {
-				file.content = string;
-			});
+			const filePath = `localhost:3000/files/${file.id}.md`
+			const content = await getFileContents(filePath);
+			file.content = content;
 		} else if (file.isFolder && file.children) {
 			await populateFiles(file.children);
 		}
 	}
+
+	return files;
 };
 
-async function setup() {
-  await populateFiles(fileSys);
-  // export default fileSys;
-}
-
-setup();
-
-export default fileSys;
+export { fileSys, populateFiles };

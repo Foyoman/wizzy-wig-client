@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from "../store/store";
 import { getStaticProps } from '../store/appSlice';
 
-import fileSys from '../lib/files';
+// import { fileSys, populateFiles } from '../lib/files';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -22,7 +22,6 @@ export default function App() {
   // user check
   useEffect(() => {
     const user = false; // replace with real user check
-    console.log(fileSys);
     if (!user) {
       dispatch(getStaticProps());
     }

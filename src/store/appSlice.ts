@@ -5,7 +5,6 @@ import { files } from '../__mocks__/Files';
 import { File, SortKeys, SaveStates } from '../types/FileTypes';
 import { sortFileSystem, findById } from './helpers';
 
-import fileSys from '../lib/files';
 
 export interface AppState {
 	files: File[];
@@ -19,8 +18,8 @@ export interface AppState {
 }
 
 const initialState: AppState = {
-	// files: sortFileSystem(files, "title", false),
-	files: [],
+	files: sortFileSystem(files, "title", false),
+	// files: [],
 	markdown: "",
 	showSidebar: true,
 	saveState: "saved",
@@ -39,9 +38,7 @@ export const appSlice = createSlice({
 		) => {
 			const user = false; // replace with real user check
 			if (!user) {
-				state.files = sortFileSystem(fileSys, "title", false); // maybe add user pref for sort
-				const welcomeFile = fileSys.find(file => file.id === 'welcome');
-				state.selectedFile = welcomeFile!;
+				// const files = populateFiles(fileSys);
 			}
 		},
 		sortFs: (
