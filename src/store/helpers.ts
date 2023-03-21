@@ -85,59 +85,29 @@ export const findById = (
 		return items;
 	}
 
-	const helper = (
-		item: File, 
-		append: boolean, 
-		update: boolean, 
-		child?: File | null, 
-		updatedContent?: File["content"],
-	) => {
-		if (append && child) {
-			appendChild(item, child);
-		} else if (update) {
-			item.content = updatedContent;
-			return items;
-		} else {
-			return item;
-		}
-	}
-
 	for (const item of items) {
+		const helper = (item: File) => {
+			if (append && child) {
+				appendChild(item, child);
+			} else if (update) {
+				item.content = updatedContent;
+				return items;
+			} else {
+				return item;
+			}
+		}
+
 		if (item.id === needle.id) {
-			helper(item, append, update, child, updatedContent);
+			helper(item);
 		}
 
 		if (item.isFolder && item.children) {
 			const foundItem = findById(item.children, key, needle, child, updatedContent);
 			if (foundItem) {
-				helper(foundItem, append, update, child, updatedContent);
+				helper(item);
 			}
 		}
 	} 
 
 	if (emit) return items;
 }
-
-// export const findById = (
-// 	items: File[],
-// 	child: File,
-// 	parent?: File,
-// ): File | null => {
-// 	if (!parent) { 
-// 		items.push(child);
-// 	} else {
-// 		for (const item of items) {
-// 			if (item.id === parent.id) {
-// 				appendChild(item, child);
-// 			}
-	
-// 			if (item.isFolder && item.children) {
-// 				const foundItem = appendById(item.children, child, parent);
-// 				if (foundItem) {
-// 					appendChild(foundItem, child);
-// 				}
-// 			}
-// 		}
-// 	}
-// 	return null;
-// }
