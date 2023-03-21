@@ -38,7 +38,6 @@ export const appSlice = createSlice({
 			state,
 		) => {
 			const user = false; // replace with real user check
-			console.log(fileSys);
 			if (!user) {
 				state.files = sortFileSystem(fileSys, "title", false); // maybe add user pref for sort
 				const welcomeFile = fileSys.find(file => file.id === 'welcome');
@@ -99,7 +98,6 @@ export const appSlice = createSlice({
 			state,
 			action: PayloadAction<string>,
 		) => {
-			console.log('save reducer')
 			state.saveState = "saved";
 			findById(state.files, "update", state.selectedFile as File, null, action.payload);
 		},

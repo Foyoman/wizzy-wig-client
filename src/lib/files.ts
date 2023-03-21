@@ -54,21 +54,40 @@ let fileSys: File[] = [
 	}
 ]
 
-const fileToString = async (file: any) => {
-	const content = await fetch(file);
-	const string = await content.text();
-	return string;
-}
+// const populateFiles = async (files: File[] = fileSys) => {
+// 	for (let file of files) {
+// 		if (!file.isFolder) {
+// 			const mdFile = await import(`../files/${file.id}.md`);
+// 			await fetch(mdFile).then((response) => response.text()).then((string) => {
+// 				file.content = 'wait';
+// 			});
+// 		} else if (file.isFolder && file.children) {
+// 			await populateFiles(file.children);
+// 		}
+// 	}
+// };
+
+// const populateFiles = async (files: File[] = fileSys) => {
+//   for (let file of files) {
+//     if (!file.isFolder) {
+//       const mdFile = await import(`../files/${file.id}.md`);
+//       const response = await fetch(mdFile.default);
+//       const string = await response.text();
+//       file.content = string;
+//     } else if (file.isFolder && file.children) {
+//       await populateFiles(file.children);
+//     }
+//   }
+// };
+
+// await populateFiles(fileSys);
 
 const populateFiles = async (files: File[] = fileSys) => {
 	for (const file of files) {
 		if (!file.isFolder) {
 			const mdFile = await import(`../files/${file.id}.md`);
-			const response = await fetch(mdFile.default);
-			const string = await response.text();
-			file.content = string;
 			await fetch(mdFile).then((response) => response.text()).then((string) => {
-				file.content = 'wait';
+				file.content = string;
 			});
 		} else if (file.isFolder && file.children) {
 			await populateFiles(file.children);
@@ -76,6 +95,11 @@ const populateFiles = async (files: File[] = fileSys) => {
 	}
 };
 
-populateFiles(fileSys);
+async function setup() {
+  await populateFiles(fileSys);
+  // export default fileSys;
+}
+
+setup();
 
 export default fileSys;

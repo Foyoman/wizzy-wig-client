@@ -1,17 +1,3 @@
 {
-  "presets": [
-    ["@babel/preset-env", {
-      "targets": {
-        "node": "current"
-      }
-    }]
-  ],
-  // "presets": ["next/babel"],
-  "env": {
-    "development": {
-      "experiments": {
-        "top-level-await": true
-      }
-    }
-  }
+  "presets": ["next/babel"]
 }
