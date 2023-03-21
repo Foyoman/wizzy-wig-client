@@ -1,5 +1,5 @@
 ---
-id: 'intro'
+id: 'welcome'
 ---
 
 # wizzy wig

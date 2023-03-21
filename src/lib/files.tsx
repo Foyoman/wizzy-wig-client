@@ -3,7 +3,7 @@ import { findById } from "../store/helpers";
 
 let fileSys: File[] = [
 	{
-		id: 'intro',
+		id: 'welcome',
 		title: 'Welcome',
 		dateCreated: new Date('03/20/23'),
 		lastUpdated: new Date('03/20/23'),
@@ -54,17 +54,14 @@ let fileSys: File[] = [
 	}
 ]
 
-const populateFiles = (files: File[]) => {
+const populateFiles = (files: File[] = fileSys) => {
 	files.forEach((file) => {
-		const filename = file.id;
 		if (!file.isFolder) {
-			const mdFile = require(`../files/${filename}.md`);
-			let content: string;
+			const mdFile = require(`../files/${file.id}.md`);
 			fetch(mdFile).then((response) => response.text()).then((string) => {
-				content = string;
-				findById(fileSys, "update", { id: filename } as File, null, content, true);
+				findById(files, "update", { id: file.id } as File, null, string, false);
 			});
-		} if (file.isFolder && file.children) {
+		} else if (file.isFolder && file.children) {
 			populateFiles(file.children);
 		}
 	})
