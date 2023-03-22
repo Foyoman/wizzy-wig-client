@@ -50,25 +50,31 @@ export const fileSys: File[] = [
 				]
 			}
 		]
+	},
+	{
+		id: 'documentation',
+		title: 'Documentation',
+		dateCreated: new Date('03/21/23'),
+		lastUpdated: new Date('03/21/23'),
+		isFolder: true,
+		children: [
+			{
+				id: 'features',
+				title: 'Features',
+				dateCreated: new Date('03/21/23'),
+				lastUpdated: new Date('03/21/23'),
+				isFolder: true,
+				children: [
+					{
+						id: 'feature-overview',
+						title: 'Feature Overview',
+						dateCreated: new Date('03/21/23'),
+						lastUpdated: new Date('03/21/23'),
+						isFolder: false,
+						content: ''
+					}
+				]
+			},
+		]
 	}
 ]
-
-// async function getFileContents(filePath: string) {
-//   const response = await fetch(filePath);
-//   const fileContents = await response.text();
-//   return fileContents;
-// }
-
-// const populateFiles = async (files: File[] = fileSys) => {
-// 	for (let file of files) {
-// 		if (!file.isFolder) {
-// 			const filePath = `localhost:3000/files/${file.id}.md`
-// 			const content = await getFileContents(filePath);
-// 			file.content = content;
-// 		} else if (file.isFolder && file.children) {
-// 			await populateFiles(file.children);
-// 		}
-// 	}
-
-// 	return files;
-// };

@@ -11,7 +11,7 @@ import { setSaveState, setStaticProps } from '../store/appSlice';
 
 import { File } from '../types/FileTypes';
 
-import { fileSys } from '../lib/files';
+import { fileSys } from '../lib/starter-files';
 
 
 export default function App() {
