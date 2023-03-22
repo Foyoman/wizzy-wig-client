@@ -36,10 +36,13 @@ export const appSlice = createSlice({
 			state,
 			action: PayloadAction<File[]>
 		) => {
-			state.files = sortFileSystem(action.payload, "title", false);
-			const selectFile = (file: File) => {
-				
-			}
+			const starterFiles = action.payload;
+			state.files = sortFileSystem(starterFiles, "title", false);
+			const welcomeFile = starterFiles.find((file) => file.id === 'welcome');
+			state.selectedFile = welcomeFile as File;
+			if (welcomeFile?.content) state.markdown = welcomeFile.content;
+			const rootFiles = starterFiles.filter((file) => !file.isFolder);
+			state.tabs = rootFiles;
 		},
 		sortFs: (
 			state, 
