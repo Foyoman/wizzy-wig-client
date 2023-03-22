@@ -17,12 +17,14 @@ interface MarkdownParserProps {
 	content?: string;
 	theme?: "light" | "dark" | undefined;
 	splitDirection?: "vertical" | "horizontal" | undefined;
+	defaultSplit?: [number, number];
 }
 
 const MarkdownParser = ({ 
 	content = "",
 	theme = 'dark',
-	splitDirection = 'horizontal',
+	splitDirection = 'vertical',
+	defaultSplit = [50, 50],
 }: MarkdownParserProps) => {
 	const [split, setSplit] = useState(splitDirection);
 	const [collapsedIndex, setCollapsedIndex] = useState<number>();
@@ -62,7 +64,7 @@ const MarkdownParser = ({
 			id="md-parser"
 			className={`md-parser ${theme}`}
 			direction={split}
-			sizes={[50, 50]}
+			sizes={defaultSplit}
 			minSize={[0, 0]}
 			snapOffset={split === 'horizontal' ? 75 : 55}
 			collapsed={collapsedIndex}

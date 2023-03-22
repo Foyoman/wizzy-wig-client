@@ -87,7 +87,10 @@ export default function App() {
             className={`md-container ${!showSidebar ? 'sidebar-hidden' : ''}`}
           >
           { tabs[selectedTab] ? 
-            <MarkdownParser content={content} />
+            <MarkdownParser 
+              content={content} 
+              defaultSplit={[60, 40]}
+            />
           : 
             <NoFile />
           }
