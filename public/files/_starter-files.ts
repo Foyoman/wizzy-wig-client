@@ -1,6 +1,4 @@
-import { File } from "../types/FileTypes";
-
-const fileSys: File[] = [
+const fileSys = [
 	{
 		id: 'welcome',
 		title: 'Welcome',
@@ -52,25 +50,3 @@ const fileSys: File[] = [
 		]
 	}
 ]
-
-// async function getFileContents(filePath: string) {
-//   const response = await fetch(filePath);
-//   const fileContents = await response.text();
-//   return fileContents;
-// }
-
-// const populateFiles = async (files: File[] = fileSys) => {
-// 	for (let file of files) {
-// 		if (!file.isFolder) {
-// 			const filePath = `localhost:3000/files/${file.id}.md`
-// 			const content = await getFileContents(filePath);
-// 			file.content = content;
-// 		} else if (file.isFolder && file.children) {
-// 			await populateFiles(file.children);
-// 		}
-// 	}
-
-// 	return files;
-// };
-
-export default fileSys;

@@ -5,7 +5,6 @@ import { files } from '../__mocks__/Files';
 import { File, SortKeys, SaveStates } from '../types/FileTypes';
 import { sortFileSystem, findById } from './helpers';
 
-
 export interface AppState {
 	files: File[];
 	markdown: string;
@@ -33,14 +32,6 @@ export const appSlice = createSlice({
 	name: 'app',
 	initialState,
 	reducers: {
-		getStaticProps: (
-			state,
-		) => {
-			const user = false; // replace with real user check
-			if (!user) {
-				// const files = populateFiles(fileSys);
-			}
-		},
 		sortFs: (
 			state, 
 			action: PayloadAction<{ 
@@ -189,7 +180,7 @@ export const appSlice = createSlice({
 })
 
 export const { 
-	getStaticProps,
+	// getStaticProps,
 	sortFs, 
 	selectFolder,
 	selectFile,
