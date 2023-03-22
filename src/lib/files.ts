@@ -1,6 +1,6 @@
 import { File } from "../types/FileTypes";
 
-const fileSys: File[] = [
+export const fileSys: File[] = [
 	{
 		id: 'welcome',
 		title: 'Welcome',
@@ -72,5 +72,3 @@ const fileSys: File[] = [
 
 // 	return files;
 // };
-
-export default fileSys;

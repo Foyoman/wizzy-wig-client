@@ -32,6 +32,15 @@ export const appSlice = createSlice({
 	name: 'app',
 	initialState,
 	reducers: {
+		setStaticProps: (
+			state,
+			action: PayloadAction<File[]>
+		) => {
+			state.files = sortFileSystem(action.payload, "title", false);
+			const selectFile = (file: File) => {
+				
+			}
+		},
 		sortFs: (
 			state, 
 			action: PayloadAction<{ 
@@ -181,6 +190,7 @@ export const appSlice = createSlice({
 
 export const { 
 	// getStaticProps,
+	setStaticProps,
 	sortFs, 
 	selectFolder,
 	selectFile,
