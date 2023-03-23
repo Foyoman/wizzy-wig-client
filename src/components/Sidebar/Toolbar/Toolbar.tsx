@@ -114,7 +114,7 @@ export default function Toolbar (
 		<div className="toolbar">
 			<div className="selected-folder">
 				<p>
-					dir: { selectedFolder ? selectedFolder.title : 'root' }
+					dir: { selectedFolder ? selectedFolder.title : 'root (~)' }
 				</p>
 			</div>
 			<div className="tools">

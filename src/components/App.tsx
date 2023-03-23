@@ -20,6 +20,7 @@ export default function App() {
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
   const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
+  // const files = useSelector((state: RootState) => state.app.files);
   const [content, setContent] = useState<string | undefined>(selectedFile?.content as string | undefined);
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
@@ -61,10 +62,29 @@ export default function App() {
       dispatch(setStaticProps(starterFiles));
     }
   }, [starterFiles, dispatch])
-
+  
   useEffect(() => {
     setContent(selectedFile?.content as string | undefined)
   }, [selectedFile]);
+  
+  const handleClick = (e: any) => {
+    console.log(e);
+    console.log('hi, clicked')
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const loginEl = document.querySelector("a[href='#loginEl']");
+      if (loginEl) {
+        loginEl.addEventListener('click', (e) => handleClick(e));
+        clearInterval(intervalId);
+      }
+    }, 100);
+  
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   const NoFile = () => {
     return (
