@@ -59,6 +59,14 @@ export const fileSys: File[] = [
 		isFolder: true,
 		children: [
 			{
+				id: 'feature-overview',
+				title: 'Feature Overview',
+				dateCreated: new Date('03/21/23'),
+				lastUpdated: new Date('03/21/23'),
+				isFolder: false,
+				content: ''
+			},
+			{
 				id: 'features',
 				title: 'Features',
 				dateCreated: new Date('03/21/23'),
@@ -66,13 +74,13 @@ export const fileSys: File[] = [
 				isFolder: true,
 				children: [
 					{
-						id: 'feature-overview',
-						title: 'Feature Overview',
-						dateCreated: new Date('03/21/23'),
-						lastUpdated: new Date('03/21/23'),
+						id: 'md-preview',
+						title: 'Markdown Preview',
+						dateCreated: new Date('03/20/23'),
+						lastUpdated: new Date('03/20/23'),
 						isFolder: false,
 						content: ''
-					}
+					},
 				]
 			},
 		]

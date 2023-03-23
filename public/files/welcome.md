@@ -11,4 +11,30 @@ This app was developed with a focus on a fluid and intuitive experience with fil
 - A file system to store saved files
 - Autosaving  
 
-Read more about features in `~/Documentation/Features/Feature\ Overview.md`
+Read more about features in `~/Documentation/Features/Feature\ Overview.md` 
+
+## Credits
+## `<MdPreview />`
+This markdown parser couldn't be put together without the help of `react-markdown` and `react-syntax-highlighter`. Awesome tutorial goes to [Amir Adalan](https://amirardalan.com/blog/syntax-highlight-code-in-markdown).  
+
+```ts
+import { hug, relieve } from '@/experiences/soul';
+
+const hug = (participants: Person[]) => {
+	participants.forEach((person) => {
+		hug(person.soul);
+		if (person.doubts.length) {
+			relieve(person);
+		}
+	})
+}
+```
+  
+## `<MdEditor />`
+Props goes out to Microsoft for their monaco editor. Specifically `@monaco-editor/react` for making the editor possible. Some extra props go into configuration but basically their entire functionality. Debounce kicks in after only about 500 characters, `useMemo()` is in effect but not sure if I'm using it in it's most optimised method.  
+
+## `<FileSystem />`
+Big credits go to Microsoft's Material UI and ChatGPT3 for helping me figure out sort functions and general recursive functions. Big pat on the back goes out to me for figuring out the recursive function for MUI's nested tree view of files and folders on my own! It was very fun to code :)
+
+## `<edwardtdo />`
+If you're reading this far down, I'd like to let you know, just me and you, that I really appreciate you giving me the time of day. I made this project out of passion and a lot of the code was genuinely fun to write. My dream is to live a digitally nomadic lifestyle, and if you are or know a connection to get a shoe in in this field of software development, I would love to hear from you. If I could just make you do a little work, my contact info is in `~/About\ Me.md`. Or it should already be an opened tab.
