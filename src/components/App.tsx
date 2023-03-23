@@ -67,22 +67,38 @@ export default function App() {
     setContent(selectedFile?.content as string | undefined)
   }, [selectedFile]);
   
-  const handleClick = (e: any) => {
-    console.log(e);
+  const handleClick = (e: Event) => {
+    e.preventDefault();
+    console.log(e.target);
     console.log('hi, clicked')
   }
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       const loginEl = document.querySelector("a[href='#loginEl']");
+      const signupEl = document.querySelector("a[href='#signupEl']");
+
       if (loginEl) {
-        loginEl.addEventListener('click', (e) => handleClick(e));
+        loginEl.addEventListener('click', handleClick);
+        clearInterval(intervalId);
+      }
+      if (signupEl) {
+        signupEl.addEventListener('click', handleClick);
         clearInterval(intervalId);
       }
     }, 100);
   
     return () => {
       clearInterval(intervalId);
+      const loginEl = document.querySelector("a[href='#loginEl']");
+      const signupEl = document.querySelector("a[href='#signupEl']");
+
+      if (loginEl) {
+        loginEl.removeEventListener('click', handleClick);
+      }
+      if (signupEl) {
+        signupEl.removeEventListener('click', handleClick);
+      }
     };
   }, []);
 
