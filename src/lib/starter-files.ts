@@ -5,7 +5,7 @@ export const fileSys: File[] = [
 		id: 'welcome',
 		title: 'Welcome',
 		dateCreated: new Date('03/20/23'),
-		lastUpdated: new Date('03/20/23'),
+		lastUpdated: new Date('03/24/23'),
 		isFolder: false,
 		content: ''
 	},
@@ -28,7 +28,7 @@ export const fileSys: File[] = [
 				id: 'practical-recursion',
 				title: 'Practical Recursion',
 				dateCreated: new Date('03/21/23'),
-				lastUpdated: new Date('03/22/23'),
+				lastUpdated: new Date('03/24/23'),
 				isFolder: false,
 				content: ''
 			},
