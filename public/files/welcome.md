@@ -1,7 +1,7 @@
-# `wizzy wig` - [Create an account](#signupEl) or [Login](#loginEl)
+# `wizzy wig` - [Create an account](#signupEl) or [Login](#loginEl) (currently not functional)
 Welcome! 	`wizzy wig` is an in browser note-taking app with code block syntax highlighting, a file system, and a tab system. 
 
-## Edit this file! I dare you! Click the... shit it doesn't work like that...
+## Edit this file! I dare you! Click the... wait it doesn't work like that... (dev update inc)
 Open the editor, and just mess around with it. Edit a file, switch files, and see if your changes are still there. Test the limits. Open a million tabs. Why not? This single page web app uses [static props](/files/welcome.md) `¡middle click to open in a new tab!`  to populate state - when you create an account and start making your own files, your file system will be automatically saved to the server. 
 
 ## Feature Overview
