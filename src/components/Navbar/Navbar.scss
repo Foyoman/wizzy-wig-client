@@ -20,7 +20,7 @@
 	height: 32px;
 	
 	.utils {
-		min-width: calc(250px - var(--spacer-sm));
+		width: calc(250px - var(--spacer-sm));
     padding: var(--spacer-xxs) var(--spacer-sm) var(--spacer-xxs) var(--spacer-xxs);
 		display: flex;
 		align-items: center;
