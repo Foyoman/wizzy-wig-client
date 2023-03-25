@@ -188,6 +188,12 @@ export const appSlice = createSlice({
 				state.markdown = "";
 			}
 		},
+		deleteFile: (
+			state,
+			action: PayloadAction<File>,
+		) => {
+			return // ...
+		}
 	}
 })
 
@@ -206,6 +212,7 @@ export const {
 	newTab,
 	closeTab,
 	createFile,
+	deleteFile,
 } = appSlice.actions;
 
 export default appSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import './Toolbar.scss';
 
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
@@ -12,7 +12,7 @@ import Check from '@mui/icons-material/Check';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 import { File, SortKeys, SortFunction } from "../../../types/FileTypes";
 import { useDispatch, useSelector } from "react-redux";
@@ -184,6 +184,16 @@ export default function Toolbar (
 						</form>
 					</MenuItem>
 				</Menu>
+				{/* delete */}
+				<Button
+					className="toolbar-button"
+					// aria-controls={createFileOpen ? 'basic-menu' : undefined}
+					aria-haspopup="true"
+					// aria-expanded={createFileOpen ? 'true' : undefined}
+					// onClick={handleCreateFile}
+				>
+					<DeleteOutlinedIcon className="icon" />
+				</Button>
 				{/* filter menu */}
 				<Button
 					className="toolbar-button"
