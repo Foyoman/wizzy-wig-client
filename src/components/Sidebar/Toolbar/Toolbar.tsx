@@ -29,16 +29,20 @@ export default function Toolbar (
 	const [filterEl, setFilterEl] = useState<HTMLElement | null>(null);
 	const filterOpen = Boolean(filterEl);
 
+	// custom hook?
 	const [createFileEl, setCreateFileEl] = useState<HTMLElement | null>(null);
 	const [fileTitle, setFileTitle] = useState<string | "">("");
 	const createFileOpen = Boolean(createFileEl);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+	
 	const [createFolderEl, setCreateFolderEl] = useState<HTMLElement | null>(null);
 	const [folderTitle, setFolderTitle] = useState<string | "">("");
 	const createFolderOpen = Boolean(createFolderEl);
 	const folderInputRef = useRef<HTMLInputElement | null>(null);
 
+	const [deleteEl, setDeleteEl] = useState<HTMLElement | null>(null);
+	const deleteOpen = Boolean(deleteEl);
+	
 	const [sort, setSort] = 
 		useState<{
 			sortKey: SortKeys, reverse: boolean
@@ -63,6 +67,10 @@ export default function Toolbar (
 		}, 1);
 	}
 
+	const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		setDeleteEl(e.currentTarget);
+	}
+
 	const handleCreateFileClose = () => {
 		setCreateFileEl(null);
 		setFileTitle("");
@@ -71,6 +79,10 @@ export default function Toolbar (
 	const handleCreateFolderClose = () => {
 		setCreateFolderEl(null);
 		setFolderTitle("");
+	}
+
+	const handleDeleteClose = () => {
+		setDeleteEl(null);
 	}
 
   const handleSelect: SortFunction = (items, sortKey, reverse) => {
@@ -187,13 +199,26 @@ export default function Toolbar (
 				{/* delete */}
 				<Button
 					className="toolbar-button"
-					// aria-controls={createFileOpen ? 'basic-menu' : undefined}
+					aria-controls={deleteOpen ? 'basic-menu' : undefined}
 					aria-haspopup="true"
-					// aria-expanded={createFileOpen ? 'true' : undefined}
-					// onClick={handleCreateFile}
+					aria-expanded={deleteOpen ? 'true' : undefined}
+					onClick={handleDelete}
 				>
 					<DeleteOutlinedIcon className="icon" />
 				</Button>
+				<Menu
+					className="dropdown-menu"
+					anchorEl={deleteEl}
+					open={deleteOpen}
+					onClose={handleDeleteClose}
+					MenuListProps={{
+						'aria-labelledby': 'basic-button',
+					}}
+				>
+					<MenuItem className="menu-item">
+						are you sure?
+					</MenuItem>
+				</Menu>
 				{/* filter menu */}
 				<Button
 					className="toolbar-button"
