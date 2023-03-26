@@ -215,8 +215,12 @@ export default function Toolbar (
 						'aria-labelledby': 'basic-button',
 					}}
 				>
-					<MenuItem className="menu-item">
-						are you sure?
+					<MenuItem className="menu-item delete">
+						<p>Are you sure?</p>
+						<div className="delete-confirm">
+							<Button variant="contained" color="error">Confirm</Button>
+							<Button variant="outlined">Cancel</Button>
+						</div>
 					</MenuItem>
 				</Menu>
 				{/* filter menu */}

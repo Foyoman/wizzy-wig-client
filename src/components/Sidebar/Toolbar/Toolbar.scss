@@ -44,6 +44,7 @@
 
 .dropdown-menu {
 	color: var(--gh-lighter-grey-80);
+
 	input {
 		border: none;
 		background: #1E1E1E;
@@ -63,6 +64,25 @@
 			display: flex;
 			justify-content: space-between;
 			padding: var(--spacer-xs) var(--spacer-sm);
+
+			&.delete {
+				flex-direction: column;
+				justify-content: center;
+
+				p {
+					margin-bottom: var(--spacer-sm);
+				}
+
+				.delete-confirm {
+					display: flex;
+					gap: var(--spacer-sm);
+
+					button {
+						padding: var(--spacer-xxs) var(--spacer-xs);
+						font-size: var(--text-xs);
+					}
+				}
+			}
 		}
 
 		svg {
