@@ -16,7 +16,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 import { File, SortKeys, SortFunction } from "../../../types/FileTypes";
 import { useDispatch, useSelector } from "react-redux";
-import { sortFs, createFile } from "../../../store/appSlice";
+import { sortFs, createFile, deleteFile } from "../../../store/appSlice";
 import { RootState } from "../../../store/store";
 
 interface ToolbarProps {
@@ -67,7 +67,7 @@ export default function Toolbar (
 		}, 1);
 	}
 
-	const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const handleDeleteEl = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		setDeleteEl(e.currentTarget);
 	}
 
@@ -81,7 +81,8 @@ export default function Toolbar (
 		setFolderTitle("");
 	}
 
-	const handleDeleteClose = () => {
+	const handleDelete = () => {
+		dispatch(deleteFile);
 		setDeleteEl(null);
 	}
 
@@ -202,7 +203,7 @@ export default function Toolbar (
 					aria-controls={deleteOpen ? 'basic-menu' : undefined}
 					aria-haspopup="true"
 					aria-expanded={deleteOpen ? 'true' : undefined}
-					onClick={handleDelete}
+					onClick={handleDeleteEl}
 				>
 					<DeleteOutlinedIcon className="icon" />
 				</Button>
@@ -210,7 +211,7 @@ export default function Toolbar (
 					className="dropdown-menu"
 					anchorEl={deleteEl}
 					open={deleteOpen}
-					onClose={handleDeleteClose}
+					onClose={() => setDeleteEl(null)}
 					MenuListProps={{
 						'aria-labelledby': 'basic-button',
 					}}
@@ -218,8 +219,12 @@ export default function Toolbar (
 					<MenuItem className="menu-item delete">
 						<p>Are you sure?</p>
 						<div className="delete-confirm">
-							<Button variant="contained" color="error">Confirm</Button>
-							<Button variant="outlined">Cancel</Button>
+							<Button variant="contained" color="error" onClick={handleDelete}>
+								Confirm
+							</Button>
+							<Button variant="outlined" onClick={() => setDeleteEl(null)}>
+								Cancel
+							</Button>
 						</div>
 					</MenuItem>
 				</Menu>
