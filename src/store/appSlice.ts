@@ -198,8 +198,15 @@ export const appSlice = createSlice({
 		},
 		deleteFile: (
 			state,
+			action: PayloadAction<File>
 		) => {
-			findById(state.files, "delete", state.selectedItem as File);
+			const selectedFile = action.payload;
+			findById(state.files, "delete", selectedFile);
+			debugger
+			const indexOfDeleted = state.tabs.indexOf(selectedFile as never);
+			console.log(indexOfDeleted);
+			state.tabs.splice(indexOfDeleted, 1);
+			// debugger
 		}
 	}
 })

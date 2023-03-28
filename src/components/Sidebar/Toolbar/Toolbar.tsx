@@ -85,8 +85,7 @@ export default function Toolbar (
 
 	const handleDelete = () => {
 		if (!selectedItem) return;
-		console.log(selectedItem);
-		dispatch(deleteFile());
+		dispatch(deleteFile(selectedItem));
 		setDeleteEl(null);
 	}
 
