@@ -91,6 +91,8 @@ export const findById = (
 			if (destroy) {
 				const itemIndex = items.indexOf(item);
 				items.splice(itemIndex, 1);
+				console.log(items);
+				// return items;
 			} else if (append && child) {
 				appendChild(item, child);
 			} else if (update) {

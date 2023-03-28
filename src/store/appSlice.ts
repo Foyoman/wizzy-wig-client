@@ -12,6 +12,7 @@ export interface AppState {
 	saveState: SaveStates;
 	tabs: Array<File | null> | [];
 	selectedTab: number;
+	selectedItem: File | null;
 	selectedFile: File | null;
 	selectedFolder: File | null;
 }
@@ -24,6 +25,7 @@ const initialState: AppState = {
 	saveState: "saved",
 	tabs: [null],
 	selectedTab: 0,
+	selectedItem: null,
 	selectedFile: null,
 	selectedFolder: null,
 }
@@ -69,6 +71,12 @@ export const appSlice = createSlice({
 			const file = action.payload;
 			state.selectedFile = file;
 			state.markdown = file.content || "";
+		},
+		selectItem: (
+			state,
+			action: PayloadAction<File>
+		) => {
+			state.selectedItem = action.payload;
 		},
 		updateMarkdown: (
 			state, 
@@ -190,9 +198,8 @@ export const appSlice = createSlice({
 		},
 		deleteFile: (
 			state,
-			action: PayloadAction<File>,
 		) => {
-			return // ...
+			findById(state.files, "delete", state.selectedItem as File);
 		}
 	}
 })
@@ -202,6 +209,7 @@ export const {
 	sortFs, 
 	selectFolder,
 	selectFile,
+	selectItem,
 	updateMarkdown, 
 	toggleSidebar,
 	setSaveState,

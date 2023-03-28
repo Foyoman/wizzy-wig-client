@@ -8,7 +8,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { File } from "../../../types/FileTypes";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { setTab, selectFolder, selectTab, selectFile } from "../../../store/appSlice";
+import { setTab, selectFolder, selectTab, selectFile, selectItem } from "../../../store/appSlice";
 import { RootState } from "../../../store/store";
 
 interface FileSystemProps {
@@ -27,6 +27,7 @@ const FileSystem = (
 		parent: File | null,
 	) => {
 		e.stopPropagation();
+		dispatch(selectItem(item));
 		if (!item.isFolder) {
 			dispatch(selectFolder(parent))
 			if (tabs.includes(item as never)) {

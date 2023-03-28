@@ -26,6 +26,8 @@ interface ToolbarProps {
 export default function Toolbar (
 	{ items }: ToolbarProps
 ) {
+	const selectedItem = useSelector((state: RootState) => state.app.selectedItem);
+
 	const [filterEl, setFilterEl] = useState<HTMLElement | null>(null);
 	const filterOpen = Boolean(filterEl);
 
@@ -82,7 +84,9 @@ export default function Toolbar (
 	}
 
 	const handleDelete = () => {
-		dispatch(deleteFile);
+		if (!selectedItem) return;
+		console.log(selectedItem);
+		dispatch(deleteFile());
 		setDeleteEl(null);
 	}
 
