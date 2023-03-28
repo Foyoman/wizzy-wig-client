@@ -200,10 +200,19 @@ export const appSlice = createSlice({
 			state,
 			action: PayloadAction<File>
 		) => {
-			const selectedFile = action.payload;
-			findById(state.files, "delete", selectedFile);
-			debugger
-			const indexOfDeleted = state.tabs.indexOf(selectedFile as never);
+			const fileToDelete = action.payload;
+			findById(state.files, "delete", fileToDelete);
+
+			const closeFolderTabs = (item: File & { isFolder: true }) => {
+				item.children?.forEach((child) => {
+					if ()
+					state.tabs.filter((tab) => {
+						return tab !== child;
+					})
+				})
+			}
+
+			const indexOfDeleted = state.tabs.indexOf(fileToDelete as never);
 			console.log(indexOfDeleted);
 			state.tabs.splice(indexOfDeleted, 1);
 			// debugger
