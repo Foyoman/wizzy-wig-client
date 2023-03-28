@@ -71,7 +71,7 @@ export const appendChild = (item: File, child: File) => {
 
 export const findById = (
 	items: File[],
-	key: "append" | "update",
+	key: "append" | "update" | "delete",
 	needle: File,
 	child?: File | null,
 	updatedContent?: File["content"],
@@ -79,6 +79,7 @@ export const findById = (
 ): any => {
 	const append = key === "append";
 	const update = key === "update";
+	const destroy = key === "delete";
 
 	if (append && !needle && child) { 
 		items.push(child);
@@ -87,7 +88,10 @@ export const findById = (
 
 	for (const item of items) {
 		const helper = (item: File) => {
-			if (append && child) {
+			if (destroy) {
+				const itemIndex = items.indexOf(item);
+				items.splice(itemIndex, 1);
+			} else if (append && child) {
 				appendChild(item, child);
 			} else if (update) {
 				item.content = updatedContent;

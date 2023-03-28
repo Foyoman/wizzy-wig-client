@@ -198,7 +198,6 @@ export const appSlice = createSlice({
 })
 
 export const { 
-	// getStaticProps,
 	setStaticProps,
 	sortFs, 
 	selectFolder,
