@@ -208,19 +208,13 @@ export const appSlice = createSlice({
 					if (child.isFolder) {
 						closeFolderTabs(child);
 					} else {
-						state.tabs.filter((tab) => {
-							return tab !== child;
-						})
+						const index = state.tabs.indexOf(child as never);
+						state.tabs.splice(index, 1);
 					}
 				})
 			}
 
 			closeFolderTabs(fileToDelete);
-
-			const indexOfDeleted = state.tabs.indexOf(fileToDelete as never);
-			console.log(indexOfDeleted);
-			state.tabs.splice(indexOfDeleted, 1);
-			// debugger
 		}
 	}
 })
