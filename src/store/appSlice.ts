@@ -203,14 +203,19 @@ export const appSlice = createSlice({
 			const fileToDelete = action.payload;
 			findById(state.files, "delete", fileToDelete);
 
-			const closeFolderTabs = (item: File & { isFolder: true }) => {
+			const closeFolderTabs = (item: File) => {
 				item.children?.forEach((child) => {
-					if ()
-					state.tabs.filter((tab) => {
-						return tab !== child;
-					})
+					if (child.isFolder) {
+						closeFolderTabs(child);
+					} else {
+						state.tabs.filter((tab) => {
+							return tab !== child;
+						})
+					}
 				})
 			}
+
+			closeFolderTabs(fileToDelete);
 
 			const indexOfDeleted = state.tabs.indexOf(fileToDelete as never);
 			console.log(indexOfDeleted);
