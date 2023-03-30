@@ -16,7 +16,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 import { File, SortKeys, SortFunction } from "../../../types/FileTypes";
 import { useDispatch, useSelector } from "react-redux";
-import { sortFs, createFile, deleteFile } from "../../../store/appSlice";
+import { sortFs, createFile, deleteFile, setTabs } from "../../../store/appSlice";
 import { RootState } from "../../../store/store";
 
 interface ToolbarProps {
@@ -27,6 +27,7 @@ export default function Toolbar (
 	{ items }: ToolbarProps
 ) {
 	const selectedItem = useSelector((state: RootState) => state.app.selectedItem);
+	const tabs = useSelector((state: RootState) => state.app.tabs);
 
 	const [filterEl, setFilterEl] = useState<HTMLElement | null>(null);
 	const filterOpen = Boolean(filterEl);
@@ -86,6 +87,29 @@ export default function Toolbar (
 	const handleDelete = () => {
 		if (!selectedItem) return;
 		dispatch(deleteFile(selectedItem));
+
+		const nestedFiles: File[] = [];
+		const findNestedFiles = (item: File) => {
+			item.children?.forEach((child) => {
+				if (child.isFolder) {
+					findNestedFiles(child);
+				} else {
+					nestedFiles.push(child);
+				}
+			})
+		}
+
+		findNestedFiles(selectedItem);
+		const newTabs = tabs;
+		nestedFiles.forEach((file: File) => {
+			const index = newTabs.indexOf(file as never);
+			newTabs.splice(index, 1);
+		});
+		console.log(newTabs);
+		debugger;
+
+		dispatch(setTabs(newTabs));
+		
 		setDeleteEl(null);
 	}
 

@@ -45,8 +45,6 @@ export default function App() {
             
             await populateFiles(file.children);
           }
-          
-          console.log(file);
         }
         
         setStarterFiles(files);
@@ -69,8 +67,6 @@ export default function App() {
   
   const handleClick = (e: Event) => {
     e.preventDefault();
-    console.log(e.target);
-    console.log('hi, clicked')
   }
 
   useEffect(() => {

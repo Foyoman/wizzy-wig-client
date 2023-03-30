@@ -209,18 +209,23 @@ export const appSlice = createSlice({
 					if (child.isFolder) {
 						findNestedFiles(child);
 					} else {
-						// if (state.tabs.includes(child as never)) {
-						// 	const index = state.tabs.indexOf(child as never);
-						// 	state.tabs.splice(index, 1);
-						// }
 						nestedFiles.push(child);
 					}
 				})
 			}
 
+			console.log(state.tabs);
+			
 			findNestedFiles(fileToDelete);
+			console.log(state.tabs.includes(nestedFiles[0] as never))
 
 			console.log(nestedFiles);
+		},
+		setTabs: (
+			state,
+			action: PayloadAction<(File | null)[] | []>
+		) => {
+			state.tabs = action.payload;
 		}
 	}
 })
@@ -241,6 +246,7 @@ export const {
 	closeTab,
 	createFile,
 	deleteFile,
+	setTabs,
 } = appSlice.actions;
 
 export default appSlice.reducer;

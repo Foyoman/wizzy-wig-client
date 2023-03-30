@@ -35,7 +35,6 @@ export default function App() {
           if (!file.isFolder) {
             try {
               const filePath = `/files/${file.id}.md`
-              // const content = await getFileContents(filePath);
               const response = await fetch(filePath);
               const fileContents = await response.text();
               file.content = fileContents;
@@ -46,8 +45,6 @@ export default function App() {
             
             await populateFiles(file.children);
           }
-          
-          console.log(file);
         }
         
         setStarterFiles(files);
@@ -70,8 +67,6 @@ export default function App() {
   
   const handleClick = (e: Event) => {
     e.preventDefault();
-    console.log(e.target);
-    console.log('hi, clicked')
   }
 
   useEffect(() => {
