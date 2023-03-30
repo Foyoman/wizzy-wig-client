@@ -203,18 +203,24 @@ export const appSlice = createSlice({
 			const fileToDelete = action.payload;
 			findById(state.files, "delete", fileToDelete);
 
-			const closeFolderTabs = (item: File) => {
+			const nestedFiles: File[] = [];
+			const findNestedFiles = (item: File) => {
 				item.children?.forEach((child) => {
 					if (child.isFolder) {
-						closeFolderTabs(child);
+						findNestedFiles(child);
 					} else {
-						const index = state.tabs.indexOf(child as never);
-						state.tabs.splice(index, 1);
+						// if (state.tabs.includes(child as never)) {
+						// 	const index = state.tabs.indexOf(child as never);
+						// 	state.tabs.splice(index, 1);
+						// }
+						nestedFiles.push(child);
 					}
 				})
 			}
 
-			closeFolderTabs(fileToDelete);
+			findNestedFiles(fileToDelete);
+
+			console.log(nestedFiles);
 		}
 	}
 })
