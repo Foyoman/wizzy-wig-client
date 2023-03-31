@@ -107,11 +107,17 @@ export default function Toolbar (
 			newTabs = tabs.filter(file => file !== selectedItem);
 		}
 		
-		dispatch(setTabs(newTabs));
+		if (newTabs.length) {
+			dispatch(setTabs(newTabs));
+		} else {
+			dispatch(setTabs([null]));
+		}
+
 		if (newTabs[0]) { // TODO: something more logical than [0]
 			dispatch(selectFile(newTabs[0]));
 			dispatch(setTab(newTabs[0]));
 		} 
+		
 		setDeleteEl(null);
 	}
 
