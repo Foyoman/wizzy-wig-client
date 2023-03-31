@@ -119,12 +119,12 @@ export const appSlice = createSlice({
 		},
 		setTab: (
 			state,
-			action: PayloadAction<File>
+			action: PayloadAction<File | null>
 		) => {
 			const file = action.payload;
 			// set current tab to the selected file
 			state.tabs[state.selectedTab] = file;
-			selectFile(file);
+			selectFile(file!);
 		},
 		newTab: (
 			state,
