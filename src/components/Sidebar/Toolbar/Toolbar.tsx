@@ -88,29 +88,26 @@ export default function Toolbar (
 		if (!selectedItem) return;
 		dispatch(deleteFile(selectedItem));
 
-		const nestedFiles: File[] = [];
-		const findNestedFiles = (item: File) => {
-			item.children?.forEach((child) => {
-				if (child.isFolder) {
-					findNestedFiles(child);
-				} else {
-					nestedFiles.push(child);
-				}
-			})
+		let newTabs: (File | null)[];
+		if (selectedItem.isFolder) {
+			const nestedFiles: File[] = [];
+			const findNestedFiles = (item: File) => {
+				item.children?.forEach((child) => {
+					if (child.isFolder) {
+						findNestedFiles(child);
+					} else {
+						nestedFiles.push(child);
+					}
+				})
+			}
+	
+			findNestedFiles(selectedItem);
+			newTabs = tabs.filter(file => !nestedFiles.includes(file!));
+		} else {
+			newTabs = tabs.filter(file => file !== selectedItem);
 		}
-
-		findNestedFiles(selectedItem);
-		console.log('nested files');
-		console.log(nestedFiles);
-
-		const newTabs = tabs.filter(file => !nestedFiles.includes(file!));
-
-		console.log('newTabs after filter')
-		console.log(newTabs);
-		// debugger;
-
-		dispatch(setTabs(newTabs));
 		
+		dispatch(setTabs(newTabs));
 		setDeleteEl(null);
 	}
 

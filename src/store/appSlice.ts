@@ -202,19 +202,6 @@ export const appSlice = createSlice({
 		) => {
 			const fileToDelete = action.payload;
 			findById(state.files, "delete", fileToDelete);
-
-			// const nestedFiles: File[] = [];
-			// const findNestedFiles = (item: File) => {
-			// 	item.children?.forEach((child) => {
-			// 		if (child.isFolder) {
-			// 			findNestedFiles(child);
-			// 		} else {
-			// 			nestedFiles.push(child);
-			// 		}
-			// 	})
-			// }
-
-			// findNestedFiles(fileToDelete);
 		},
 		setTabs: (
 			state,
