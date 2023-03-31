@@ -101,10 +101,17 @@ export default function Toolbar (
 
 		findNestedFiles(selectedItem);
 		const newTabs = tabs;
-		nestedFiles.forEach((file: File) => {
-			const index = newTabs.indexOf(file as never);
-			newTabs.splice(index, 1);
-		});
+		// nestedFiles.forEach((file: File) => {
+		// 	const index = newTabs.indexOf(file as never);
+		// 	newTabs.splice(index, 1);
+		// });
+		newTabs.filter((tab) => {
+			if (tab) {
+				return !nestedFiles.includes(tab);
+			} else {
+				return null;
+			}
+		})
 		console.log(newTabs);
 		debugger;
 
