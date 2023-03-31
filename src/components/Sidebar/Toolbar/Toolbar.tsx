@@ -16,7 +16,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 import { File, SortKeys, SortFunction } from "../../../types/FileTypes";
 import { useDispatch, useSelector } from "react-redux";
-import { sortFs, createFile, deleteFile, setTabs } from "../../../store/appSlice";
+import { sortFs, createFile, deleteFile, setTabs, selectFile, setTab } from "../../../store/appSlice";
 import { RootState } from "../../../store/store";
 
 interface ToolbarProps {
@@ -108,6 +108,10 @@ export default function Toolbar (
 		}
 		
 		dispatch(setTabs(newTabs));
+		if (newTabs[0]) { // TODO: something more logical than [0]
+			dispatch(selectFile(newTabs[0]));
+			dispatch(setTab(newTabs[0]));
+		} 
 		setDeleteEl(null);
 	}
 
