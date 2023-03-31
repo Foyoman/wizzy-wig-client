@@ -20,9 +20,13 @@
 		height: 24px;
 		font-size: var(--text-xs);
 		color: var(--gh-lighter-grey-80);
-		white-space: nowrap;
 		overflow: hidden;
-		text-overflow: ellipsis;
+
+		p {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 	}
 
 	.tools {
