@@ -114,7 +114,6 @@ export default function Toolbar (
 		if (newTabs[0]) { // TODO: something more logical than [0]
 			dispatch(selectFile(newTabs[0]));
 		} 
-		// dispatch(setTab(newTabs[0]));
 
 		setDeleteEl(null);
 	}
