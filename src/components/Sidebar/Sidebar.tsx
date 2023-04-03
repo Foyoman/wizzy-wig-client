@@ -1,8 +1,6 @@
 import './Sidebar.scss';
 
 import FileSystem from "./FileSystem/FileSystem";
-import { File } from "../../types/FileTypes";
-
 import Toolbar from "./Toolbar/Toolbar";
 
 import { useSelector } from 'react-redux';

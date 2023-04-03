@@ -7,7 +7,7 @@ import Sidebar from './Sidebar/Sidebar';
 
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from "../store/store";
-import { setSaveState, setStaticProps } from '../store/appSlice';
+import { setStaticProps } from '../store/appSlice';
 
 import { File } from '../types/FileTypes';
 
