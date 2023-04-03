@@ -119,11 +119,9 @@ export default function Toolbar (
 		}
 
 		const tabShift = deletedIndices.filter(n => n <= selectedTab).length;
-		if (tabShift) {
-			const indexShift = selectedTab - tabShift;
-			dispatch(selectTab(indexShift >= 0 ? indexShift : 0));
-			if (newTabs[indexShift]) dispatch(selectFile(newTabs[indexShift]!));
-		}
+		const indexShift = selectedTab - tabShift;
+		dispatch(selectTab(indexShift >= 0 ? indexShift : 0));
+		if (newTabs[indexShift]) dispatch(selectFile(newTabs[indexShift]!));
 
 		setDeleteEl(null);
 	}
