@@ -11,7 +11,7 @@ This app was developed with a focus on a fluid and intuitive experience with fil
 - A file system to store saved files
 - Autosaving  
 
-Read more about features in `~/Documentation/Features/Feature Overview.md` 
+Read more about features in `~/Documentation/Feature Overview.md` 
 
 ## Credits
 ## `<MdPreview />`
@@ -41,4 +41,4 @@ Props goes out to Microsoft for their monaco editor. Specifically `@monaco-edito
 Big credits go to Microsoft's Material UI and ChatGPT3 for helping me figure out sort functions and general recursive functions. Big pat on the back goes out to me for figuring out the recursive function for MUI's nested tree view of files and folders on my own! It was very fun to code :)
 
 ## `<edwardtdo />`
-If you're reading this far down, between just me and you, I really appreciate you giving this project the time of day. I made `wizzy-wig` out of passion for programming - a lot of the code was genuinely fun to write. And on passions, my dream is to combine my two biggest passions and to live a digitally nomadic lifestyle, and as long as this is here to be read, I am currently chasing that dream. So if you are or know a connection to get a shoe in in this field of software development, I would love to hear from you. If I could just make you do a little work, my contact info is in `~/About Me.md`. Or it should already be an opened tab. And as you might be able to tell, this site isn't very easily SEO optimised. So, I would appreciate a bit of word of mouth, and if you could give a shout this site to your network, friends, or family  :)
+If you're reading this far down, between just me and you, I really appreciate you giving this project the time of day. I made `wizzy-wig` out of passion for programming - a lot of the code was genuinely fun to write. And on passions, my dream is to combine my two biggest passions and to live a digitally nomadic lifestyle, and as long as this is here to be read, I am currently chasing that dream. So if you are or know a connection to get a shoe in in this field of software development, I would love to hear from you. If I could just make you do a little work, my contact info is in `~/About Me.md`. Or it should already be an opened tab.
