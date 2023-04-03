@@ -111,8 +111,10 @@ export default function Toolbar (
 		if (!newTabs.length) newTabs = [null];
 		dispatch(setTabs(newTabs));
 
+		console.log(nestedFiles);
+
 		const deletedIndices = [];
-		for (let i = 0; i < tabs.length; i++) {
+		for (let i = 0; i < nestedFiles.length; i++) {
 			if (tabs.includes(nestedFiles[i] as never)) {
 				deletedIndices.push(tabs.indexOf(nestedFiles[i] as never));
 			}
@@ -121,7 +123,7 @@ export default function Toolbar (
 		console.log('selectedTab:' + selectedTab)
 		const tabShift = deletedIndices.filter(n => n <= selectedTab).length;
 		console.log('tabShift: ' + tabShift);
-		const indexShift = selectedTab - tabShift + 1;
+		const indexShift = selectedTab - tabShift;
 		console.log('indexShift: ' + indexShift);
 
 		dispatch(selectTab(indexShift));
