@@ -28,6 +28,7 @@ export default function Toolbar (
 ) {
 	const selectedItem = useSelector((state: RootState) => state.app.selectedItem);
 	const tabs = useSelector((state: RootState) => state.app.tabs);
+	const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
 
 	const [filterEl, setFilterEl] = useState<HTMLElement | null>(null);
 	const filterOpen = Boolean(filterEl);
@@ -89,8 +90,8 @@ export default function Toolbar (
 		dispatch(deleteFile(selectedItem));
 
 		let newTabs: (File | null)[];
+		const nestedFiles: File[] = [];
 		if (selectedItem.isFolder) {
-			const nestedFiles: File[] = [];
 			const findNestedFiles = (item: File) => {
 				item.children?.forEach((child) => {
 					if (child.isFolder) {
@@ -109,11 +110,17 @@ export default function Toolbar (
 
 		if (!newTabs.length) newTabs = [null];
 		dispatch(setTabs(newTabs));
-		dispatch(selectTab(0));
 
-		if (newTabs[0]) { // TODO: something more logical than [0]
-			dispatch(selectFile(newTabs[0]));
-		} 
+		const deletedIndices = [];
+		for (let i = 0; i < tabs.length; i++) {
+			deletedIndices.push(tabs.indexOf(nestedFiles[i] as never));
+		}
+		const tabShift = deletedIndices.filter(n => n <= selectedTab).length;
+		const indexShift = selectedTab - tabShift;
+
+		dispatch(selectTab(indexShift));
+
+		if (newTabs[0]) dispatch(selectFile(newTabs[0]));
 
 		setDeleteEl(null);
 	}
