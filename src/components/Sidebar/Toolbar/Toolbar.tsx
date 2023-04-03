@@ -111,24 +111,19 @@ export default function Toolbar (
 		if (!newTabs.length) newTabs = [null];
 		dispatch(setTabs(newTabs));
 
-		console.log(nestedFiles);
-
 		const deletedIndices = [];
 		for (let i = 0; i < nestedFiles.length; i++) {
 			if (tabs.includes(nestedFiles[i] as never)) {
 				deletedIndices.push(tabs.indexOf(nestedFiles[i] as never));
 			}
 		}
-		console.log('deletedIndices:' + deletedIndices);
-		console.log('selectedTab:' + selectedTab)
+
 		const tabShift = deletedIndices.filter(n => n <= selectedTab).length;
-		console.log('tabShift: ' + tabShift);
-		const indexShift = selectedTab - tabShift;
-		console.log('indexShift: ' + indexShift);
-
-		dispatch(selectTab(indexShift));
-
-		if (newTabs[indexShift]) dispatch(selectFile(newTabs[indexShift]!));
+		if (tabShift) {
+			const indexShift = selectedTab - tabShift;
+			dispatch(selectTab(indexShift >= 0 ? indexShift : 0));
+			if (newTabs[indexShift]) dispatch(selectFile(newTabs[indexShift]!));
+		}
 
 		setDeleteEl(null);
 	}
