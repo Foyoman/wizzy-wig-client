@@ -20,4 +20,3 @@ Speaking of tabs, you also have a tab system to multitask between notes! They wo
 
 ## File System
 Create folders as well as md files, everything can be nested and sorted - test it out with the toolbar at the top, the functionality was really fun to write!
-> Please refresh the page if you delete the login/signup button and can't get it back
