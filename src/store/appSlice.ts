@@ -74,7 +74,7 @@ export const appSlice = createSlice({
 		},
 		selectItem: (
 			state,
-			action: PayloadAction<File>
+			action: PayloadAction<File | null>
 		) => {
 			state.selectedItem = action.payload;
 		},

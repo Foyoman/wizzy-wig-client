@@ -42,6 +42,11 @@ const FileSystem = (
 		}
 	}
 
+	const handleDeselect = () => {
+		dispatch(selectFolder(null));
+		dispatch(selectItem(null));
+	}
+
 	const mapDirectory = (
 		items: File[],
 		parent: File | null,
@@ -89,7 +94,7 @@ const FileSystem = (
 			defaultCollapseIcon={<ExpandMoreIcon />}
 			defaultExpandIcon={<ChevronRightIcon />}
 			sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-			onClick={() => dispatch(selectFolder(null))}
+			onClick={handleDeselect}
 		>
 			{ mappedItems }
 		</TreeView>
