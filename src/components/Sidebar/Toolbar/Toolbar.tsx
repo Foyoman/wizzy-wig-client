@@ -256,16 +256,34 @@ export default function Toolbar (
 						'aria-labelledby': 'basic-button',
 					}}
 				>
-					<MenuItem className="menu-item delete">
-						<p>Are you sure?</p>
+					<MenuItem className="menu-item">
+					{ selectedItem ? 
 						<div className="delete-confirm">
-							<Button variant="contained" color="error" onClick={handleDelete}>
-								Confirm
-							</Button>
+							<div className="file-to-delete">
+								<p>
+									{ selectedItem?.isFolder ? 'Folder ' : 'File ' } 
+									to delete:
+								</p>
+								<p>{ selectedItem?.title }</p>
+							</div>
+							<p>Are you sure?</p>
+							<div className="confirm-buttons">
+								<Button variant="contained" color="error" onClick={handleDelete}>
+									Confirm
+								</Button>
+								<Button variant="outlined" onClick={() => setDeleteEl(null)}>
+									Cancel
+								</Button>
+							</div>
+						</div>
+					: 
+						<div className="delete-confirm">
+							<p>Select an item to delete</p>
 							<Button variant="outlined" onClick={() => setDeleteEl(null)}>
-								Cancel
+								Ok
 							</Button>
 						</div>
+					}
 					</MenuItem>
 				</Menu>
 				{/* filter menu */}

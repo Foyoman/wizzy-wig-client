@@ -69,15 +69,25 @@
 			justify-content: space-between;
 			padding: var(--spacer-xs) var(--spacer-sm);
 
-			&.delete {
+			.delete-confirm {
 				flex-direction: column;
 				justify-content: center;
+				text-align: center;
+				font-size: var(--text-sm);
 
 				p {
 					margin-bottom: var(--spacer-sm);
 				}
 
-				.delete-confirm {
+				.file-to-delete {
+					margin-bottom: var(--spacer-xs);
+
+					p {
+						margin-bottom: 0;
+					}
+				}
+
+				.confirm-buttons {
 					display: flex;
 					gap: var(--spacer-sm);
 
