@@ -20,7 +20,6 @@ export default function App() {
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
   const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
-  // const files = useSelector((state: RootState) => state.app.files);
   const [content, setContent] = useState<string | undefined>(selectedFile?.content as string | undefined);
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
