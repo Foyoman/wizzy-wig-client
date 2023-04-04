@@ -19,7 +19,6 @@ export interface AppState {
 
 const initialState: AppState = {
 	files: sortFileSystem(files, "title", false),
-	// files: [],
 	markdown: "",
 	showSidebar: true,
 	saveState: "saved",
@@ -108,6 +107,7 @@ export const appSlice = createSlice({
 		) => {
 			state.saveState = "saved";
 			findById(state.files, "update", state.selectedFile as File, null, action.payload);
+			findById(state.tabs as File[], "update", state.selectedFile as File, null, action.payload);
 		},
 		// prevents a bug where debounce would run after switching files, overwriting the file switched to and causing infinite loops 
 		selectTab: (
