@@ -10,7 +10,7 @@ export interface AppState {
 	markdown: string;
 	showSidebar: boolean;
 	saveState: SaveStates;
-	tabs: Array<File | null> | [];
+	tabs: Array<File | null> | []; // tabs currently don't update changes
 	selectedTab: number;
 	selectedItem: File | null;
 	selectedFile: File | null;

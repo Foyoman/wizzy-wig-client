@@ -46,7 +46,7 @@ export default function MdEditor(props: MdEditorProps) {
 		};
 	}, [debouncedSetMarkdown, dispatch, selectedFile]);
 
-	// trigger autosave after 3 seconds of inactivity
+	// trigger autosave after 1 second of inactivity // TODO: save to db
 	useEffect(() => {
 		const lastEditTime = Date.now();
 		const timeout = setTimeout(() => {
