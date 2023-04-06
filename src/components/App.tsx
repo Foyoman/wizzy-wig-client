@@ -65,7 +65,6 @@ export default function App() {
 
   // count page visits
   useEffect(() => {
-    localStorage.setItem('status', 'visited');
     if (localStorage.getItem('status') !== 'visited') {
       countapi.update('wizzy-wig.netlify.app', 'fcaf3e5c-8c4b-4217-90f3-22d573fcec35', 1)
         .then((result) => {
@@ -73,6 +72,9 @@ export default function App() {
         }
       )
     }
+    
+    localStorage.setItem('status', 'visited');
+
     countapi.get('wizzy-wig.netlify.app', 'fcaf3e5c-8c4b-4217-90f3-22d573fcec35')
       .then((result) => {
         console.log(result);
