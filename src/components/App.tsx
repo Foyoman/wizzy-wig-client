@@ -93,7 +93,7 @@ export default function App() {
     } else {
       countapi.get('wizzy-wig.netlify.app', countKey)
         .then((result) => {
-          console.log(`this page has had ${result.value} unique visit${result.value > 1 ? 's' : ''}`);
+          console.log(`this page has had ${result.value} unique visit${result.value !== 1 ? 's' : ''}`);
         }
       )
     }
