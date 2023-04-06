@@ -67,8 +67,10 @@ export default function App() {
 
   // count page visits
   useEffect(() => {
+    const countKey = process.env.REACT_APP_COUNT_KEY as string;
+
     if (localStorage.getItem('status') !== 'visited') {
-      countapi.update('wizzy-wig.netlify.app', process.env.COUNT_KEY!, 1)
+      countapi.update('wizzy-wig.netlify.app', countKey, 1)
         .then((result) => {
           console.log(result);
         }
@@ -77,7 +79,7 @@ export default function App() {
 
     localStorage.setItem('status', 'visited');
 
-    countapi.get('wizzy-wig.netlify.app', process.env.COUNT_KEY!)
+    countapi.get('wizzy-wig.netlify.app', countKey)
       .then((result) => {
         console.log(result);
       }
