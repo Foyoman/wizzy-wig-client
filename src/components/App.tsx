@@ -65,17 +65,18 @@ export default function App() {
 
   // count page visits
   useEffect(() => {
+    console.log(process.env.COUNT_KEY)
     if (localStorage.getItem('status') !== 'visited') {
-      countapi.update('wizzy-wig.netlify.app', 'fcaf3e5c-8c4b-4217-90f3-22d573fcec35', 1)
+      countapi.update('wizzy-wig.netlify.app', process.env.COUNT_KEY!, 1)
         .then((result) => {
           console.log(result);
         }
       )
     }
-    
+
     localStorage.setItem('status', 'visited');
 
-    countapi.get('wizzy-wig.netlify.app', 'fcaf3e5c-8c4b-4217-90f3-22d573fcec35')
+    countapi.get('wizzy-wig.netlify.app', process.env.COUNT_KEY!)
       .then((result) => {
         console.log(result);
       }
