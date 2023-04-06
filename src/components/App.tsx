@@ -10,9 +10,9 @@ import type { RootState } from "../store/store";
 import { setStaticProps } from '../store/appSlice';
 
 import { File } from '../types/FileTypes';
-
 import { fileSys } from '../lib/starter-files';
 
+import countapi from 'countapi-js';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -23,7 +23,6 @@ export default function App() {
   const [content, setContent] = useState<string | undefined>(selectedFile?.content as string | undefined);
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
-  
   // user check
   useEffect(() => {
     const user = false; // replace with real user check
@@ -63,6 +62,15 @@ export default function App() {
   useEffect(() => {
     setContent(selectedFile?.content as string | undefined)
   }, [selectedFile]);
+
+  // count page visits
+  useEffect(() => {
+    countapi.get('wizzy-wig.netlify.app', 'fcaf3e5c-8c4b-4217-90f3-22d573fcec35')
+      .then ((result) => {
+        console.log(result);
+      }
+    )
+  }, [])
   
   const handleClick = (e: Event) => {
     e.preventDefault();
