@@ -12,6 +12,8 @@ import { setStaticProps } from '../store/appSlice';
 import { File } from '../types/FileTypes';
 import { fileSys } from '../lib/starter-files';
 
+import CircularProgress from '@mui/material/CircularProgress';
+
 import countapi from 'countapi-js';
 
 export default function App() {
@@ -126,26 +128,35 @@ export default function App() {
     )
   }
 
-  return (
-    <>
-      <div className="page">
-        <Navbar />
-        <div className='container'>
-          <Sidebar />
-          <div 
-            className={`md-container ${!showSidebar ? 'sidebar-hidden' : ''}`}
-          >
-          { tabs[selectedTab] ? 
-            <MarkdownParser 
-              content={content} 
-              defaultSplit={[55, 45]}
-            />
-          : 
-            <NoFile />
-          }
+  if (!starterFiles) {
+    return (
+      <div className='loading'>
+        <CircularProgress />
+      </div>
+    )
+  } else {
+    return (
+      <>
+        <div className="page">
+          <Navbar />
+          <div className='container'>
+            <Sidebar />
+            <div 
+              className={`md-container ${!showSidebar ? 'sidebar-hidden' : ''}`}
+            >
+            { tabs[selectedTab] ? 
+              <MarkdownParser 
+                content={content} 
+                defaultSplit={[55, 45]}
+              />
+            : 
+              <NoFile />
+            }
+            </div>
           </div>
         </div>
-      </div>
-    </>
-  )
+      </>
+    )
+  }
+
 }
