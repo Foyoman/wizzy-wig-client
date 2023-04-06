@@ -23,7 +23,7 @@ interface MarkdownParserProps {
 const MarkdownParser = ({ 
 	content = "",
 	theme = 'dark',
-	splitDirection = 'vertical',
+	splitDirection = 'horizontal',
 	defaultSplit = [50, 50],
 }: MarkdownParserProps) => {
 	const [split, setSplit] = useState(splitDirection);

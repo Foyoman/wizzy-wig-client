@@ -120,7 +120,7 @@ export default function App() {
           { tabs[selectedTab] ? 
             <MarkdownParser 
               content={content} 
-              defaultSplit={[70, 30]}
+              defaultSplit={[55, 45]}
             />
           : 
             <NoFile />
