@@ -72,14 +72,14 @@
 		background-position: 50%;
 
 		&.gutter-horizontal {
-			width: 20px !important;
+			width: 16px !important;
 			height: auto !important;
 			background-image: url("../../assets/images/horizontal-gutter.png");
 			cursor: col-resize;
 		}
 
 		&.gutter-vertical {
-			height: 20px !important;
+			height: 16px !important;
 			width: auto !important;
 			background-image: url("../../assets/images/vertical-gutter.png");
 			cursor: row-resize;

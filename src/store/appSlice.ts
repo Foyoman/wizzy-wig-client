@@ -165,7 +165,7 @@ export const appSlice = createSlice({
 		) => {
 			// set up new file
 			const [ title, key ] = action.payload;
-			const tempId = "tempid" + Math.random();
+			const tempId = "tempid." + Math.random();
 			const newFile: File = {
 				id: tempId,
 				title: title ? title : "Untitled",

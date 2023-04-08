@@ -87,6 +87,10 @@ export const findById = (
 	}
 
 	for (const item of items) {
+		if (!item.id || !needle.id) {
+			throw new Error('id not found');
+		}
+
 		const helper = (item: File) => {
 			if (destroy) {
 				const itemIndex = items.indexOf(item);
