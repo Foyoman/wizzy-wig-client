@@ -10,8 +10,8 @@ const testFs: File[] = [
 	{
 		id: '0',
 		title: 'angela',
-		dateCreated: new Date('01-01-1990 00:03:44'),
-		lastUpdated: new Date('01-01-2000 00:03:44'),
+		dateCreated: new Date('01-01-1990 00:03:44').toISOString(),
+		lastUpdated: new Date('01-01-2000 00:03:44').toISOString(),
 		isFolder: false,
 		content: 'angelas content'
 	},
@@ -20,8 +20,8 @@ const testFs: File[] = [
 const testNeedle: File = {
 	id: '0',
 	title: 'angela',
-	dateCreated: new Date('01-01-1990 00:03:44'),
-	lastUpdated: new Date('01-01-2000 00:03:44'),
+	dateCreated: new Date('01-01-1990 00:03:44').toISOString(),
+	lastUpdated: new Date('01-01-2000 00:03:44').toISOString(),
 	isFolder: false,
 	content: 'angelas content'
 }
@@ -30,8 +30,8 @@ const testResult: File[] = [
 	{
 		id: '0',
 		title: 'angela',
-		dateCreated: new Date('01-01-1990 00:03:44'),
-		lastUpdated: new Date('01-01-2000 00:03:44'),
+		dateCreated: new Date('01-01-1990 00:03:44').toISOString(),
+		lastUpdated: new Date('01-01-2000 00:03:44').toISOString(),
 		isFolder: false,
 		content: 'jest'
 	},

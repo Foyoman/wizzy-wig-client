@@ -1,8 +1,8 @@
 export interface File {
 	id?: string;
 	title: string;
-	dateCreated: Date;
-	lastUpdated: Date;
+	dateCreated: string;
+	lastUpdated: string;
 	isFolder: boolean;
 	content?: string | null;
 	children?: File[] | null;

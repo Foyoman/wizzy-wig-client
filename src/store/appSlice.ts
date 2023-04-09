@@ -187,8 +187,8 @@ export const appSlice = createSlice({
 			const newFile: File = {
 				id: tempId,
 				title: title ? title : "Untitled",
-				dateCreated: new Date(),
-				lastUpdated: new Date(),
+				dateCreated: new Date().toISOString(),
+				lastUpdated: new Date().toISOString(),
 				isFolder: key === "folder",
 				content: key === "file" ? "" : null,
 				children: key === "folder" ? [] : null,
