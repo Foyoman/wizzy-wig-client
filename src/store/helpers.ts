@@ -81,18 +81,14 @@ export const findById = (
 	const update = key === "update";
 	const destroy = key === "delete";
 
-	if (!needle) {
-		throw new Error('needle not found');
-	}
-
 	if (append && !needle && child) { 
 		items.push(child);
 		return items;
 	}
 
 	for (const item of items) {
-		if (!item.id) {
-			throw new Error('item not found');
+		if (!item) {
+			return;
 		}
 
 		const helper = (item: File) => {

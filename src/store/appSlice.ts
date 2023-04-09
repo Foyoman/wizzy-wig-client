@@ -105,6 +105,7 @@ export const appSlice = createSlice({
 			state,
 			action: PayloadAction<string>,
 		) => {
+			console.log('saving file...');
 			state.saveState = "saved";
 			findById(state.files, "update", state.selectedFile as File, null, action.payload);
 			findById(state.tabs as File[], "update", state.selectedFile as File, null, action.payload);
