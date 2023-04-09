@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 import { debounce } from "lodash";
 import Editor, { useMonaco, OnMount, Monaco } from "@monaco-editor/react";
 import { IKeyboardEvent } from "monaco-editor-core";
@@ -23,19 +23,11 @@ export default function MdEditor(props: MdEditorProps) {
 	const allowSave = useSelector((state: RootState) => state.app.allowSave);
 	const dispatch = useDispatch();
 	const monaco = useMonaco();
-	// const [lastEditTime, setLastEditTime] = useState<number | null>(null);
-	// const [allowSave, setAllowSave] = useState<boolean>(false);
 
 	// no clue what this does
 	useEffect(() => {
 		monaco?.languages.typescript.javascriptDefaults.setEagerModelSync(true);
 	}, [monaco]);
-
-	// debounce updating markdown to improve performance
-	const debouncedSetMarkdown = debounce((value: string) => {
-		console.log('running debounced set markdown...');
-		dispatch(updateMarkdown({ value: value, file: selectedFile! }));
-	}, 1000);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const handleEditorDidMount: OnMount = (editor: editor.IStandaloneCodeEditor, _monaco: Monaco) => {
@@ -49,16 +41,27 @@ export default function MdEditor(props: MdEditorProps) {
     }
   };
 
+	// debounce updating markdown to improve performance
+	const debouncedSetMarkdown = useCallback(
+    debounce((value: string) => {
+      console.log('running debounced set markdown...');
+      dispatch(updateMarkdown({ value: value, file: selectedFile! }));
+    }, 1000),
+    [dispatch, selectedFile]
+  );
+
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
 		return (value: string | undefined, e?: editor.IModelContentChangedEvent) => {
 			if (!allowSave) return;
 			dispatch(saveFile(value || ""));
 			// dispatch(setSaveState("modified"));
-			if (value && value.length > 500) {
-				debouncedSetMarkdown(value);
-			} else if (value || value === "") {
-				dispatch(updateMarkdown({ value: value, file: selectedFile! }));
+			if (value) {
+				if (value.length > 500) {
+					debouncedSetMarkdown(value);
+				} else {
+					dispatch(updateMarkdown({ value: value, file: selectedFile! }));
+				}
 			}
 		};
 	}, [allowSave, debouncedSetMarkdown, dispatch, selectedFile]);
@@ -71,8 +74,8 @@ export default function MdEditor(props: MdEditorProps) {
 			const now = Date.now();
 			const timeSinceLastEdit = now - lastEditTime!;
 			if (timeSinceLastEdit >= 1000) {
-				console.log('autosaving...')
-				dispatch(saveFile(markdown));
+				console.log('autosaving...');
+				// dispatch(saveFile(markdown));
 			}
 		}, 1000);
 
