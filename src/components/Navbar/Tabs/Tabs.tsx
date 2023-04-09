@@ -91,6 +91,7 @@ export default function Tabs() {
 								title={file.title} 
 								selected={index === selectedTab} 
 								index={index}
+								key={index}
 							/>
 						)
 					} else {
@@ -99,6 +100,7 @@ export default function Tabs() {
 								title="New tab" 
 								selected={index === selectedTab} 
 								index={index} 
+								key={index}
 							/>
 						)
 					}

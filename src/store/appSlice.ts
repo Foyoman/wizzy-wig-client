@@ -127,6 +127,7 @@ export const appSlice = createSlice({
 			// select tab by index
 			state.selectedTab = action.payload;
 		},
+		// TODO: bug - when a new file is created it's recognised as the same file if left empty but not after edited, so this same file can be set in two tabs
 		setTab: (
 			state,
 			action: PayloadAction<File | null>
@@ -136,6 +137,12 @@ export const appSlice = createSlice({
 			// set current tab to the selected file
 			state.tabs[state.selectedTab] = file;
 			selectFile(file!);
+		},
+		setTabs: (
+			state,
+			action: PayloadAction<(File | null)[] | []>
+		) => {
+			state.tabs = action.payload;
 		},
 		newTab: (
 			state,
@@ -214,12 +221,6 @@ export const appSlice = createSlice({
 			const fileToDelete = action.payload;
 			findById(state.files, "delete", fileToDelete);
 		},
-		setTabs: (
-			state,
-			action: PayloadAction<(File | null)[] | []>
-		) => {
-			state.tabs = action.payload;
-		}
 	}
 })
 
@@ -236,11 +237,11 @@ export const {
 	saveFile,
 	selectTab,
 	setTab,
+	setTabs,
 	newTab,
 	closeTab,
 	createFile,
 	deleteFile,
-	setTabs,
 } = appSlice.actions;
 
 export default appSlice.reducer;
