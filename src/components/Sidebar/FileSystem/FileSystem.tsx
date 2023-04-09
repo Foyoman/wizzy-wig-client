@@ -29,7 +29,7 @@ const FileSystem = (
 		e.stopPropagation();
 		dispatch(selectItem(item));
 		if (!item.isFolder) {
-			dispatch(selectFolder(parent))
+			dispatch(selectFolder(parent));
 			if (tabs.includes(item as never)) {
 				// if open tabs includes file, set tab to that file
 				dispatch(selectTab(tabs.indexOf(item as never)))

@@ -127,7 +127,7 @@ export const appSlice = createSlice({
 			// select tab by index
 			state.selectedTab = action.payload;
 		},
-		// TODO: bug - when a new file is created it's recognised as the same file if left empty but not after edited, so this same file can be set in two tabs
+		// TODO: bug - when a file is updated it's not recognised as the same file
 		setTab: (
 			state,
 			action: PayloadAction<File | null>
@@ -171,11 +171,6 @@ export const appSlice = createSlice({
 			} else if (state.tabs.length <= 1) {
 				state.selectedTab = 0;
 			}
-
-			// if the new current tab is an open file, switch the content to the new current tab
-			// ^ I guess the above isn't asynchronous - mutable. obviously?
-			const file = state.tabs[state.selectedTab];
-			if (file) selectFile(file);
 		},
 		createFile: (
 			state,

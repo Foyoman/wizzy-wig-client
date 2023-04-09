@@ -25,6 +25,14 @@ export const fileSys: File[] = [
 		isFolder: true,
 		children: [
 			{
+				id: 'bugs',
+				title: 'Bugs',
+				dateCreated: new Date('04/09/23').toISOString(),
+				lastUpdated: new Date('04/09/23').toISOString(),
+				isFolder: false,
+				content: ''
+			},
+			{
 				id: 'practical-recursion',
 				title: 'Practical Recursion',
 				dateCreated: new Date('03/21/23').toISOString(),

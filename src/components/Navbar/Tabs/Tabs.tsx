@@ -30,12 +30,20 @@ export default function Tabs() {
 		tabBarEl.current!.scrollLeft += e.deltaY;
 	}
 
+	const closeHelper = (index: number) => {
+		if (tabs.length - 1 === index && tabs[selectedTab - 1]) {
+			dispatch(selectFile(tabs[selectedTab - 1] as File));
+		}
+		// console.log(tabs[selectedTab - 1])
+		dispatch(closeTab(index));
+	}
+
 	const handleAuxClick = (
 		e: React.MouseEvent<HTMLDivElement, MouseEvent>,
 		index: number
 	) => {
 		if (e.button === 1) {
-			dispatch(closeTab(index));
+			closeHelper(index);
 		}
 	}
 
@@ -59,7 +67,7 @@ export default function Tabs() {
 			index: number
 		) => {
 			e.stopPropagation();
-			dispatch(closeTab(index));
+			closeHelper(index);
 		}
 
 		return (
