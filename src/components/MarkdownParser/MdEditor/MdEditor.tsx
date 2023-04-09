@@ -42,13 +42,14 @@ export default function MdEditor(props: MdEditorProps) {
   };
 
 	// debounce updating markdown to improve performance
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedSetMarkdown = useCallback(
-    debounce((value: string) => {
-      console.log('running debounced set markdown...');
-      dispatch(updateMarkdown({ value: value, file: selectedFile! }));
-    }, 1000),
-    [dispatch, selectedFile]
-  );
+		debounce((value: string) => {
+			console.log('running debounced set markdown...');
+			dispatch(updateMarkdown({ value: value, file: selectedFile! }));
+		}, 1000),
+		[dispatch, selectedFile]
+	);
 
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
