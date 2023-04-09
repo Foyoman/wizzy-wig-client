@@ -1,11 +1,12 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
-import Editor, { useMonaco } from "@monaco-editor/react";
+import Editor, { useMonaco, OnMount, Monaco } from "@monaco-editor/react";
+import { IKeyboardEvent } from "monaco-editor-core";
 
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 
 import { useDispatch } from "react-redux";
-import { updateMarkdown } from "../../../store/appSlice";
+import { setAllowSave, updateMarkdown } from "../../../store/appSlice";
 import { saveFile } from "../../../store/appSlice";
 import { useSelector } from 'react-redux';
 import type { RootState } from "../../../store/store";
@@ -19,8 +20,11 @@ export default function MdEditor(props: MdEditorProps) {
 	const { content, theme } = props;
 	const markdown = useSelector((state: RootState) => state.app.markdown);
 	const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
+	const allowSave = useSelector((state: RootState) => state.app.allowSave);
 	const dispatch = useDispatch();
 	const monaco = useMonaco();
+	// const [lastEditTime, setLastEditTime] = useState<number | null>(null);
+	// const [allowSave, setAllowSave] = useState<boolean>(false);
 
 	// no clue what this does
 	useEffect(() => {
@@ -33,9 +37,22 @@ export default function MdEditor(props: MdEditorProps) {
 		dispatch(updateMarkdown({ value: value, file: selectedFile! }));
 	}, 1000);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const handleEditorDidMount: OnMount = (editor: editor.IStandaloneCodeEditor, _monaco: Monaco) => {
+    const model = editor.getModel();
+
+    if (model) {
+			// Add event listener for keydown
+      editor.onKeyDown((_event: IKeyboardEvent) => {
+				dispatch(setAllowSave(true));
+      });
+    }
+  };
+
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
 		return (value: string | undefined, e?: editor.IModelContentChangedEvent) => {
+			if (!allowSave) return;
 			dispatch(saveFile(value || ""));
 			// dispatch(setSaveState("modified"));
 			if (value && value.length > 500) {
@@ -44,15 +61,17 @@ export default function MdEditor(props: MdEditorProps) {
 				dispatch(updateMarkdown({ value: value, file: selectedFile! }));
 			}
 		};
-	}, [debouncedSetMarkdown, dispatch, selectedFile]);
+	}, [allowSave, debouncedSetMarkdown, dispatch, selectedFile]);
 
 	// trigger autosave after 1 second of inactivity // TODO: async save to db
 	useEffect(() => {
+		if (!allowSave) return;
 		const lastEditTime = Date.now();
 		const timeout = setTimeout(() => {
 			const now = Date.now();
-			const timeSinceLastEdit = now - lastEditTime;
+			const timeSinceLastEdit = now - lastEditTime!;
 			if (timeSinceLastEdit >= 1000) {
+				console.log('autosaving...')
 				dispatch(saveFile(markdown));
 			}
 		}, 1000);
@@ -60,7 +79,7 @@ export default function MdEditor(props: MdEditorProps) {
 		return () => {
 			clearTimeout(timeout);
 		};
-	}, [dispatch, markdown]);
+	}, [allowSave, dispatch, markdown]);
 
 	const MemoizedEditor = useMemo(() => {
 		return (
@@ -77,9 +96,10 @@ export default function MdEditor(props: MdEditorProps) {
 					wordWrap: "on",
 				}}
 				className="md-editor"
+				onMount={handleEditorDidMount}
 			/>
 		)
-	}, [content, handleInputChange, theme]);
+	}, [content, handleEditorDidMount, handleInputChange, theme]);
 
 	return MemoizedEditor;
 }

@@ -9,6 +9,7 @@ export interface AppState {
 	files: File[];
 	markdown: string;
 	showSidebar: boolean;
+	allowSave: boolean;
 	saveState: SaveStates;
 	tabs: Array<File | null> | []; // tabs currently don't update changes
 	selectedTab: number;
@@ -21,6 +22,7 @@ const initialState: AppState = {
 	files: sortFileSystem(files, "title", false),
 	markdown: "",
 	showSidebar: true,
+	allowSave: false,
 	saveState: "saved",
 	tabs: [null],
 	selectedTab: 0,
@@ -101,6 +103,12 @@ export const appSlice = createSlice({
 		) => {
 			state.saveState = action.payload;
 		},
+		setAllowSave: (
+			state,
+			action: PayloadAction<boolean>,
+		) => {
+			state.allowSave = action.payload;
+		},
 		saveFile: (
 			state,
 			action: PayloadAction<string>,
@@ -115,6 +123,7 @@ export const appSlice = createSlice({
 			state,
 			action: PayloadAction<number>
 		) => {
+			state.allowSave = false;
 			// select tab by index
 			state.selectedTab = action.payload;
 		},
@@ -123,6 +132,7 @@ export const appSlice = createSlice({
 			action: PayloadAction<File | null>
 		) => {
 			const file = action.payload;
+			state.allowSave = false;
 			// set current tab to the selected file
 			state.tabs[state.selectedTab] = file;
 			selectFile(file!);
@@ -222,6 +232,7 @@ export const {
 	updateMarkdown, 
 	toggleSidebar,
 	setSaveState,
+	setAllowSave,
 	saveFile,
 	selectTab,
 	setTab,
