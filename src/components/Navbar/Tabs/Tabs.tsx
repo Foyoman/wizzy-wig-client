@@ -5,7 +5,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { useDispatch } from 'react-redux';
-import { selectTab, newTab, closeTab, selectFile } from '../../../store/appSlice';
+import { selectTab, newTab, closeTab, selectFile, selectItem } from '../../../store/appSlice';
 import { File } from '../../../types/FileTypes';
 
 export default function Tabs() {
@@ -59,6 +59,7 @@ export default function Tabs() {
 			dispatch(selectTab(index));
 			if (file) {
 				dispatch(selectFile(file));
+				dispatch(selectItem(file));
 			}
 		}
 
