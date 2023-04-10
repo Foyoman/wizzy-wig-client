@@ -132,7 +132,6 @@ export default function Toolbar (
 
 		if (!newTabs.length) newTabs = [null];
 		dispatch(setTabs(newTabs));
-
 		dispatch(selectItem(null));
 
 		setDeleteEl(null);

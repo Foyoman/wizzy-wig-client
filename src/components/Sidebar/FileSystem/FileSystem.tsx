@@ -30,9 +30,12 @@ const FileSystem = (
 		dispatch(selectItem(item));
 		if (!item.isFolder) {
 			dispatch(selectFolder(parent));
-			if (tabs.includes(item as never)) {
+			const tabIds = tabs.map((tab) => {
+				return tab ? tab.id : null;
+			})
+			if (tabIds.includes(item.id as never)) {
 				// if open tabs includes file, set tab to that file
-				dispatch(selectTab(tabs.indexOf(item as never)))
+				dispatch(selectTab(tabIds.indexOf(item.id as never)))
 			} else {
 				dispatch(setTab(item));
 			}

@@ -1,3 +1,2 @@
-- Closing a currently selected tab that is the last index will not reset the selected file or markdown parser props to the new last index tab
-- Updating a file will have it not be recognised as the same file in the file system, allowing multiple tabs to be set to the same file
-- Deleting a file that's the last tab index won't shift the selected tab down
+#### All bugs currently resolved  
+If you find a new bug please email me at [edwardtdo@gmail.com](mailto:edwardtdo@gmail.com)
