@@ -21,7 +21,7 @@ export default function Tabs() {
 	}, [tabs.length])
 
 	useEffect(() => {
-		tabBarEl.current!.addEventListener('wheel', handleScroll);
+		tabBarEl.current!.addEventListener('wheel', handleScroll, {passive: true});
 	})
 
 	// allows tab-bar to be scrolled horizontally even with vertical scroll

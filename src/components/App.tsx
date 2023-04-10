@@ -98,6 +98,13 @@ export default function App() {
       )
     }
 
+    // uncomment to reset counter
+    // countapi.set('wizzy-wig.netlify.app', countKey, 0)
+    //   .then((result) => {
+    //     console.log(result);
+    //   }
+    // )
+
     localStorage.setItem('status', 'visited');
   }, [])
   
