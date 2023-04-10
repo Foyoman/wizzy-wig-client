@@ -113,7 +113,6 @@ export default function Toolbar (
 				}
 			}
 
-
 			const tabShift = deletedIndices.filter(n => n <= selectedTab).length;
 			const indexShift = selectedTab - tabShift;
 			dispatch(selectTab(indexShift >= 0 ? indexShift : 0));
@@ -123,21 +122,11 @@ export default function Toolbar (
 		} else {
 			console.log('file deleted');
 			newTabs = tabs.filter(file => file !== selectedItem);
-			const indexOfDeleted = tabs.indexOf(selectedItem as never);
-			if (indexOfDeleted <= selectedTab) {
-				if (tabs.length - 1 > selectedTab) {
-					dispatch(selectTab(selectedTab));
-	
-					if (newTabs[selectedTab]) {
-						dispatch(selectFile(newTabs[selectedTab]!));
-					}
-				} else {
-					dispatch(selectTab(selectedTab - 1));
-	
-					if (newTabs[selectedTab - 1]) {
-						dispatch(selectFile(newTabs[selectedTab - 1]!));
-					}
-				}
+			const shift = tabs.length - 1 > selectedTab ? 0 : 1;
+			dispatch(selectTab(selectedTab - shift));
+
+			if (newTabs[selectedTab - shift]) {
+				dispatch(selectFile(newTabs[selectedTab - shift]!));
 			}
 		}
 
