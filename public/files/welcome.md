@@ -1,4 +1,4 @@
-# `wizzy wig` - [Create an account](#signupEl) or [Login](#loginEl) (currently not functional)
+# `wizzy wig` - [Create an account](#signupEl) or [Login](#loginEl) (auth inc.)
 Welcome! 	`wizzy wig` is an in browser note-taking app with code block syntax highlighting, a file system, and a tab system. 
 
 > This site is currently only a frontend demo. Backend integration and account creation coming soon.

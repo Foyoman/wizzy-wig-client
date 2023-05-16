@@ -70,7 +70,7 @@ export default function App() {
     const countKey = process.env.REACT_APP_COUNT_KEY as string;
 
     const getOrdinal = (n: number) => {
-      let ord = 'th';
+      let ord: 'th' | 'st' | 'nd' | 'rd' = 'th';
     
       if (n % 10 === 1 && n % 100 !== 11) {
         ord = 'st';
