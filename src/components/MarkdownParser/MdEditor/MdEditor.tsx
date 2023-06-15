@@ -12,13 +12,12 @@ import { useSelector } from 'react-redux';
 import type { RootState } from "../../../store/store";
 
 interface MdEditorProps {
-	content: string | undefined;
 	theme: "vs-dark" | "vs-light" | undefined;
 }
 
 export default function MdEditor(props: MdEditorProps) {
-	const { content, theme } = props;
-	const markdown = useSelector((state: RootState) => state.app.markdown);
+	const { theme } = props;
+	const markdown = useSelector((state: RootState) => state.app.markdown) as string | undefined;
 	const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
 	const allowSave = useSelector((state: RootState) => state.app.allowSave);
 	const dispatch = useDispatch();
@@ -53,16 +52,14 @@ export default function MdEditor(props: MdEditorProps) {
 
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
-		return (value: string | undefined, e?: editor.IModelContentChangedEvent) => {
+		return (value: string | null | undefined, e?: editor.IModelContentChangedEvent) => {
 			if (!allowSave) return;
 			dispatch(saveFile(value || ""));
 			// dispatch(setSaveState("modified"));
-			if (value) {
-				if (value.length > 500) {
-					debouncedSetMarkdown(value);
-				} else {
-					dispatch(updateMarkdown({ value: value, file: selectedFile! }));
-				}
+			if (value && value.length > 500) {
+				debouncedSetMarkdown(value);
+			} else {
+				dispatch(updateMarkdown({ value: value, file: selectedFile! }));
 			}
 		};
 	}, [allowSave, debouncedSetMarkdown, dispatch, selectedFile]);
@@ -93,7 +90,7 @@ export default function MdEditor(props: MdEditorProps) {
 				defaultLanguage="markdown"
 				defaultValue=""
 				theme={theme}
-				value={content}
+				value={markdown}
 				onChange={(value, e) => handleInputChange(value, e)}
 				options={{
 					selectOnLineNumbers: true,
@@ -103,7 +100,7 @@ export default function MdEditor(props: MdEditorProps) {
 				onMount={handleEditorDidMount}
 			/>
 		)
-	}, [content, handleEditorDidMount, handleInputChange, theme]);
+	}, [markdown, handleEditorDidMount, handleInputChange, theme]);
 
 	return MemoizedEditor;
 }

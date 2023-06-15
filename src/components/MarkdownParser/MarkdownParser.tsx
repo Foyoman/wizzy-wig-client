@@ -113,10 +113,7 @@ const MarkdownParser = ({
 				}}
 			>
 				<div className="padding" />
-				<MdEditor 
-					content={content} 
-					theme={editorTheme} 
-				/>
+				<MdEditor theme={editorTheme} />
 				<KeyboardTab 
 					className={`
 						collapse-tab 

@@ -7,7 +7,7 @@ import { sortFileSystem, findById } from './helpers';
 
 export interface AppState {
 	files: File[];
-	markdown: string;
+	markdown: string | null | undefined;
 	showSidebar: boolean;
 	allowSave: boolean;
 	saveState: SaveStates;
@@ -81,7 +81,7 @@ export const appSlice = createSlice({
 		},
 		updateMarkdown: (
 			state, 
-			action: PayloadAction<{ value: string, file: File }>
+			action: PayloadAction<{ value: string | null | undefined, file: File }>
 		) => {
 			const { value, file } = action.payload;
 			// prevents a bug where debounce will overwrite between switching files
