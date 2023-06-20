@@ -22,20 +22,22 @@ Read more about features in `~/Documentation/Feature Overview.md`
 This markdown parser couldn't be put together without the help of `react-markdown` and `react-syntax-highlighter`. Awesome tutorial goes to [Amir Adalan](https://amirardalan.com/blog/syntax-highlight-code-in-markdown). Thanks also to GitHub and their public markdown CSS.
 
 ```ts
-import { hug, relieve, caress } from '@/experiences/soul';
+import { hug, caress, relieve } from '@/experiences/soul';
 import { squeeze } from '@/experiences/physical';
 
-const hug = (participants: Person[]) => {
-	participants.forEach((person) => {
+const love = (people: Person[]) => {
+	people.forEach((person) => {
+		hug(person.body);
 		caress(person.soul);
-		squeeze(person.body);
 		if (person.doubts.length) {
 			relieve(person);
 		}
-	});
 
-	console.log(`${person.name}, you are loved <3`);
+		console.log(`${person.name}, you are loved <3`);
+	});
 };
+
+love(earth);
 ```
   
 ## `<MdEditor />`
