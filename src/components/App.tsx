@@ -14,8 +14,6 @@ import { fileSys } from '../lib/starter-files';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
-import countapi from 'countapi-js';
-
 export default function App() {
   const dispatch = useDispatch();
   const [starterFiles, setStarterFiles] = useState<File [] | null>(null);
