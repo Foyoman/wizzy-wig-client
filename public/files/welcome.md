@@ -2,6 +2,7 @@
 Welcome! 	`wizzy wig` is an in browser note-taking app with code block syntax highlighting, a file system, and a tab system. 
 
 > This site is currently only a frontend demo. Backend integration and account creation coming soon.
+### [The GitHub repo.](https://github.com/Foyoman/wizzy-wig-client)
 
 ## Edit this file! I dare you!
 Open the editor, and just mess around with it. Edit a file, switch files, and see if your changes are still there. Test the limits. Open a million tabs. Why not? This single page web app uses [static props](/files/welcome.md) to populate state - when you create an account and start making your own files, your file system will be automatically saved to the server. 
