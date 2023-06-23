@@ -177,6 +177,8 @@ export const appSlice = createSlice({
 			action: PayloadAction<[string, "file" | "folder"]>,
 		) => {
 			// set up new file
+			console.log(`selected file: ${state.selectedFile}`)
+			console.log(state.selectedFile);
 			const [ title, key ] = action.payload;
 			const tempId = "tempid." + Math.random();
 			const newFile: File = {

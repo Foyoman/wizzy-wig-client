@@ -87,6 +87,7 @@ export default function Toolbar (
 
 	const handleDelete = () => {
 		if (!selectedItem) return;
+		console.log(selectedItem);
 		dispatch(deleteFile(selectedItem));
 
 		let newTabs: (File | null)[];
@@ -103,7 +104,6 @@ export default function Toolbar (
 			}
 	
 			findNestedFiles(selectedItem);
-			console.log('folder deleted');
 			newTabs = tabs.filter(file => !nestedFiles.includes(file!));
 
 			const deletedIndices = [];
@@ -145,6 +145,7 @@ export default function Toolbar (
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>, key: "file" | "folder") => {
 		e.preventDefault();
+		if (!selectedItem) console.log('no selected item')
 		let title: string;
 		if (key === "file") {
 			title = fileTitle;
