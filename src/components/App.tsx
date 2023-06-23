@@ -12,6 +12,8 @@ import { setStaticProps } from '../store/appSlice';
 import { File } from '../types/FileTypes';
 import { fileSys } from '../lib/starter-files';
 
+import SignUp from './auth/SignUp';
+
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function App() {
@@ -65,6 +67,7 @@ export default function App() {
 
   const handleClick = (e: Event) => {
     e.preventDefault();
+    console.log('clicked');
   }
 
   useEffect(() => {
@@ -118,6 +121,7 @@ export default function App() {
       <>
         <div className="page">
           <Navbar />
+          {/* <SignUp /> */}
           <div className='container'>
             <Sidebar />
             <div 
