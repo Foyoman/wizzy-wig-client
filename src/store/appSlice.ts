@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-import { files } from '../__mocks__/Files';
+// import { files } from '../__mocks__/Files';
 import { File, SortKeys, SaveStates } from '../types/FileTypes';
 import { sortFileSystem, findById } from './helpers';
 
@@ -19,7 +19,7 @@ export interface AppState {
 }
 
 const initialState: AppState = {
-	files: sortFileSystem(files, "title", false),
+	files: [],
 	markdown: "",
 	showSidebar: true,
 	allowSave: false,
