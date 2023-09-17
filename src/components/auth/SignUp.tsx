@@ -21,6 +21,7 @@ export default function SignUp () {
 		});
 	}
 
+	// TODO: move to /utils or /hooks
 	async function registerUser(e: any) { // TODO: not any
 		e.preventDefault();
 		// setReadOnly(true);

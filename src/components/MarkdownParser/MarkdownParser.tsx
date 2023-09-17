@@ -21,7 +21,7 @@ interface MarkdownParserProps {
 }
 
 const MarkdownParser = ({ 
-	content = "",
+	// content = "",
 	theme = 'dark',
 	splitDirection = 'horizontal',
 	defaultSplit = [50, 50],

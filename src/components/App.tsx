@@ -42,7 +42,6 @@ export default function App() {
               console.error('Error fetching data:', error);
             }
           } else if (file.isFolder && file.children) {
-            
             await populateFiles(file.children);
           }
         }
