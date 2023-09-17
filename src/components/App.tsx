@@ -1,144 +1,151 @@
-import { useState, useEffect } from 'react';
-import MarkdownParser from './MarkdownParser/MarkdownParser';
-import Navbar from './Navbar/Navbar';
-import './App.scss';
-import '../assets/styles/global.scss'
-import Sidebar from './Sidebar/Sidebar';
+import { useState, useEffect } from "react";
+import MarkdownParser from "./MarkdownParser/MarkdownParser";
+import Navbar from "./Navbar/Navbar";
+import "./App.scss";
+import "../assets/styles/global.scss";
+import Sidebar from "./Sidebar/Sidebar";
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../store/store";
-import { setStaticProps } from '../store/appSlice';
+import { setStaticProps } from "../store/appSlice";
 
-import { File } from '../types/FileTypes';
-import { fileSys } from '../lib/starter-files';
+import { File } from "../types/FileTypes";
+import { fileSys } from "../lib/starter-files";
 
-import SignUp from './auth/SignUp';
+import SignUp from "./auth/SignUp";
 
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function App() {
-  const dispatch = useDispatch();
-  const [starterFiles, setStarterFiles] = useState<File [] | null>(null);
-  const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
-  const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
-  const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
-  const [content, setContent] = useState<string | undefined>(selectedFile?.content as string | undefined);
-  const tabs = useSelector((state: RootState) => state.app.tabs);
+    const dispatch = useDispatch();
+    const [starterFiles, setStarterFiles] = useState<File[] | null>(null);
+    const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
+    const selectedFile = useSelector(
+        (state: RootState) => state.app.selectedFile
+    );
+    const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
+    const [content, setContent] = useState<string | undefined>(
+        selectedFile?.content as string | undefined
+    );
+    const tabs = useSelector((state: RootState) => state.app.tabs);
 
-  // user check
-  useEffect(() => {
-    const user = false; // replace with real user check
-    if (!user) {
-      const populateFiles = async (files: File[]) => {
-        for (let file of files) {
-          if (!file.isFolder) {
-            try {
-              const filePath = `/files/${file.id}.md`
-              // const content = await getFileContents(filePath);
-              const response = await fetch(filePath);
-              const fileContents = await response.text();
-              file.content = fileContents;
-            } catch (error) {
-              console.error('Error fetching data:', error);
-            }
-          } else if (file.isFolder && file.children) {
-            await populateFiles(file.children);
-          }
+    // user check
+    useEffect(() => {
+        const user = false; // replace with real user check
+        if (!user) {
+            const fetchFileContents = async (file: File) => {
+                if (!file.isFolder) {
+                    try {
+                        const filePath = `/files/${file.id}.md`;
+                        const response = await fetch(filePath);
+                        const fileContents = await response.text();
+                        return { ...file, content: fileContents };
+                    } catch (error) {
+                        console.error("Error fetching data:", error);
+                        return file; // Return the original file if there's an error
+                    }
+                } else if (file.isFolder && file.children) {
+                    const updatedChildren: any = await Promise.all(
+                        file.children.map((childFile: File) => fetchFileContents(childFile))
+                    );
+                    return { ...file, children: updatedChildren };
+                }
+                return file;
+            };
+
+            const updateFileContents = async () => {
+                const updatedFileSys = await Promise.all(
+                    fileSys.map((file) => fetchFileContents(file))
+                );
+                setStarterFiles(updatedFileSys);
+            };
+
+            updateFileContents();
         }
-        
-        setStarterFiles(files);
-        return files;
-      };
-      
-      populateFiles(fileSys);
-    }
-  }, []);
+    }, []);
 
-  useEffect(() => {
-    if (starterFiles) {
-      dispatch(setStaticProps(starterFiles));
-    }
-  }, [starterFiles, dispatch])
-  
-  useEffect(() => {
-    setContent(selectedFile?.content as string | undefined)
-  }, [selectedFile]);
+    useEffect(() => {
+        if (starterFiles) {
+            dispatch(setStaticProps(starterFiles));
+        }
+    }, [starterFiles, dispatch]);
 
-  const handleClick = (e: Event) => {
-    e.preventDefault();
-    console.log('clicked');
-  }
+    useEffect(() => {
+        setContent(selectedFile?.content as string | undefined);
+    }, [selectedFile]);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const loginEl = document.querySelector("a[href='#loginEl']");
-      const signupEl = document.querySelector("a[href='#signupEl']");
-
-      if (loginEl) {
-        loginEl.addEventListener('click', handleClick);
-        clearInterval(intervalId);
-      }
-      if (signupEl) {
-        signupEl.addEventListener('click', handleClick);
-        clearInterval(intervalId);
-      }
-    }, 100);
-  
-    return () => {
-      clearInterval(intervalId);
-      const loginEl = document.querySelector("a[href='#loginEl']");
-      const signupEl = document.querySelector("a[href='#signupEl']");
-
-      if (loginEl) {
-        loginEl.removeEventListener('click', handleClick);
-      }
-      if (signupEl) {
-        signupEl.removeEventListener('click', handleClick);
-      }
+    const handleClick = (e: Event) => {
+        e.preventDefault();
+        console.log("clicked");
     };
-  }, []);
 
-  const NoFile = () => {
-    return (
-      <div className='no-file'>
-        <div>
-          <h1>No file is open</h1>
-          <p>Select a file from the sidebar or create a new file to start.</p>
-        </div>
-      </div>
-    )
-  }
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            const loginEl = document.querySelector("a[href='#loginEl']");
+            const signupEl = document.querySelector("a[href='#signupEl']");
 
-  if (!starterFiles) {
-    return (
-      <div className='loading'>
-        <CircularProgress />
-      </div>
-    )
-  } else {
-    return (
-      <>
-        <div className="page">
-          <Navbar />
-          {/* <SignUp /> */}
-          <div className='container'>
-            <Sidebar />
-            <div 
-              className={`md-container ${!showSidebar ? 'sidebar-hidden' : ''}`}
-            >
-            { tabs[selectedTab] ? 
-              <MarkdownParser 
-                content={content} 
-                defaultSplit={[55, 45]}
-              />
-            : 
-              <NoFile />
+            if (loginEl) {
+                loginEl.addEventListener("click", handleClick);
+                clearInterval(intervalId);
             }
-            </div>
-          </div>
-        </div>
-      </>
-    )
-  }
+            if (signupEl) {
+                signupEl.addEventListener("click", handleClick);
+                clearInterval(intervalId);
+            }
+        }, 100);
 
+        return () => {
+            clearInterval(intervalId);
+            const loginEl = document.querySelector("a[href='#loginEl']");
+            const signupEl = document.querySelector("a[href='#signupEl']");
+
+            if (loginEl) {
+                loginEl.removeEventListener("click", handleClick);
+            }
+
+            if (signupEl) {
+                signupEl.removeEventListener("click", handleClick);
+            }
+        };
+    }, []);
+
+    const NoFile = () => {
+        return (
+            <div className="no-file">
+                <div>
+                    <h1>No file is open</h1>
+                    <p>Select a file from the sidebar or create a new file to start.</p>
+                </div>
+            </div>
+        );
+    };
+
+    if (!starterFiles) {
+        return (
+            <div className="loading">
+                <CircularProgress />
+            </div>
+        );
+    } else {
+        return (
+            <>
+                <div className="page">
+                    <Navbar />
+                    {/* <SignUp /> */}
+                    <div className="container">
+                        <Sidebar />
+                        <div
+                            className={`md-container ${!showSidebar ? "sidebar-hidden" : ""}`}
+                        >
+                            {tabs[selectedTab] ? (
+                                <MarkdownParser content={content} defaultSplit={[55, 45]} />
+                            ) : (
+                                <NoFile />
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
 }
