@@ -70,6 +70,7 @@ export const appSlice = createSlice({
 			action: PayloadAction<File>,
 		) => {
 			const file = action.payload;
+			state.allowSave = false;
 			state.selectedFile = file;
 			state.markdown = file.content || "";
 		},
@@ -86,7 +87,7 @@ export const appSlice = createSlice({
 			const { value, file } = action.payload;
 			// prevents a bug where debounce will overwrite between switching files
 			const verified = file.id === state.selectedFile?.id;
-			if (verified) {
+			if (verified && state.allowSave) {
 				state.markdown = value;
 			} else {
 				console.log('file verification failed');

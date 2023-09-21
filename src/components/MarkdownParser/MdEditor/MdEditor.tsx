@@ -33,9 +33,9 @@ export default function MdEditor(props: MdEditorProps) {
 		const model = editor.getModel();
 
 		if (model) {
-				// Add event listener for keydown
+			// Add event listener for keydown
 		editor.onKeyDown((_event: IKeyboardEvent) => {
-					dispatch(setAllowSave(true));
+			dispatch(setAllowSave(true));
 		});
 		}
 	};
