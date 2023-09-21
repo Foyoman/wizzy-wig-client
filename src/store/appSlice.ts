@@ -223,6 +223,7 @@ export const appSlice = createSlice({
 		) => {
 			const fileToDelete = action.payload;
 			findById(state.files, "delete", fileToDelete);
+			state.selectedFolder = null;
 		},
 	}
 })
