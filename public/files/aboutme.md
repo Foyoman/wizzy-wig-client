@@ -9,10 +9,11 @@ I'm not really good at talking about myself so I'll express it in JSON format.
 ```json
 {
 	name: "Edward Do",
-	dob: process.env.ED_DOB,
-	passions: ["code", "his dog Donut", "travel", "backpacking", "latam culture", "sunsets"],
-	donut: {
-		age
+	passions: ["code", "his dog Donut", "travel", "backpacking", "latin culture", "sunsets"],
+	dog: {
+		name: "Donut"
+		dob: "11 Jan 2021",
+		race: "beagle"
 	},
 	expertise: { // more to come
 		languages: ["TypeScript/JS", "Ruby", "Python"],
