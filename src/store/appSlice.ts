@@ -197,7 +197,11 @@ export const appSlice = createSlice({
 			// sort file system after appendage
 			state.files = sortFileSystem(state.files, "title", false);
 			
+			// update selected item to the newly created file/folder
+			state.selectedItem = newFile;
+
 			if (key === "file") {
+				console.log(state.selectedItem);
 				// if the current tab is an open file, open the new file in a new tab
 				if (state.tabs[state.selectedTab]) {
 					state.tabs.push(newFile as never);
@@ -209,6 +213,8 @@ export const appSlice = createSlice({
 				state.selectedFile = newFile;
 				// file initialises empty
 				state.markdown = "";
+			} else {
+				state.selectedFolder = newFile;
 			}
 		},
 		deleteFile: (
