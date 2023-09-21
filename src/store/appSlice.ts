@@ -177,8 +177,6 @@ export const appSlice = createSlice({
 			action: PayloadAction<[string, "file" | "folder"]>,
 		) => {
 			// set up new file
-			console.log(`selected file: ${state.selectedFile}`)
-			console.log(state.selectedFile);
 			const [ title, key ] = action.payload;
 			const tempId = "tempid." + Math.random();
 			const newFile: File = {
@@ -201,7 +199,6 @@ export const appSlice = createSlice({
 			state.selectedItem = newFile;
 
 			if (key === "file") {
-				console.log(state.selectedItem);
 				// if the current tab is an open file, open the new file in a new tab
 				if (state.tabs[state.selectedTab]) {
 					state.tabs.push(newFile as never);
