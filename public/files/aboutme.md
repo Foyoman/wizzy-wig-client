@@ -1,6 +1,6 @@
 # Edward Do
 
-### [LinkedIn](https://linkedin.com/in/edwardtdo) | [GitHub](https://github.com/Foyoman) | [edwardtdo.com](https://edwardtdo.com)
+### [LinkedIn](https://linkedin.com/in/edwardtdo) | [GitHub](https://github.com/Foyoman) | [edwardtdo.info](https://edwardtdo.info)
 
 Hi! First, thanks for visiting my app! I'm really passionate about the fun I have coding and it makes me glad to be able to spread it :)
 
