@@ -30,21 +30,22 @@ export default function MdEditor(props: MdEditorProps) {
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const handleEditorDidMount: OnMount = (editor: editor.IStandaloneCodeEditor, _monaco: Monaco) => {
-    const model = editor.getModel();
+		const model = editor.getModel();
 
-    if (model) {
-			// Add event listener for keydown
-      editor.onKeyDown((_event: IKeyboardEvent) => {
-				dispatch(setAllowSave(true));
-      });
-    }
-  };
+		if (model) {
+				// Add event listener for keydown
+		editor.onKeyDown((_event: IKeyboardEvent) => {
+					dispatch(setAllowSave(true));
+		});
+		}
+	};
 
 	// debounce updating markdown to improve performance
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedSetMarkdown = useCallback(
 		debounce((value: string) => {
-			console.log('running debounced set markdown...');
+			console.log("setting debounced");
+			console.log(selectedFile);
 			dispatch(updateMarkdown({ value: value, file: selectedFile! }));
 		}, 1000),
 		[dispatch, selectedFile]
@@ -57,6 +58,8 @@ export default function MdEditor(props: MdEditorProps) {
 			dispatch(saveFile(value || ""));
 			// dispatch(setSaveState("modified"));
 			if (value && value.length > 500) {
+				console.log("running debounced")
+				// console.log(selectedFile);
 				debouncedSetMarkdown(value);
 			} else {
 				dispatch(updateMarkdown({ value: value, file: selectedFile! }));
@@ -72,7 +75,8 @@ export default function MdEditor(props: MdEditorProps) {
 			const now = Date.now();
 			const timeSinceLastEdit = now - lastEditTime!;
 			if (timeSinceLastEdit >= 1000) {
-				console.log('autosaving...');
+				return;
+				// console.log('autosaving...');
 				// dispatch(saveFile(markdown));
 			}
 		}, 1000);

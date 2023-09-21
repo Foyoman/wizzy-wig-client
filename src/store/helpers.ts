@@ -88,6 +88,7 @@ export const findById = (
 
 	for (const item of items) {
 		if (!item) {
+			console.log("item not found");
 			return;
 		}
 
