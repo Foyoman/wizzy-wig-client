@@ -1,11 +1,4 @@
-<!-- #### All bugs currently resolved  
-If you find a new bug please email me at [edwardtdo@gmail.com](mailto:edwardtdo@gmail.com) -->
-  
-
 # Bugs
 
-- Deleting an edited new file will not filter it from tabs
-
-  Recreate the bug by: create a new file, edit it, then delete it.
-
-  Deleting a file is 
+#### All bugs currently resolved  
+If you find a new bug please open an issue on [the GitHub repo](https://github.com/Foyoman/wizzy-wig-client) or email me at [edwardtdo@gmail.com](mailto:edwardtdo@gmail.com).

@@ -120,11 +120,10 @@ export default function Toolbar (
 				dispatch(selectFile(newTabs[indexShift]!));
 			}
 		} else {
-			console.log('file deleted');
-			newTabs = tabs.filter(file => file !== selectedItem);
+			newTabs = tabs.filter(file => file?.id !== selectedItem.id);
 			const shift = tabs.length - 1 > selectedTab ? 0 : 1;
 			dispatch(selectTab(selectedTab - shift));
-
+			
 			if (newTabs[selectedTab - shift]) {
 				dispatch(selectFile(newTabs[selectedTab - shift]!));
 			}
