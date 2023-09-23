@@ -29,7 +29,7 @@ export default function App() {
     );
     const tabs = useSelector((state: RootState) => state.app.tabs);
 
-    // user check
+    // user checkt
     useEffect(() => {
         const user = false; // replace with real user check
         if (!user) {

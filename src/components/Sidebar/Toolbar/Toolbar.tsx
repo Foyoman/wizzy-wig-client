@@ -104,10 +104,12 @@ export default function Toolbar (
 			}
 	
 			findNestedFiles(selectedItem);
-			newTabs = tabs.filter(file => !nestedFiles.includes(file!));
+			const nestedFileIds = nestedFiles.map(file => file.id);
+			newTabs = tabs.filter(file => !nestedFileIds.includes(file!.id));
 
 			const deletedIndices = [];
 			for (let i = 0; i < nestedFiles.length; i++) {
+				const tabIds = tabs.filter(tab => tab?.id);
 				if (tabs.includes(nestedFiles[i] as never)) {
 					deletedIndices.push(tabs.indexOf(nestedFiles[i] as never));
 				}
