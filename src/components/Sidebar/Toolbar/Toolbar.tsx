@@ -87,7 +87,6 @@ export default function Toolbar (
 
 	const handleDelete = () => {
 		if (!selectedItem) return;
-		console.log(selectedItem);
 		dispatch(deleteFile(selectedItem));
 
 		let newTabs: (File | null)[];
@@ -104,20 +103,21 @@ export default function Toolbar (
 			}
 	
 			findNestedFiles(selectedItem);
-			const nestedFileIds = nestedFiles.map(file => file.id);
-			newTabs = tabs.filter(file => !nestedFileIds.includes(file!.id));
-
+			const nestedFilesIds = nestedFiles.map(file => file.id);
+			newTabs = tabs.filter(file => !nestedFilesIds.includes(file!.id));
+			
+			const tabsIds = tabs.map(tab => tab?.id);
 			const deletedIndices = [];
 			for (let i = 0; i < nestedFiles.length; i++) {
-				const tabIds = tabs.filter(tab => tab?.id);
-				if (tabs.includes(nestedFiles[i] as never)) {
-					deletedIndices.push(tabs.indexOf(nestedFiles[i] as never));
+				if (tabsIds.includes(nestedFilesIds[i] as never)) {
+					deletedIndices.push(tabsIds.indexOf(nestedFilesIds[i] as never));
 				}
 			}
 
 			const tabShift = deletedIndices.filter(n => n <= selectedTab).length;
 			const indexShift = selectedTab - tabShift;
 			dispatch(selectTab(indexShift >= 0 ? indexShift : 0));
+			
 			if (newTabs[indexShift]) {
 				dispatch(selectFile(newTabs[indexShift]!));
 			}
