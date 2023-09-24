@@ -11,13 +11,12 @@
     "@mui/lab": "^5.0.0-alpha.122",
     "@mui/material": "^5.11.12",
     "@reduxjs/toolkit": "^1.9.3",
-    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
     "@types/node": "^16.18.16",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react-swc": "^3.3.2",
     "countapi-js": "^1.0.2",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
@@ -28,24 +27,26 @@
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.5",
     "react-redux": "^8.0.5",
-    "react-scripts": "5.0.1",
     "react-split": "^2.0.14",
     "react-syntax-highlighter": "^15.5.0",
     "sass": "^1.59.3",
     "sass-loader": "^13.2.0",
     "typescript": "^4.9.5",
+    "vite": "^4.4.9",
+    "vite-plugin-svgr": "^4.0.0",
+    "vite-tsconfig-paths": "^4.2.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage --watch=false"
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {
@@ -65,21 +66,20 @@
     "@babel/core": "^7.21.3",
     "@babel/preset-env": "^7.20.2",
     "@testing-library/dom": "^9.0.1",
-    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/jest": "^29.4.0",
     "@types/lodash": "^4.14.191",
     "@types/react-syntax-highlighter": "^15.5.6",
     "@types/webpack-env": "^1.18.0",
-    "babel-jest": "^29.5.0",
+    "@vitest/coverage-v8": "^0.34.5",
     "babel-loader": "^8.3.0",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^29.5.0",
+    "jsdom": "^22.1.0",
     "lodash": "^4.17.21",
     "monaco-editor-core": "^0.37.1",
     "raw-loader": "^4.0.2",
     "sass": "^1.59.2",
+    "vitest": "^0.34.5",
     "webpack": "^5.76.2",
     "webpack-cli": "^5.0.1"
   }
