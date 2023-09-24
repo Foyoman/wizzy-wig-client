@@ -117,7 +117,7 @@ export default function Toolbar (
 			const tabShift = deletedIndices.filter(n => n <= selectedTab).length;
 			const indexShift = selectedTab - tabShift;
 			dispatch(selectTab(indexShift >= 0 ? indexShift : 0));
-			
+
 			if (newTabs[indexShift]) {
 				dispatch(selectFile(newTabs[indexShift]!));
 			}
@@ -179,7 +179,7 @@ export default function Toolbar (
 	return (
 		<div className="toolbar">
 			<div className="selected-folder">
-				<p>
+				<p title={selectedFolder?.title}>
 					dir: { selectedFolder ? selectedFolder.title : 'root (~)' }
 				</p>
 			</div>
