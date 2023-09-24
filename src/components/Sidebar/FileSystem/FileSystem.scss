@@ -7,11 +7,12 @@
 	color: var(--gh-lighter-grey);
 	cursor: default;
 	width: 100%;
-
+	
 	.MuiTreeItem-content {
 		cursor: default;
-
+		
 		.MuiTreeItem-label {
+			font-size: var(--text-sm);
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
