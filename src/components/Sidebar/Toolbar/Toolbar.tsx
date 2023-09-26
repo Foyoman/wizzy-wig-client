@@ -23,7 +23,7 @@ interface ToolbarProps {
 	items: File[],
 }
 
-export default function Toolbar (
+export default function Toolbar(
 	{ items }: ToolbarProps
 ) {
 	const selectedItem = useSelector((state: RootState) => state.app.selectedItem);
@@ -38,7 +38,7 @@ export default function Toolbar (
 	const [fileTitle, setFileTitle] = useState<string | "">("");
 	const createFileOpen = Boolean(createFileEl);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-	
+
 	const [createFolderEl, setCreateFolderEl] = useState<HTMLElement | null>(null);
 	const [folderTitle, setFolderTitle] = useState<string | "">("");
 	const createFolderOpen = Boolean(createFolderEl);
@@ -46,8 +46,8 @@ export default function Toolbar (
 
 	const [deleteEl, setDeleteEl] = useState<HTMLElement | null>(null);
 	const deleteOpen = Boolean(deleteEl);
-	
-	const [sort, setSort] = 
+
+	const [sort, setSort] =
 		useState<{
 			sortKey: SortKeys, reverse: boolean
 		} | null>({
@@ -101,11 +101,11 @@ export default function Toolbar (
 					}
 				})
 			}
-	
+
 			findNestedFiles(selectedItem);
 			const nestedFilesIds = nestedFiles.map(file => file.id);
 			newTabs = tabs.filter(file => !nestedFilesIds.includes(file!.id));
-			
+
 			const tabsIds = tabs.map(tab => tab?.id);
 			const deletedIndices = [];
 			for (let i = 0; i < nestedFiles.length; i++) {
@@ -125,7 +125,7 @@ export default function Toolbar (
 			newTabs = tabs.filter(file => file?.id !== selectedItem.id);
 			const shift = tabs.length - 1 > selectedTab ? 0 : 1;
 			dispatch(selectTab(selectedTab - shift));
-			
+
 			if (newTabs[selectedTab - shift]) {
 				dispatch(selectFile(newTabs[selectedTab - shift]!));
 			}
@@ -138,11 +138,11 @@ export default function Toolbar (
 		setDeleteEl(null);
 	}
 
-  const handleSelect: SortFunction = (items, sortKey, reverse) => {
-		dispatch(sortFs({items, sortKey, reverse}));
-		setSort({sortKey: sortKey, reverse: reverse});
-    setFilterEl(null);
-  }
+	const handleSelect: SortFunction = (items, sortKey, reverse) => {
+		dispatch(sortFs({ items, sortKey, reverse }));
+		setSort({ sortKey: sortKey, reverse: reverse });
+		setFilterEl(null);
+	}
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>, key: "file" | "folder") => {
 		e.preventDefault();
@@ -165,22 +165,22 @@ export default function Toolbar (
 	}
 
 	const Checked = ({ visible = false }: CheckedProps) => {
-    return (
-      <ListItemIcon 
-				style={{ 
+		return (
+			<ListItemIcon
+				style={{
 					visibility: visible ? 'visible' : 'hidden'
 				}}
 			>
-        <Check />
-      </ListItemIcon>
-    )
-  }
+				<Check />
+			</ListItemIcon>
+		)
+	}
 
 	return (
 		<div className="toolbar">
 			<div className="selected-folder">
 				<p title={selectedFolder?.title}>
-					dir: { selectedFolder ? selectedFolder.title : 'root (~)' }
+					dir: {selectedFolder ? selectedFolder.title : 'root (~)'}
 				</p>
 			</div>
 			<div className="tools">
@@ -205,14 +205,14 @@ export default function Toolbar (
 				>
 					<MenuItem className="menu-item">
 						<form onSubmit={(e) => handleSubmit(e, "file")}>
-							<input 
+							<input
 								// autoFocus
 								id="input-el"
 								ref={fileInputRef}
-								type="text" 
-								value={fileTitle} 
-								onChange={(e) => setFileTitle(e.target.value)} 
-								placeholder="title" 
+								type="text"
+								value={fileTitle}
+								onChange={(e) => setFileTitle(e.target.value)}
+								placeholder="title"
 							/>
 						</form>
 					</MenuItem>
@@ -238,14 +238,14 @@ export default function Toolbar (
 				>
 					<MenuItem className="menu-item">
 						<form onSubmit={(e) => handleSubmit(e, "folder")}>
-							<input 
+							<input
 								// autoFocus
 								id="input-el"
 								ref={folderInputRef}
-								type="text" 
-								value={folderTitle} 
-								onChange={(e) => setFolderTitle(e.target.value)} 
-								placeholder="title" 
+								type="text"
+								value={folderTitle}
+								onChange={(e) => setFolderTitle(e.target.value)}
+								placeholder="title"
 							/>
 						</form>
 					</MenuItem>
@@ -270,33 +270,33 @@ export default function Toolbar (
 					}}
 				>
 					<MenuItem className="menu-item">
-					{ selectedItem ? 
-						<div className="delete-confirm">
-							<div className="file-to-delete">
-								<p>
-									{ selectedItem?.isFolder ? 'Folder ' : 'File ' } 
-									to delete:
-								</p>
-								<p>{ selectedItem?.title }</p>
+						{selectedItem ?
+							<div className="delete-confirm">
+								<div className="file-to-delete">
+									<p>
+										{selectedItem?.isFolder ? 'Folder ' : 'File '}
+										to delete:
+									</p>
+									<p>{selectedItem?.title}</p>
+								</div>
+								<p>Are you sure?</p>
+								<div className="confirm-buttons">
+									<Button variant="contained" color="error" onClick={handleDelete}>
+										Confirm
+									</Button>
+									<Button variant="outlined" onClick={() => setDeleteEl(null)}>
+										Cancel
+									</Button>
+								</div>
 							</div>
-							<p>Are you sure?</p>
-							<div className="confirm-buttons">
-								<Button variant="contained" color="error" onClick={handleDelete}>
-									Confirm
-								</Button>
+							:
+							<div className="delete-confirm">
+								<p>Select an item to delete</p>
 								<Button variant="outlined" onClick={() => setDeleteEl(null)}>
-									Cancel
+									Ok
 								</Button>
 							</div>
-						</div>
-					: 
-						<div className="delete-confirm">
-							<p>Select an item to delete</p>
-							<Button variant="outlined" onClick={() => setDeleteEl(null)}>
-								Ok
-							</Button>
-						</div>
-					}
+						}
 					</MenuItem>
 				</Menu>
 				{/* filter menu */}
@@ -319,45 +319,45 @@ export default function Toolbar (
 					}}
 				>
 					<MenuList id="menu-list" dense>
-						<MenuItem 
-							className="menu-item" 
+						<MenuItem
+							className="menu-item"
 							onClick={() => handleSelect(items, "title", false)}
 						>
 							<Checked visible={sort?.sortKey === "title" && !sort?.reverse} />
 							<ListItemText>File Name (A - Z)</ListItemText>
 						</MenuItem>
-						<MenuItem 
-							className="menu-item" 
+						<MenuItem
+							className="menu-item"
 							onClick={() => handleSelect(items, "title", true)}
 						>
 							<Checked visible={sort?.sortKey === "title" && sort?.reverse} />
 							<ListItemText>File Name (Z - A)</ListItemText>
 						</MenuItem>
 						<Divider />
-						<MenuItem 
-							className="menu-item" 
+						<MenuItem
+							className="menu-item"
 							onClick={() => handleSelect(items, "lastUpdated", false)}
 						>
 							<Checked visible={sort?.sortKey === "lastUpdated" && !sort?.reverse} />
 							<ListItemText>Date Modified (Newest First)</ListItemText>
 						</MenuItem>
-						<MenuItem 
-							className="menu-item" 
+						<MenuItem
+							className="menu-item"
 							onClick={() => handleSelect(items, "lastUpdated", true)}
 						>
 							<Checked visible={sort?.sortKey === "lastUpdated" && sort?.reverse} />
 							<ListItemText>Date Modified (Oldest First)</ListItemText>
 						</MenuItem>
 						<Divider />
-						<MenuItem 
-							className="menu-item" 
+						<MenuItem
+							className="menu-item"
 							onClick={() => handleSelect(items, "dateCreated", false)}
 						>
 							<Checked visible={sort?.sortKey === "dateCreated" && !sort?.reverse} />
 							<ListItemText>Date Created (Newest First)</ListItemText>
 						</MenuItem>
-						<MenuItem 
-							className="menu-item" 
+						<MenuItem
+							className="menu-item"
 							onClick={() => handleSelect(items, "dateCreated", true)}
 						>
 							<Checked visible={sort?.sortKey === "dateCreated" && sort?.reverse} />
