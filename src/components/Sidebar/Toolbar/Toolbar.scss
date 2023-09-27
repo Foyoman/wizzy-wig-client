@@ -1,119 +1,119 @@
 @mixin icon {
-	color: var(--gh-lighter-grey);
-	cursor: pointer;
-	transition: all .2s;
-	opacity: .8;
-	width: 20px;
+  color: var(--gh-lighter-grey);
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0.8;
+  width: 20px;
 
-	&:hover {
-		opacity: 1;
-	}
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .toolbar {
-	display: flex;
-	justify-content: space-between;
-	padding: 0 var(--spacer-xxs);
-	margin-bottom: var(--spacer-sm);
-	// max-width: calc(250px - var(--spacer-sm) * 2);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--spacer-xxs);
+  margin-bottom: var(--spacer-sm);
+  // max-width: calc(250px - var(--spacer-sm) * 2);
 
-	.selected-folder {
-		height: 24px;
-		font-size: var(--text-xs);
-		color: var(--gh-lighter-grey-80);
-		overflow: hidden;
+  .selected-folder {
+    height: 24px;
+    font-size: var(--text-xs);
+    color: var(--gh-lighter-grey-80);
+    overflow: hidden;
 
-		p {
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			-webkit-user-select: none; /* Safari */
-			-ms-user-select: none; /* IE 10 and IE 11 */
-			user-select: none; /* Standard syntax */
-		}
-	}
+    p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
+    }
+  }
 
-	.tools {
-		display: flex;
-		justify-content: flex-end;
-		// flex-direction: row-reverse;
-		gap: var(--spacer-xs);
-	
-		.icon {
-			@include icon;
-		}
-	
-		.toolbar-button {
-			padding: 0;
-			min-width: 0;
-		}
-	}
+  .tools {
+    display: flex;
+    justify-content: flex-end;
+    // flex-direction: row-reverse;
+    gap: var(--spacer-xs);
+
+    .icon {
+      @include icon;
+    }
+
+    .toolbar-button {
+      padding: 0;
+      min-width: 0;
+    }
+  }
 }
 
 .dropdown-menu {
-	color: var(--gh-lighter-grey-80);
+  color: var(--gh-lighter-grey-80);
 
-	input {
-		border: none;
-		background: #1E1E1E;
-		color: var(--gh-lighter-grey);
+  input {
+    border: none;
+    background: #1e1e1e;
+    color: var(--gh-lighter-grey);
 
-		&:focus-visible {
-			border: none;
-			outline: none;
-		}
-	}
+    &:focus-visible {
+      border: none;
+      outline: none;
+    }
+  }
 
-	.MuiMenu-paper {
-		background-color: #1E1E1E;
-		color: var(--gh-lighter-grey);
+  .MuiMenu-paper {
+    background-color: #1e1e1e;
+    color: var(--gh-lighter-grey);
 
-		.menu-item {
-			display: flex;
-			justify-content: space-between;
-			padding: var(--spacer-xs) var(--spacer-sm);
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacer-xs) var(--spacer-sm);
 
-			.delete-confirm {
-				flex-direction: column;
-				justify-content: center;
-				text-align: center;
-				font-size: var(--text-sm);
+      .delete-confirm {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        font-size: var(--text-sm);
 
-				p {
-					margin-bottom: var(--spacer-sm);
-				}
+        p {
+          margin-bottom: var(--spacer-sm);
+        }
 
-				.file-to-delete {
-					margin-bottom: var(--spacer-xs);
+        .file-to-delete {
+          margin-bottom: var(--spacer-xs);
 
-					p {
-						margin-bottom: 0;
-					}
-				}
+          p {
+            margin-bottom: 0;
+          }
+        }
 
-				.confirm-buttons {
-					display: flex;
-					gap: var(--spacer-sm);
+        .confirm-buttons {
+          display: flex;
+          gap: var(--spacer-sm);
 
-					button {
-						padding: var(--spacer-xxs) var(--spacer-xs);
-						font-size: var(--text-xs);
-					}
-				}
-			}
-		}
+          button {
+            padding: var(--spacer-xxs) var(--spacer-xs);
+            font-size: var(--text-xs);
+          }
+        }
+      }
+    }
 
-		svg {
-			color: var(--gh-lighter-grey);
-		}
+    svg {
+      color: var(--gh-lighter-grey);
+    }
 
-		hr {
-			background: var(--gh-neutral-grey);
-			margin: var(--spacer-xxs) 0;
-		}
+    hr {
+      background: var(--gh-neutral-grey);
+      margin: var(--spacer-xxs) 0;
+    }
 
-		.MuiListItemIcon-root {
-			min-width: 30px;
-		}
-	}
+    .MuiListItemIcon-root {
+      min-width: 30px;
+    }
+  }
 }

@@ -1,78 +1,78 @@
 .markdown-body {
-	overflow-y: auto;
-	height: 100%;
-	padding: var(--spacer-xl) !important;
+  overflow-y: auto;
+  height: 100%;
+  padding: var(--spacer-xl) !important;
 
-	pre {
-		position: relative;
+  pre {
+    position: relative;
 
-		.codeStyle {
-			code {
-				.linenumber {
-					font-style: normal !important;
-					max-width: 3.25rem !important;
-				}
+    .codeStyle {
+      code {
+        .linenumber {
+          font-style: normal !important;
+          max-width: 3.25rem !important;
+        }
 
-				&::before {
-					position: absolute;
-					top: var(--spacer-xxs);
-					right: var(--spacer-xs);
-					opacity: 0.6;
-					font-size: var(--text-xs);
-				}
+        &::before {
+          position: absolute;
+          top: var(--spacer-xxs);
+          right: var(--spacer-xs);
+          opacity: 0.6;
+          font-size: var(--text-xs);
+        }
 
-				&.language-js:before {
-					content: 'JavaScript';
-				}
+        &.language-js:before {
+          content: "JavaScript";
+        }
 
-				&.language-jsx:before {
-					content: 'JSX';
-				}
+        &.language-jsx:before {
+          content: "JSX";
+        }
 
-				&.language-json:before {
-					content: 'JSON';
-				}
+        &.language-json:before {
+          content: "JSON";
+        }
 
-				&.language-ts:before {
-					content: 'TypeScript';
-				}
+        &.language-ts:before {
+          content: "TypeScript";
+        }
 
-				&.language-tsx:before {
-					content: 'TSX';
-				}
+        &.language-tsx:before {
+          content: "TSX";
+        }
 
-				&.language-py:before {
-					content: 'Python';
-				}
+        &.language-py:before {
+          content: "Python";
+        }
 
-				&.language-java:before {
-					content: 'Java';
-				}
+        &.language-java:before {
+          content: "Java";
+        }
 
-				&.language-c:before {
-					content: 'C';
-				}
+        &.language-c:before {
+          content: "C";
+        }
 
-				&.language-cpp:before {
-					content: 'C++';
-				}
+        &.language-cpp:before {
+          content: "C++";
+        }
 
-				&.language-csharp:before {
-					content: 'C#';
-				}
+        &.language-csharp:before {
+          content: "C#";
+        }
 
-				&.language-scss:before {
-					content: 'SCSS';
-				}
+        &.language-scss:before {
+          content: "SCSS";
+        }
 
-				&.language-md:before {
-					content: 'Markdown';
-				}
+        &.language-md:before {
+          content: "Markdown";
+        }
 
-				&.language-shell:before {
-					content: 'Shell';
-				}
-			}
-		}
-	}
+        &.language-shell:before {
+          content: "Shell";
+        }
+      }
+    }
+  }
 }

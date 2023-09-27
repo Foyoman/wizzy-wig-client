@@ -1,108 +1,108 @@
 @mixin icon {
-	position: absolute;
-	color: var(--gh-lighter-grey);
-	cursor: pointer;
-	transition: all .2s;
-	opacity: .6;
+  position: absolute;
+  color: var(--gh-lighter-grey);
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0.6;
 
-	&:hover {
-		opacity: 1;
-	}
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .md-parser {
-	height: 100%;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 
-	.component {
-		overflow: hidden;
-		position: relative;
+  .component {
+    overflow: hidden;
+    position: relative;
 
-		.split-icon {
-			@include icon;
-			top: var(--spacer-xxs);
-			left: var(--spacer-xxs);
-		}
+    .split-icon {
+      @include icon;
+      top: var(--spacer-xxs);
+      left: var(--spacer-xxs);
+    }
 
-		.collapse-tab {
-			@include icon;
-			
-			&.vertical {
-				left: var(--spacer-xxs);
-			}
-			
-			&.horizontal {
-				top: var(--spacer-xxs);
-			}
-		}
+    .collapse-tab {
+      @include icon;
 
-		&.md-preview {
-			.collapse-tab {
-				&.horizontal {
-					right: var(--spacer-lg);
-					transform: rotate(180deg);
-				}
+      &.vertical {
+        left: var(--spacer-xxs);
+      }
 
-				&.vertical {
-					bottom: var(--spacer-xxs);
-					transform: rotate(-90deg);
-				}
-			}
-		}
+      &.horizontal {
+        top: var(--spacer-xxs);
+      }
+    }
 
-		&.md-editor {
-			.collapse-tab {
-				&.horizontal {
-					left: var(--spacer-lg);
-				}
+    &.md-preview {
+      .collapse-tab {
+        &.horizontal {
+          right: var(--spacer-lg);
+          transform: rotate(180deg);
+        }
 
-				&.vertical {
-					top: var(--spacer-xxs);
-					transform: rotate(90deg);
-				}
-			}
-		}
-	}
+        &.vertical {
+          bottom: var(--spacer-xxs);
+          transform: rotate(-90deg);
+        }
+      }
+    }
 
-	.gutter {
-		background-color: var(--gh-neutral-grey);
-		background-repeat: no-repeat;
-		background-position: 50%;
+    &.md-editor {
+      .collapse-tab {
+        &.horizontal {
+          left: var(--spacer-lg);
+        }
 
-		&.gutter-horizontal {
-			width: 16px !important;
-			height: auto !important;
-			background-image: url("../../assets/images/horizontal-gutter.png");
-			cursor: col-resize;
-		}
+        &.vertical {
+          top: var(--spacer-xxs);
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
 
-		&.gutter-vertical {
-			height: 16px !important;
-			width: auto !important;
-			background-image: url("../../assets/images/vertical-gutter.png");
-			cursor: row-resize;
-		}
-	}
+  .gutter {
+    background-color: var(--gh-neutral-grey);
+    background-repeat: no-repeat;
+    background-position: 50%;
 
-	.md-editor {
-		background-color: #1E1E1E;
+    &.gutter-horizontal {
+      width: 16px !important;
+      height: auto !important;
+      background-image: url("../../assets/images/horizontal-gutter.png");
+      cursor: col-resize;
+    }
 
-		.padding {
-			height: var(--spacer-xl);
-		}
-	}
+    &.gutter-vertical {
+      height: 16px !important;
+      width: auto !important;
+      background-image: url("../../assets/images/vertical-gutter.png");
+      cursor: row-resize;
+    }
+  }
 
-	&.light {
-		.gutter {
-			background-color: var(--gh-lighter-grey);
-		}
+  .md-editor {
+    background-color: #1e1e1e;
 
-		.md-editor {
-			.padding {
-				background-color: #fff;
-			}
-		}
-	}
+    .padding {
+      height: var(--spacer-xl);
+    }
+  }
+
+  &.light {
+    .gutter {
+      background-color: var(--gh-lighter-grey);
+    }
+
+    .md-editor {
+      .padding {
+        background-color: #fff;
+      }
+    }
+  }
 }

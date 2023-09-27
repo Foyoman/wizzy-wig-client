@@ -1,29 +1,29 @@
 @function nest($base, $exponent) {
-	$result: $base * $exponent;
-	@return $result;
+  $result: $base * $exponent;
+  @return $result;
 }
 
 .sidebar-item {
-	color: var(--gh-lighter-grey);
-	cursor: default;
-	width: 100%;
-	
-	.MuiTreeItem-content {
-		cursor: default;
-		
-		.MuiTreeItem-label {
-			font-size: var(--text-sm);
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-	}
+  color: var(--gh-lighter-grey);
+  cursor: default;
+  width: 100%;
 
-	&:hover {
-		background-color: var(--color-canvas-default);
-	}
+  .MuiTreeItem-content {
+    cursor: default;
 
-	&.nested {
-		padding-left: var(--spacer-sm);
-	}
+    .MuiTreeItem-label {
+      font-size: var(--text-sm);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &:hover {
+    background-color: var(--color-canvas-default);
+  }
+
+  &.nested {
+    padding-left: var(--spacer-sm);
+  }
 }
