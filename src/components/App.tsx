@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import MarkdownParser from "./MarkdownParser/MarkdownParser";
 import Navbar from "./Navbar/Navbar";
 import "./App.scss";
 import "../assets/styles/global.scss";
 import Sidebar from "./Sidebar/Sidebar";
 
+// redux
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../store/store";
 import { setStaticProps } from "../store/appSlice";
@@ -12,9 +13,13 @@ import { setStaticProps } from "../store/appSlice";
 import { File } from "../types/FileTypes";
 import { fileSys } from "../lib/starter-files";
 
+// auth
 import SignUp from "./auth/SignUp";
+import Login from "./auth/Login";
 
+// mui
 import CircularProgress from "@mui/material/CircularProgress";
+import AuthContext from "../context/AuthContext";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -29,9 +34,13 @@ export default function App() {
   );
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
-  // user checkt
+  const [showLogin, setShowLogin] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+  const { user } = useContext<any>(AuthContext);
+
+  // user check
   useEffect(() => {
-    const user = false; // replace with real user check
+    // const user = false; // replace with real user check
     if (!user) {
       const fetchFileContents = async (file: File) => {
         if (!file.isFolder) {
@@ -61,6 +70,8 @@ export default function App() {
       };
 
       updateFileContents();
+    } else {
+      setStarterFiles([]);
     }
   }, []);
 
@@ -74,10 +85,21 @@ export default function App() {
     setContent(selectedFile?.content as string | undefined);
   }, [selectedFile]);
 
-  const handleClick = (e: Event) => {
+  const handleLoginClick = (e: Event) => {
     e.preventDefault();
-    console.log("clicked");
+    console.log("login");
+    setShowLogin(true);
   };
+
+  const handleSignupClick = (e: Event) => {
+    e.preventDefault();
+    console.log("signup");
+  };
+
+  const closeModal = () => {
+    setShowLogin(false);
+    setShowSignup(false);
+  }
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -85,11 +107,11 @@ export default function App() {
       const signupEl = document.querySelector("a[href='#signupEl']");
 
       if (loginEl) {
-        loginEl.addEventListener("click", handleClick);
+        loginEl.addEventListener("click", handleLoginClick);
         clearInterval(intervalId);
       }
       if (signupEl) {
-        signupEl.addEventListener("click", handleClick);
+        signupEl.addEventListener("click", handleSignupClick);
         clearInterval(intervalId);
       }
     }, 100);
@@ -100,11 +122,11 @@ export default function App() {
       const signupEl = document.querySelector("a[href='#signupEl']");
 
       if (loginEl) {
-        loginEl.removeEventListener("click", handleClick);
+        loginEl.removeEventListener("click", handleLoginClick);
       }
 
       if (signupEl) {
-        signupEl.removeEventListener("click", handleClick);
+        signupEl.removeEventListener("click", handleSignupClick);
       }
     };
   }, []);
@@ -120,32 +142,25 @@ export default function App() {
     );
   };
 
-  if (!starterFiles) {
-    return (
-      <div className="loading">
-        <CircularProgress />
-      </div>
-    );
-  } else {
-    return (
-      <>
-        <div className="page">
-          <Navbar />
-          {/* <SignUp /> */}
-          <div className="container">
-            <Sidebar />
-            <div
-              className={`md-container ${!showSidebar ? "sidebar-hidden" : ""}`}
-            >
-              {tabs[selectedTab] ? (
-                <MarkdownParser content={content} defaultSplit={[55, 45]} />
-              ) : (
-                <NoFile />
-              )}
-            </div>
-          </div>
+  return starterFiles ? (
+    <div className="page">
+      <Navbar />
+      {/* <SignUp /> */}
+      {showLogin ? <Login closeModal={closeModal} /> : null}
+      <div className="container">
+        <Sidebar />
+        <div className={`md-container ${!showSidebar ? "sidebar-hidden" : ""}`}>
+          {tabs[selectedTab] ? (
+            <MarkdownParser content={content} defaultSplit={[55, 45]} />
+          ) : (
+            <NoFile />
+          )}
         </div>
-      </>
-    );
-  }
+      </div>
+    </div>
+  ) : (
+    <div className="loading">
+      <CircularProgress />
+    </div>
+  );
 }

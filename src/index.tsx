@@ -3,11 +3,15 @@ import App from "./components/App";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 
+import { AuthProvider } from "./context/AuthContext";
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <AuthProvider>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </AuthProvider>
 );

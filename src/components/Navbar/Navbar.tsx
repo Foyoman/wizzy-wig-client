@@ -1,25 +1,40 @@
+import { useContext } from "react";
 import "./Navbar.scss";
 import Tabs from "./Tabs/Tabs";
 
-import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
-import LinearProgress from "@mui/joy/LinearProgress";
-
+// redux
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../../store/appSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 
+// mui
+import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
+import LinearProgress from "@mui/joy/LinearProgress";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
+import AuthContext from "../../context/AuthContext";
+
 export default function Navbar() {
   const saveState = useSelector((state: RootState) => state.app.saveState);
   const dispatch = useDispatch();
+  const { user, logoutUser } = useContext<any>(AuthContext);
 
   return (
     <div className="navbar">
       <div className="utils">
-        <ViewSidebarOutlinedIcon
-          className="toggle-sidebar"
-          onClick={() => dispatch(toggleSidebar())}
-        />
+        <div className="leftside-nav">
+          <ViewSidebarOutlinedIcon
+            className="toggle-sidebar"
+            onClick={() => dispatch(toggleSidebar())}
+          />
+          {user ? (
+            <AccountCircleIcon
+              className="profile"
+              onClick={() => logoutUser()}
+            />
+          ) : null}
+        </div>
         <div className="save-state">
           <LinearProgress
             className={saveState}

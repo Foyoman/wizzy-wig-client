@@ -15,7 +15,12 @@
     display: flex;
     flex-direction: column;
     height: fit-content;
-    padding-bottom: var(--spacer-xxxl);
+    padding: var(--spacer-xs) var(--spacer-lg);
     border-radius: 0.5rem;
+
+    .close-icon {
+      position: absolute;
+      right: var(--spacer-xs);
+    }
   }
 }

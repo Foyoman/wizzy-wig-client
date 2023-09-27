@@ -28,9 +28,20 @@
     justify-content: space-between;
     gap: var(--spacer-md);
 
-    .toggle-sidebar {
-      @include icon;
-      transform: rotate(180deg);
+    .leftside-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--spacer-xs);
+
+      .toggle-sidebar {
+        @include icon;
+        transform: rotate(180deg);
+      }
+
+      .profile {
+        @include icon;
+        height: 22px;
+      }
     }
 
     .save-state {
