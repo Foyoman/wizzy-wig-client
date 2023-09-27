@@ -3,51 +3,19 @@
   z-index: 100;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.6);
 
-  .auth-modal {
+  .container {
     position: absolute;
-    z-index: 200;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-    max-width: 80vw;
-    max-height: 90vh;
-    width: 50vw;
-    height: 50vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: var(--color-canvas-dark);
-    border-radius: 6px;
+    // color: var(--gh-lighter-grey);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    label {
-      width: 100%;
-      display: flex;
-      // justify-content: flex-end;
-      font-size: var(--text-xl);
-      margin: 0.5rem 0;
-
-      span {
-        width: 50%;
-        text-align: end;
-        padding-right: 0.5rem;
-      }
-
-      input {
-        background: var(--color-canvas-default);
-        border: none;
-
-        &:active {
-          border: none;
-        }
-      }
-    }
-
-    button {
-    }
+    height: fit-content;
+    padding-bottom: var(--spacer-xxxl);
+    border-radius: 0.5rem;
   }
 }
