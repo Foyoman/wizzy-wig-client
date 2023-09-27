@@ -3,48 +3,38 @@ import "./auth.scss";
 
 import AuthContext from "../../context/AuthContext";
 
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CloseIcon from '@mui/icons-material/Close';
+import { ClickEvent } from "../../types/ReactTypes";
+
+import { Copyright } from "./Copyright";
+
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface LoginProps {
-  closeModal: () => void;
+  closeModal: ClickEvent;
+  switchModal: ClickEvent;
 }
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
   },
 });
 
-export default function Login({closeModal}: LoginProps) {
+export default function Login({ closeModal, switchModal }: LoginProps) {
   const { loginUser } = useContext<any>(AuthContext);
-
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,7 +44,7 @@ export default function Login({closeModal}: LoginProps) {
     //   password: data.get('password'),
     // });
 
-    loginUser(e)
+    // loginUser(e);
     closeModal();
   };
 
@@ -63,22 +53,27 @@ export default function Login({closeModal}: LoginProps) {
       <ThemeProvider theme={defaultTheme}>
         <Container className="container" component="main" maxWidth="xs">
           <CssBaseline />
-          <CloseIcon className="close-icon" onClick={closeModal} />
+          <CloseIcon className="close-icon" onClick={() => closeModal()} />
           <Box
             sx={{
-              marginTop: '24px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              marginTop: "24px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'info.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
+            >
               <TextField
                 margin="normal"
                 required
@@ -118,7 +113,7 @@ export default function Login({closeModal}: LoginProps) {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="#" variant="body2" onClick={(e) => switchModal(e)}>
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

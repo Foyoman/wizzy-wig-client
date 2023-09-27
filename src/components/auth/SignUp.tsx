@@ -1,102 +1,45 @@
 import { useState } from "react";
 import "./auth.scss";
 
-// MUI
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ClickEvent } from "../../types/ReactTypes";
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
+import { Copyright } from "./Copyright";
+
+// mui
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
+
+interface SignUpProps {
+  closeModal: ClickEvent;
+  switchModal: ClickEvent;
 }
 
-export default function SignUp() {
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    // passwordConfirmation: "",
-  });
-
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-
-  function updateForm(value: Object) {
-    return setForm((prev) => {
-      return { ...prev, ...value };
-    });
-  }
-
-  // TODO: move to /utils or /hooks
-  async function registerUser(e: any) {
-    // TODO: not any
-    e.preventDefault();
-    // setReadOnly(true);
-    // setLoading(true);
-
-    const newSignup = { ...form };
-
-    const response = await fetch("SERVER_URL", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newSignup),
-    }).catch((error) => {
-      console.log(error);
-      // setAlert(true);
-      // setReadOnly(false);
-      // setLoading(false);
-    });
-
-    setForm({ username: "", email: "", password: "" });
-    setPasswordConfirm("");
-
-    if (response) {
-      const data = await response.json();
-
-      if (data.status === "ok") {
-        // receive the JWT and store it in cookies/local storage
-        // setAlert(false);
-        // navigate('/login');
-      } else {
-        // console.error('error');
-        // setAlert(true);
-        // setReadOnly(false);
-        // setLoading(false);
-      }
-    }
-  }
-
+export default function SignUp({ closeModal, switchModal }: SignUpProps) {
   const defaultTheme = createTheme({
     palette: {
-      mode: 'dark',
+      mode: "dark",
     },
   });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
     console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+      email: data.get("email"),
+      password: data.get("password"),
     });
+
+    closeModal();
   };
 
   return (
@@ -104,21 +47,27 @@ export default function SignUp() {
       <ThemeProvider theme={defaultTheme}>
         <Container className="container" component="main" maxWidth="xs">
           <CssBaseline />
+          <CloseIcon className="close-icon" onClick={() => closeModal()} />
           <Box
             sx={{
-              marginTop: 8,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              marginTop: "24px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 3 }}
+            >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -141,6 +90,17 @@ export default function SignUp() {
                     autoComplete="new-password"
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="confirm-password"
+                    label="Confirm Password"
+                    type="password"
+                    id="confirm-password"
+                    autoComplete="confirm-password"
+                  />
+                </Grid>
               </Grid>
               <Button
                 type="submit"
@@ -152,14 +112,14 @@ export default function SignUp() {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="#" variant="body2" onClick={() => switchModal()}>
                     Already have an account? Sign in
                   </Link>
                 </Grid>
               </Grid>
             </Box>
           </Box>
-          <Copyright sx={{ mt: 5 }} />
+          <Copyright sx={{ mt: 8, mb: 4 }} />
         </Container>
       </ThemeProvider>
     </div>

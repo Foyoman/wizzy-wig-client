@@ -8,8 +8,10 @@ import Sidebar from "./Sidebar/Sidebar";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../store/store";
-import { setStaticProps } from "../store/appSlice";
+import { setStaticProps, setUserData } from "../store/appSlice";
 
+// types/files
+import { ClickEvent } from "../types/ReactTypes";
 import { File } from "../types/FileTypes";
 import { fileSys } from "../lib/starter-files";
 
@@ -23,7 +25,6 @@ import AuthContext from "../context/AuthContext";
 
 export default function App() {
   const dispatch = useDispatch();
-  const [starterFiles, setStarterFiles] = useState<File[] | null>(null);
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
   const selectedFile = useSelector(
     (state: RootState) => state.app.selectedFile
@@ -34,13 +35,13 @@ export default function App() {
   );
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
+  const [loaded, setLoaded] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const [showSignup, setShowSignup] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
   const { user } = useContext<any>(AuthContext);
 
   // user check
   useEffect(() => {
-    // const user = false; // replace with real user check
     if (!user) {
       const fetchFileContents = async (file: File) => {
         if (!file.isFolder) {
@@ -66,40 +67,46 @@ export default function App() {
         const updatedFileSys = await Promise.all(
           fileSys.map((file) => fetchFileContents(file))
         );
-        setStarterFiles(updatedFileSys);
+        dispatch(setStaticProps(updatedFileSys));
+        setLoaded(true);
       };
 
       updateFileContents();
     } else {
-      setStarterFiles([]);
+      dispatch(setUserData([])); // set to user's files
+      setLoaded(true);
     }
   }, []);
-
-  useEffect(() => {
-    if (starterFiles) {
-      dispatch(setStaticProps(starterFiles));
-    }
-  }, [starterFiles, dispatch]);
 
   useEffect(() => {
     setContent(selectedFile?.content as string | undefined);
   }, [selectedFile]);
 
-  const handleLoginClick = (e: Event) => {
-    e.preventDefault();
+  const handleLoginClick: ClickEvent = (e) => {
+    e?.preventDefault();
     console.log("login");
     setShowLogin(true);
+    setShowSignUp(false);
   };
 
-  const handleSignupClick = (e: Event) => {
-    e.preventDefault();
+  const handleSignupClick: ClickEvent = (e) => {
+    e?.preventDefault();
     console.log("signup");
+    setShowSignUp(true);
+    setShowLogin(false);
   };
 
-  const closeModal = () => {
+  const closeModal: ClickEvent = (e) => {
+    e?.preventDefault();
     setShowLogin(false);
-    setShowSignup(false);
-  }
+    setShowSignUp(false);
+  };
+
+  const switchModal: ClickEvent = (e) => {
+    e?.preventDefault();
+    setShowLogin(!showLogin);
+    setShowSignUp(!showSignUp);
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -142,11 +149,16 @@ export default function App() {
     );
   };
 
-  return starterFiles ? (
+  return loaded ? (
     <div className="page">
       <Navbar />
       {/* <SignUp /> */}
-      {showLogin ? <Login closeModal={closeModal} /> : null}
+      {showSignUp ? (
+        <SignUp closeModal={closeModal} switchModal={switchModal} />
+      ) : null}
+      {showLogin ? (
+        <Login closeModal={closeModal} switchModal={switchModal} />
+      ) : null}
       <div className="container">
         <Sidebar />
         <div className={`md-container ${!showSidebar ? "sidebar-hidden" : ""}`}>

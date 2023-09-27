@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import "./Tabs.scss";
+
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { useDispatch } from "react-redux";
@@ -12,6 +14,7 @@ import {
   selectFile,
   selectItem,
 } from "../../../store/appSlice";
+
 import { File } from "../../../types/FileTypes";
 
 export default function Tabs() {

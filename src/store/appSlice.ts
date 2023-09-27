@@ -11,7 +11,7 @@ export interface AppState {
   showSidebar: boolean;
   allowSave: boolean;
   saveState: SaveStates;
-  tabs: Array<File | null> | []; // tabs currently don't update changes
+  tabs: Array<File | null>;
   selectedTab: number;
   selectedItem: File | null;
   selectedFile: File | null;
@@ -43,6 +43,11 @@ export const appSlice = createSlice({
       if (welcomeFile?.content) state.markdown = welcomeFile.content;
       const rootFiles = starterFiles.filter((file) => !file.isFolder);
       state.tabs = rootFiles;
+    },
+    setUserData: (state, action: PayloadAction<File[] | []>) => {
+      const userFiles = action.payload;
+      state.files = sortFileSystem(userFiles, "title", false); // use local storage to set user's preferred sort
+      state.tabs = [null] // use local storage to set user's last opened tabs
     },
     sortFs: (
       state,
@@ -122,7 +127,7 @@ export const appSlice = createSlice({
       state.tabs[state.selectedTab] = file;
       selectFile(file!);
     },
-    setTabs: (state, action: PayloadAction<(File | null)[] | []>) => {
+    setTabs: (state, action: PayloadAction<(File | null)[]>) => {
       state.tabs = action.payload;
     },
     newTab: (state) => {
@@ -200,6 +205,7 @@ export const appSlice = createSlice({
 
 export const {
   setStaticProps,
+  setUserData,
   sortFs,
   selectFolder,
   selectFile,
