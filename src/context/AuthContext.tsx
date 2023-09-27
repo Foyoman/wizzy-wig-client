@@ -89,6 +89,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    };
+
     if (loading) {
       updateToken();
     }
