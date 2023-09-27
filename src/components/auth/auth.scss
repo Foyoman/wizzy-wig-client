@@ -1,3 +1,14 @@
+@mixin icon {
+  color: var(--gh-lighter-grey);
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0.8;
+
+  &:hover {
+    color: #fff; // neutral grey .6
+  }
+}
+
 .overlay {
   position: absolute;
   z-index: 100;
@@ -19,6 +30,7 @@
     border-radius: 0.5rem;
 
     .close-icon {
+      @include icon;
       position: absolute;
       right: var(--spacer-xs);
     }
