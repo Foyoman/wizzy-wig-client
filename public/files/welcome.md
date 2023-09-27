@@ -1,6 +1,6 @@
-# `wizzy wig` - [Create an account](#signupEl) or [Login](#loginEl) (auth inc.)
+# `wizzy-wig` - [Create an account](#signupEl) or [Login](#loginEl) (auth inc.)
 
-Welcome! `wizzy wig` is an in-browser markdown note-taking app featuring syntax highlighted code blocks, a file system, a tab system, and more.
+Welcome! `wizzy-wig` is an in-browser markdown note-taking app featuring syntax highlighted code blocks, a file system, a tab system, and more.
 
 > This site is currently only a frontend demo. Backend integration and account creation coming soon.
 
@@ -14,7 +14,7 @@ Open the editor, and just mess around with it. Edit a file, switch files, and se
 
 ## Feature Overview
 
-This app was developed with a focus on a fluid and intuitive experience with file navigation and tab management. Major features of `wizzy wig` include:
+This app was developed with a focus on a fluid and intuitive experience with file navigation and tab management. Major features of `wizzy-wig` include:
 
 - What You See Is What You Get (WYSIWYG) markdown parsing
 - Browser-like tab management

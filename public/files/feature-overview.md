@@ -16,7 +16,7 @@ The adjacent editor uses the browser-capable version of the same IDE used for VS
 
 ## Saving
 
-Take note of the save state you see in the top left navbar, your files will only be saved when the state shows 'saved -'. Please don't close out of the browser tab containing your `wizzy wig` until you your save state is confirmed.
+Take note of the save state you see in the top left navbar, your files will only be saved when the state shows 'saved -'. Please don't close out of the browser tab containing your `wizzy-wig` until you your save state is confirmed.
 
 ## Tabs
 
