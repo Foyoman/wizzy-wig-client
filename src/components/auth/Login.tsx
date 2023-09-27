@@ -44,7 +44,7 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
     //   password: data.get('password'),
     // });
 
-    // loginUser(e);
+    loginUser(e);
     closeModal();
   };
 

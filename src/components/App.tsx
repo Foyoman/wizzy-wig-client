@@ -24,6 +24,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import AuthContext from "../context/AuthContext";
 
 export default function App() {
+  const SERVER_URL = "http://localhost:8000/api/files/";
+
   const dispatch = useDispatch();
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
   const selectedFile = useSelector(
@@ -38,7 +40,30 @@ export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
-  const { user } = useContext<any>(AuthContext);
+
+  const { user, authTokens, logoutUser } = useContext<any>(AuthContext);
+
+  const [files, setFiles] = useState<any>(null);
+  const getFiles = async () => {
+    const response = await fetch(SERVER_URL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + String(authTokens.access),
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.status === 200) {
+      console.log(data);
+      setFiles(data);
+    } else if (response.statusText === "Unauthorized") {
+      logoutUser();
+    }
+
+    setLoaded(true); // move to getFiles as it's async
+  };
 
   // user check
   useEffect(() => {
@@ -74,9 +99,9 @@ export default function App() {
       updateFileContents();
     } else {
       dispatch(setUserData([])); // set to user's files
-      setLoaded(true);
+      getFiles();
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     setContent(selectedFile?.content as string | undefined);
@@ -84,14 +109,12 @@ export default function App() {
 
   const handleLoginClick: ClickEvent = (e) => {
     e?.preventDefault();
-    console.log("login");
     setShowLogin(true);
     setShowSignUp(false);
   };
 
   const handleSignupClick: ClickEvent = (e) => {
     e?.preventDefault();
-    console.log("signup");
     setShowSignUp(true);
     setShowLogin(false);
   };

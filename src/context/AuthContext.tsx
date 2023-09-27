@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       ? jwt_decode(localStorage.getItem("authTokens")!)
       : null
   );
+  const [loading, setLoading] = useState(true);
 
   const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
     // e.preventDefault();
@@ -46,27 +47,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } else {
       console.error("Something went wrong!");
     }
-
-    window.location.reload();
   };
 
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
-    window.location.reload();
   };
 
   const updateToken = async () => {
-    const response = await fetch(SERVER_URL, {
+    console.log("Updated token!");
+
+    const response = await fetch(SERVER_URL + "refresh/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ refresh: authTokens.refresh }),
+      body: JSON.stringify({ refresh: authTokens?.refresh }),
     });
 
-    const data = await response.json()
+    const data = await response.json();
 
     if (response.status === 200) {
       setAuthTokens(data);
@@ -75,15 +75,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } else {
       logoutUser();
     }
+
+    if (loading) {
+      setLoading(false);
+    }
   };
 
   const contextData = {
     user: user,
+    authTokens: authTokens,
     loginUser: loginUser,
     logoutUser: logoutUser,
   };
 
+  useEffect(() => {
+    if (loading) {
+      updateToken();
+    }
+
+    const fourMinutes = 1000 * 60 * 4;
+    const interval = setInterval(() => {
+      if (authTokens) {
+        updateToken();
+      }
+    }, fourMinutes);
+
+    return () => clearInterval(interval);
+  }, [authTokens, loading]);
+
   return (
-    <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextData}>
+      {loading ? null : children}
+    </AuthContext.Provider>
   );
 };
