@@ -22,8 +22,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
-    // e.preventDefault();
-
     const usernameInput = e.currentTarget.username as HTMLInputElement;
     const passwordInput = e.currentTarget.password as HTMLInputElement;
 
@@ -45,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
     } else {
-      console.error("Something went wrong!");
+      console.error(response);
     }
   };
 
@@ -55,57 +53,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("authTokens");
   };
 
-  const updateToken = async () => {
-    console.log("Updated token!");
-
-    const response = await fetch(SERVER_URL + "refresh/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refresh: authTokens?.refresh }),
-    });
-
-    const data = await response.json();
-
-    if (response.status === 200) {
-      setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-    } else {
-      logoutUser();
-    }
-
-    if (loading) {
-      setLoading(false);
-    }
-  };
-
   const contextData = {
     user: user,
+    setUser: setUser,
     authTokens: authTokens,
+    setAuthTokens: setAuthTokens,
     loginUser: loginUser,
     logoutUser: logoutUser,
   };
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    };
-
-    if (loading) {
-      updateToken();
+    if (authTokens) {
+      setUser(jwt_decode(authTokens.access))
     }
-
-    const fourMinutes = 1000 * 60 * 4;
-    const interval = setInterval(() => {
-      if (authTokens) {
-        updateToken();
-      }
-    }, fourMinutes);
-
-    return () => clearInterval(interval);
+    setLoading(false);
   }, [authTokens, loading]);
 
   return (

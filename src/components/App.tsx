@@ -13,11 +13,12 @@ import { setStaticProps, setUserData } from "../store/appSlice";
 // types/files
 import { ClickEvent } from "../types/ReactTypes";
 import { File } from "../types/FileTypes";
-import { fileSys } from "../lib/starter-files";
+import { fileSys } from "../lib/starterFiles";
 
 // auth
 import SignUp from "./auth/SignUp";
 import Login from "./auth/Login";
+import useAxios from "../utils/useAxios";
 
 // mui
 import CircularProgress from "@mui/material/CircularProgress";
@@ -44,6 +45,8 @@ export default function App() {
   // auth
   const { user, authTokens, logoutUser } = useContext<any>(AuthContext);
 
+  const api = useAxios();
+
   const formatFiles = (files: File[]) => {
     const fileStructure = [];
 
@@ -53,7 +56,7 @@ export default function App() {
       } else {
         const parent = files.find((findFile) => {
           return findFile.id == file.parent;
-        }) 
+        });
 
         if (parent) {
           if (parent.children?.length) {
@@ -69,21 +72,21 @@ export default function App() {
   };
 
   const getFiles = async () => {
-    const response = await fetch(SERVER_URL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + String(authTokens.access),
-      },
-    });
+    // const response = await fetch(SERVER_URL, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: "Bearer " + String(authTokens.access),
+    //   },
+    // });
 
-    const data = await response.json(); // first point of receiving user's files
+    // const data = await response.json(); // first point of receiving user's files
+
+    const response = await api.get("/api/files/");
 
     if (response.status === 200) {
-      const userFileSystem = formatFiles(data);
+      const userFileSystem = formatFiles(response.data);
       dispatch(setUserData(userFileSystem));
-    } else if (response.statusText === "Unauthorized") {
-      logoutUser();
     }
 
     setLoaded(true); // move to getFiles as it's async
@@ -94,7 +97,7 @@ export default function App() {
       const fetchFileContents = async (file: File) => {
         if (!file.is_folder) {
           try {
-            const fileName = file.title.replace(/\s+/g, '-').toLowerCase();
+            const fileName = file.title.replace(/\s+/g, "-").toLowerCase();
             const filePath = `/files/${fileName}.md`;
             const response = await fetch(filePath);
             const fileContents = await response.text();
