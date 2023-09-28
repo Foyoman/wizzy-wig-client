@@ -49,32 +49,6 @@ export const fileSys: File[] = [
         content: "",
       },
       {
-        id: "src",
-        title: "src",
-        dateCreated: new Date("03/22/23").toISOString(),
-        lastUpdated: new Date("03/22/23").toISOString(),
-        isFolder: true,
-        children: [
-          {
-            id: "components",
-            title: "components",
-            dateCreated: new Date("03/22/23").toISOString(),
-            lastUpdated: new Date("03/22/23").toISOString(),
-            isFolder: true,
-            children: [
-              {
-                id: "app",
-                title: "App.tsx",
-                dateCreated: new Date("03/22/23").toISOString(),
-                lastUpdated: new Date("03/22/23").toISOString(),
-                isFolder: false,
-                content: "",
-              },
-            ],
-          },
-        ],
-      },
-      {
         id: "features",
         title: "Features",
         dateCreated: new Date("03/21/23").toISOString(),
