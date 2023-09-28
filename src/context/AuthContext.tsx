@@ -1,6 +1,9 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import jwt_decode from "jwt-decode";
 
+import { useDispatch } from "react-redux";
+import { setError } from "../store/appSlice";
+
 // @ts-ignore
 const AuthContext = createContext();
 
@@ -8,6 +11,8 @@ export default AuthContext;
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const SERVER_URL = "http://localhost:8000/api/token/";
+
+  const dispatch = useDispatch();
 
   const [authTokens, setAuthTokens] = useState(() =>
     localStorage.getItem("authTokens")
@@ -42,8 +47,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
+      window.location.reload();
     } else {
       console.error(response);
+      dispatch(setError(response.status));
     }
   };
 
@@ -51,6 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
+    window.location.reload();
   };
 
   const contextData = {

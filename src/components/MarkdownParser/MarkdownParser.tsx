@@ -71,7 +71,7 @@ const MarkdownParser = ({
       minSize={[0, 0]}
       snapOffset={split === "horizontal" ? 75 : 55}
       collapsed={collapsedIndex}
-      onDrag={() => setCollapsedIndex(undefined)} // I'd set it to null but onDrag's type is number | undefined
+      onDrag={() => setCollapsedIndex(-1)}
       gutterSize={16}
       style={{
         flexDirection: split === "horizontal" ? "row" : "column",

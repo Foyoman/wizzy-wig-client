@@ -41,7 +41,7 @@ export default function App() {
   const [showSignUp, setShowSignUp] = useState(false);
 
   // auth
-  const { user, authTokens, logoutUser } = useContext<any>(AuthContext);
+  const { user } = useContext<any>(AuthContext);
 
   const api = useAxios();
 
@@ -70,16 +70,6 @@ export default function App() {
   };
 
   const getFiles = async () => {
-    // const response = await fetch(SERVER_URL, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: "Bearer " + String(authTokens.access),
-    //   },
-    // });
-
-    // const data = await response.json(); // first point of receiving user's files
-
     const response = await api.get("/api/files/");
 
     if (response.status === 200) {
@@ -117,13 +107,13 @@ export default function App() {
         const updatedFileSys = await Promise.all(
           fileSys.map((file) => fetchFileContents(file))
         );
-        dispatch(setStaticProps(updatedFileSys));
+        const formattedFileSys = formatFiles(updatedFileSys);
+        dispatch(setStaticProps(formattedFileSys));
         setLoaded(true);
       };
 
       updateFileContents();
     } else {
-      dispatch(setUserData([])); // set to user's files
       getFiles();
     }
   }, [user]);
@@ -186,7 +176,7 @@ export default function App() {
         signupEl.removeEventListener("click", handleSignupClick);
       }
     };
-  }, [selectedFile]);
+  }, [selectedFile, selectedTab]);
 
   const NoFile = () => {
     return (

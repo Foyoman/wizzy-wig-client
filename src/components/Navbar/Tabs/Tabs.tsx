@@ -45,7 +45,6 @@ export default function Tabs() {
     if (tabs.length - 1 === index && tabs[selectedTab - 1]) {
       dispatch(selectFile(tabs[selectedTab - 1] as File));
     }
-    // console.log(tabs[selectedTab - 1])
     dispatch(closeTab(index));
   };
 

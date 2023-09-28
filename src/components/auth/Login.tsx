@@ -1,13 +1,21 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import "./auth.scss";
 
 import AuthContext from "../../context/AuthContext";
 
+// types
 import { ClickEvent } from "../../types/ReactTypes";
 
+// components
 import Overlay from "./Overlay";
 import { Copyright } from "./Copyright";
 
+// redux
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../store/store";
+import { setError } from "../../store/appSlice";
+
+// mui
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -34,6 +42,10 @@ const defaultTheme = createTheme({
 });
 
 export default function Login({ closeModal, switchModal }: LoginProps) {
+  const dispatch = useDispatch();
+  const loginError = useSelector((state: RootState) => state.app.loginError);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { loginUser } = useContext<any>(AuthContext);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,13 +55,46 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
     //   email: data.get('email'),
     //   password: data.get('password'),
     // });
-
+    dispatch(setError(null));
+    setErrorMessage("");
+    setLoading(true);
     loginUser(e);
+  };
+
+  useEffect(() => {
+    if (loginError) {
+      setLoading(false);
+
+      if (loginError === 401) {
+        setErrorMessage("Incorrect username or password.");
+      }
+
+      if (loginError === 408) {
+        setErrorMessage("408 Request Timeout. Please try again.");
+      }
+    }
+  }, [loginError]);
+
+  const closerModal = () => {
+    if (loading) return;
+    dispatch(setError(null));
+    setErrorMessage("");
     closeModal();
   };
 
+  const preventSwitch = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    if (loading) return;
+    dispatch(setError(null));
+    setErrorMessage("");
+    switchModal();
+  };
+
   return (
-    <Overlay closeModal={closeModal}>
+    <Overlay closeModal={closerModal}>
       <ThemeProvider theme={defaultTheme}>
         <Container
           className="container"
@@ -57,7 +102,9 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
           maxWidth="xs"
           onClick={(e) => e.stopPropagation()}
         >
-          <CloseIcon className="close-icon" onClick={() => closeModal()} />
+          {loading ? null : (
+            <CloseIcon className="close-icon" onClick={closerModal} />
+          )}
           <Box
             sx={{
               marginTop: "24px",
@@ -87,18 +134,10 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
                 name="username"
                 autoComplete="username"
                 autoFocus
+                disabled={loading}
+                error={Boolean(loginError)}
+                helperText={errorMessage}
               />
-              {/* <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                type="email"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              /> */}
               <TextField
                 margin="normal"
                 required
@@ -108,6 +147,9 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                disabled={loading}
+                error={Boolean(loginError)}
+                helperText={errorMessage}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -118,6 +160,7 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={loading}
               >
                 Sign In
               </Button>
@@ -131,7 +174,7 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
                   <Link
                     href="#"
                     variant="body2"
-                    onClick={(e) => switchModal(e)}
+                    onClick={(e) => preventSwitch(e)}
                   >
                     {"Don't have an account? Sign Up"}
                   </Link>

@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-// import { files } from '../__mocks__/Files';
 import { File, SortKeys, SaveStates } from "../types/FileTypes";
 import { sortFileSystem, findById } from "./helpers";
 
@@ -16,6 +15,7 @@ export interface AppState {
   selectedItem: File | null;
   selectedFile: File | null;
   selectedFolder: File | null;
+  loginError: number | null;
 }
 
 const initialState: AppState = {
@@ -29,6 +29,7 @@ const initialState: AppState = {
   selectedItem: null,
   selectedFile: null,
   selectedFolder: null,
+  loginError: null,
 };
 
 export const appSlice = createSlice({
@@ -202,6 +203,9 @@ export const appSlice = createSlice({
       findById(state.files, "delete", fileToDelete);
       state.selectedFolder = null;
     },
+    setError: (state, action: PayloadAction<number | null>) => {
+      state.loginError = action.payload;
+    }
   },
 });
 
@@ -224,6 +228,7 @@ export const {
   closeTab,
   createFile,
   deleteFile,
+  setError,
 } = appSlice.actions;
 
 export default appSlice.reducer;
