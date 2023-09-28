@@ -79,8 +79,19 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
                   <TextField
                     required
                     fullWidth
+                    id="username"
+                    label="Username"
+                    name="username"
+                    autoComplete="username"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
                     id="email"
                     label="Email Address"
+                    type="email"
                     name="email"
                     autoComplete="email"
                   />
