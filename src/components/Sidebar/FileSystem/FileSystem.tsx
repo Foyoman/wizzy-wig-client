@@ -32,7 +32,7 @@ const FileSystem = ({ items }: FileSystemProps) => {
   ) => {
     e.stopPropagation();
     dispatch(selectItem(item));
-    if (!item.isFolder) {
+    if (!item.is_folder) {
       dispatch(selectFolder(parent));
       const tabIds = tabs.map((tab) => {
         return tab ? tab.id : null;
@@ -60,7 +60,7 @@ const FileSystem = ({ items }: FileSystemProps) => {
     nested: boolean
   ) => {
     return items.map((item) => {
-      if (item.isFolder) {
+      if (item.is_folder) {
         return (
           <TreeItem
             nodeId={`${item.id}`}

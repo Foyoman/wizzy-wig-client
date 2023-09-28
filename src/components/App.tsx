@@ -41,9 +41,33 @@ export default function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
+  // auth
   const { user, authTokens, logoutUser } = useContext<any>(AuthContext);
 
-  const [files, setFiles] = useState<any>(null);
+  const formatFiles = (files: File[]) => {
+    const fileStructure = [];
+
+    for (const file of files) {
+      if (!file.parent) {
+        fileStructure.push(file);
+      } else {
+        const parent = files.find((findFile) => {
+          return findFile.id == file.parent;
+        }) 
+
+        if (parent) {
+          if (parent.children?.length) {
+            parent.children.push(file);
+          } else {
+            parent.children = [file];
+          }
+        }
+      }
+    }
+
+    return fileStructure;
+  };
+
   const getFiles = async () => {
     const response = await fetch(SERVER_URL, {
       method: "GET",
@@ -53,11 +77,11 @@ export default function App() {
       },
     });
 
-    const data = await response.json();
+    const data = await response.json(); // first point of receiving user's files
 
     if (response.status === 200) {
-      console.log(data);
-      setFiles(data);
+      const userFileSystem = formatFiles(data);
+      dispatch(setUserData(userFileSystem));
     } else if (response.statusText === "Unauthorized") {
       logoutUser();
     }
@@ -65,13 +89,13 @@ export default function App() {
     setLoaded(true); // move to getFiles as it's async
   };
 
-  // user check
   useEffect(() => {
     if (!user) {
       const fetchFileContents = async (file: File) => {
-        if (!file.isFolder) {
+        if (!file.is_folder) {
           try {
-            const filePath = `/files/${file.id}.md`;
+            const fileName = file.title.replace(/\s+/g, '-').toLowerCase();
+            const filePath = `/files/${fileName}.md`;
             const response = await fetch(filePath);
             const fileContents = await response.text();
             return { ...file, content: fileContents };
@@ -79,7 +103,7 @@ export default function App() {
             console.error("Error fetching data:", error);
             return file; // Return the original file if there's an error
           }
-        } else if (file.isFolder && file.children) {
+        } else if (file.is_folder && file.children) {
           const updatedChildren: any = await Promise.all(
             file.children.map((childFile: File) => fetchFileContents(childFile))
           );
@@ -132,6 +156,8 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (user) return;
+
     const intervalId = setInterval(() => {
       const loginEl = document.querySelector("a[href='#loginEl']");
       const signupEl = document.querySelector("a[href='#signupEl']");
@@ -159,7 +185,7 @@ export default function App() {
         signupEl.removeEventListener("click", handleSignupClick);
       }
     };
-  }, []);
+  }, [selectedFile]);
 
   const NoFile = () => {
     return (

@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
     // e.preventDefault();
 
-    const emailInput = e.currentTarget.email as HTMLInputElement;
+    const usernameInput = e.currentTarget.username as HTMLInputElement;
     const passwordInput = e.currentTarget.password as HTMLInputElement;
 
     const response = await fetch(SERVER_URL, {
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: emailInput.value,
+        username: usernameInput.value,
         password: passwordInput.value,
       }),
     });
@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (authTokens) {
         updateToken();
       }
-    }, fourMinutes);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [authTokens, loading]);

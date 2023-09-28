@@ -1,14 +1,16 @@
 export interface File {
-  id?: string;
+  user?: number;
+  id: number;
   title: string;
-  dateCreated: string;
-  lastUpdated: string;
-  isFolder: boolean;
   content?: string | null;
+  date_created: string;
+  last_modified: string;
+  is_folder: boolean;
+  parent?: number | null;
   children?: File[] | null;
 }
 
-export type SortKeys = "title" | "dateCreated" | "lastUpdated";
+export type SortKeys = "title" | "date_created" | "last_modified";
 
 export type SortFunction = (
   files: File[],

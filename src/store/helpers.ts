@@ -3,7 +3,7 @@ import { SortFunction, File } from "../types/FileTypes";
 export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
   const [folders, files] = fileSystem.reduce(
     (acc, item) => {
-      if (item.isFolder) {
+      if (item.is_folder) {
         acc[0].push(item);
       } else {
         acc[1].push(item);
@@ -63,7 +63,7 @@ export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
 };
 
 export const appendChild = (item: File, child: File) => {
-  if (!item.isFolder) {
+  if (!item.is_folder) {
     throw new Error(`Item with id: ${item.id} is not a folder.`);
   }
   if (item.children) {
@@ -114,7 +114,7 @@ export const findById = (
       helper(item);
     }
 
-    if (item.isFolder && item.children) {
+    if (item.is_folder && item.children) {
       const foundItem = findById(
         item.children,
         key,

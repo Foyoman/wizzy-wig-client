@@ -38,16 +38,16 @@ export const appSlice = createSlice({
     setStaticProps: (state, action: PayloadAction<File[]>) => {
       const starterFiles = action.payload;
       state.files = sortFileSystem(starterFiles, "title", false);
-      const welcomeFile = starterFiles.find((file) => file.id === "welcome");
+      const welcomeFile = starterFiles.find((file) => file.id === 1);
       state.selectedFile = welcomeFile as File;
       if (welcomeFile?.content) state.markdown = welcomeFile.content;
-      const rootFiles = starterFiles.filter((file) => !file.isFolder);
+      const rootFiles = starterFiles.filter((file) => !file.is_folder);
       state.tabs = rootFiles;
     },
     setUserData: (state, action: PayloadAction<File[] | []>) => {
       const userFiles = action.payload;
       state.files = sortFileSystem(userFiles, "title", false); // use local storage to set user's preferred sort
-      state.tabs = [null] // use local storage to set user's last opened tabs
+      state.tabs = [null]; // use local storage to set user's last opened tabs
     },
     sortFs: (
       state,
@@ -159,14 +159,16 @@ export const appSlice = createSlice({
     createFile: (state, action: PayloadAction<[string, "file" | "folder"]>) => {
       // set up new file
       const [title, key] = action.payload;
-      const tempId = "tempid." + Math.random();
+      // state.selectedFolder will be the parent!
+      const tempId = Math.random(); // obviously replace with a better method of allocating a temp id
       const newFile: File = {
         id: tempId,
         title: title ? title : "Untitled",
-        dateCreated: new Date().toISOString(),
-        lastUpdated: new Date().toISOString(),
-        isFolder: key === "folder",
         content: key === "file" ? "" : null,
+        date_created: new Date().toISOString(),
+        last_modified: new Date().toISOString(),
+        is_folder: key === "folder",
+        parent: state.selectedFolder?.id || null,
         children: key === "folder" ? [] : null,
       };
 

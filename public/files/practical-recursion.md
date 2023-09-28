@@ -7,7 +7,7 @@ One of the funnest and most exciting parts of writing the code for this project 
 ```tsx
 const mapDirectory = (items: File[], parent: File | null, nested: boolean) => {
   return items.map((item) => {
-    if (item.isFolder) {
+    if (item.is_folder) {
       return (
         <TreeItem>
           {item.children?.length ? (

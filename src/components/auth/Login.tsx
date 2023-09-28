@@ -10,7 +10,6 @@ import { Copyright } from "./Copyright";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -58,7 +57,6 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
           maxWidth="xs"
           onClick={(e) => e.stopPropagation()}
         >
-          <CssBaseline />
           <CloseIcon className="close-icon" onClick={() => closeModal()} />
           <Box
             sx={{
@@ -84,12 +82,23 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
                 margin="normal"
                 required
                 fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                autoFocus
+              />
+              {/* <TextField
+                margin="normal"
+                required
+                fullWidth
                 id="email"
                 label="Email Address"
+                type="email"
                 name="email"
                 autoComplete="email"
                 autoFocus
-              />
+              /> */}
               <TextField
                 margin="normal"
                 required

@@ -110,10 +110,10 @@ export default function Toolbar({ items }: ToolbarProps) {
 
     let newTabs: (File | null)[];
     const nestedFiles: File[] = [];
-    if (selectedItem.isFolder) {
+    if (selectedItem.is_folder) {
       const findNestedFiles = (item: File) => {
         item.children?.forEach((child) => {
-          if (child.isFolder) {
+          if (child.is_folder) {
             findNestedFiles(child);
           } else {
             nestedFiles.push(child);
@@ -232,9 +232,10 @@ export default function Toolbar({ items }: ToolbarProps) {
                 id="input-el"
                 ref={fileInputRef}
                 type="text"
+                maxLength={30}
                 value={fileTitle}
                 onChange={(e) => setFileTitle(e.target.value)}
-                placeholder="title"
+                placeholder="Untitled"
               />
             </form>
           </MenuItem>
@@ -265,9 +266,10 @@ export default function Toolbar({ items }: ToolbarProps) {
                 id="input-el"
                 ref={folderInputRef}
                 type="text"
+                maxLength={30}
                 value={folderTitle}
                 onChange={(e) => setFolderTitle(e.target.value)}
-                placeholder="title"
+                placeholder="Untitled"
               />
             </form>
           </MenuItem>
@@ -296,7 +298,7 @@ export default function Toolbar({ items }: ToolbarProps) {
               <div className="delete-confirm">
                 <div className="file-to-delete">
                   <p>
-                    {selectedItem?.isFolder ? "Folder " : "File "}
+                    {selectedItem?.is_folder ? "Folder " : "File "}
                     to delete:
                   </p>
                   <p>{selectedItem?.title}</p>
@@ -362,38 +364,38 @@ export default function Toolbar({ items }: ToolbarProps) {
             <Divider />
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "lastUpdated", false)}
+              onClick={() => handleSelect(items, "last_modified", false)}
             >
               <Checked
-                visible={sort?.sortKey === "lastUpdated" && !sort?.reverse}
+                visible={sort?.sortKey === "last_modified" && !sort?.reverse}
               />
               <ListItemText>Date Modified (Newest First)</ListItemText>
             </MenuItem>
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "lastUpdated", true)}
+              onClick={() => handleSelect(items, "last_modified", true)}
             >
               <Checked
-                visible={sort?.sortKey === "lastUpdated" && sort?.reverse}
+                visible={sort?.sortKey === "last_modified" && sort?.reverse}
               />
               <ListItemText>Date Modified (Oldest First)</ListItemText>
             </MenuItem>
             <Divider />
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "dateCreated", false)}
+              onClick={() => handleSelect(items, "date_created", false)}
             >
               <Checked
-                visible={sort?.sortKey === "dateCreated" && !sort?.reverse}
+                visible={sort?.sortKey === "date_created" && !sort?.reverse}
               />
               <ListItemText>Date Created (Newest First)</ListItemText>
             </MenuItem>
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "dateCreated", true)}
+              onClick={() => handleSelect(items, "date_created", true)}
             >
               <Checked
-                visible={sort?.sortKey === "dateCreated" && sort?.reverse}
+                visible={sort?.sortKey === "date_created" && sort?.reverse}
               />
               <ListItemText>Date Created (Oldest First)</ListItemText>
             </MenuItem>
