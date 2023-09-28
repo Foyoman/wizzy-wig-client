@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (authTokens) {
-      setUser(jwt_decode(authTokens.access))
+      setUser(jwt_decode(authTokens.access));
     }
     setLoading(false);
   }, [authTokens, loading]);

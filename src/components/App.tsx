@@ -25,8 +25,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import AuthContext from "../context/AuthContext";
 
 export default function App() {
-  const SERVER_URL = "http://localhost:8000/api/files/";
-
   const dispatch = useDispatch();
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
   const selectedFile = useSelector(
