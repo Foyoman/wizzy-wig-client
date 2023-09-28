@@ -5,6 +5,7 @@ import AuthContext from "../../context/AuthContext";
 
 import { ClickEvent } from "../../types/ReactTypes";
 
+import Overlay from "./Overlay";
 import { Copyright } from "./Copyright";
 
 import Avatar from "@mui/material/Avatar";
@@ -49,9 +50,14 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
   };
 
   return (
-    <div className="overlay">
+    <Overlay closeModal={closeModal}>
       <ThemeProvider theme={defaultTheme}>
-        <Container className="container" component="main" maxWidth="xs">
+        <Container
+          className="container"
+          component="main"
+          maxWidth="xs"
+          onClick={(e) => e.stopPropagation()}
+        >
           <CssBaseline />
           <CloseIcon className="close-icon" onClick={() => closeModal()} />
           <Box
@@ -113,7 +119,11 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2" onClick={(e) => switchModal(e)}>
+                  <Link
+                    href="#"
+                    variant="body2"
+                    onClick={(e) => switchModal(e)}
+                  >
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
@@ -123,6 +133,6 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
           <Copyright sx={{ mt: 8, mb: 4 }} />
         </Container>
       </ThemeProvider>
-    </div>
+    </Overlay>
   );
 }

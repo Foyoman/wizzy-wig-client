@@ -3,6 +3,7 @@ import "./auth.scss";
 
 import { ClickEvent } from "../../types/ReactTypes";
 
+import Overlay from "./Overlay";
 import { Copyright } from "./Copyright";
 
 // mui
@@ -43,9 +44,14 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
   };
 
   return (
-    <div className="overlay">
+    <Overlay closeModal={closeModal}>
       <ThemeProvider theme={defaultTheme}>
-        <Container className="container" component="main" maxWidth="xs">
+        <Container
+          className="container"
+          component="main"
+          maxWidth="xs"
+          onClick={(e) => e.stopPropagation()}
+        >
           <CssBaseline />
           <CloseIcon className="close-icon" onClick={() => closeModal()} />
           <Box
@@ -122,6 +128,6 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
           <Copyright sx={{ mt: 8, mb: 4 }} />
         </Container>
       </ThemeProvider>
-    </div>
+    </Overlay>
   );
 }
