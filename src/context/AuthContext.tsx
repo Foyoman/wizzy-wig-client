@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (authTokens) {
         updateToken();
       }
-    }, 10000);
+    }, fourMinutes);
 
     return () => clearInterval(interval);
   }, [authTokens, loading]);
