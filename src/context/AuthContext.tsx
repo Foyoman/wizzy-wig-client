@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, ReactNode } from "react";
 import jwt_decode from "jwt-decode";
 
 import { useDispatch } from "react-redux";
-import { setError } from "../store/appSlice";
+import { setLoginStatus } from "../store/appSlice";
 
 // @ts-ignore
 const AuthContext = createContext();
@@ -47,18 +47,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-      window.location.reload();
+      // window.location.reload();
     } else {
       console.error(response);
-      dispatch(setError(response.status));
     }
+    
+    dispatch(setLoginStatus(response.status));
   };
 
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
-    window.location.reload();
+    // window.location.reload();
   };
 
   const contextData = {

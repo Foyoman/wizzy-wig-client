@@ -13,7 +13,7 @@ import { Copyright } from "./Copyright";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store/store";
-import { setError } from "../../store/appSlice";
+import { setLoginStatus } from "../../store/appSlice";
 
 // mui
 import Avatar from "@mui/material/Avatar";
@@ -43,7 +43,7 @@ const defaultTheme = createTheme({
 
 export default function Login({ closeModal, switchModal }: LoginProps) {
   const dispatch = useDispatch();
-  const loginError = useSelector((state: RootState) => state.app.loginError);
+  const loginStatus = useSelector((state: RootState) => state.app.loginStatus);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { loginUser } = useContext<any>(AuthContext);
@@ -55,29 +55,35 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
     //   email: data.get('email'),
     //   password: data.get('password'),
     // });
-    dispatch(setError(null));
+    dispatch(setLoginStatus(null));
     setErrorMessage("");
     setLoading(true);
     loginUser(e);
   };
 
   useEffect(() => {
-    if (loginError) {
-      setLoading(false);
+    if (loginStatus) {
+      if (loginStatus === 200) {
+        setErrorMessage("");
+        closeModal();
+        dispatch(setLoginStatus(null));
+      }
 
-      if (loginError === 401) {
+      if (loginStatus === 401) {
         setErrorMessage("Incorrect username or password.");
       }
 
-      if (loginError === 408) {
+      if (loginStatus === 408) {
         setErrorMessage("408 Request Timeout. Please try again.");
       }
+
+      setLoading(false);
     }
-  }, [loginError]);
+  }, [loginStatus]);
 
   const closerModal = () => {
     if (loading) return;
-    dispatch(setError(null));
+    dispatch(setLoginStatus(null));
     setErrorMessage("");
     closeModal();
   };
@@ -88,7 +94,7 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
     e.preventDefault();
 
     if (loading) return;
-    dispatch(setError(null));
+    dispatch(setLoginStatus(null));
     setErrorMessage("");
     switchModal();
   };
@@ -135,7 +141,7 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
                 autoComplete="username"
                 autoFocus
                 disabled={loading}
-                error={Boolean(loginError)}
+                error={Boolean(loginStatus)}
                 helperText={errorMessage}
               />
               <TextField
@@ -148,7 +154,7 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
                 id="password"
                 autoComplete="current-password"
                 disabled={loading}
-                error={Boolean(loginError)}
+                error={Boolean(loginStatus)}
                 helperText={errorMessage}
               />
               <FormControlLabel

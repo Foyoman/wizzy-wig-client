@@ -15,7 +15,7 @@ export interface AppState {
   selectedItem: File | null;
   selectedFile: File | null;
   selectedFolder: File | null;
-  loginError: number | null;
+  loginStatus: number | null;
 }
 
 const initialState: AppState = {
@@ -29,7 +29,7 @@ const initialState: AppState = {
   selectedItem: null,
   selectedFile: null,
   selectedFolder: null,
-  loginError: null,
+  loginStatus: null,
 };
 
 export const appSlice = createSlice({
@@ -203,8 +203,8 @@ export const appSlice = createSlice({
       findById(state.files, "delete", fileToDelete);
       state.selectedFolder = null;
     },
-    setError: (state, action: PayloadAction<number | null>) => {
-      state.loginError = action.payload;
+    setLoginStatus: (state, action: PayloadAction<number | null>) => {
+      state.loginStatus = action.payload;
     }
   },
 });
@@ -228,7 +228,7 @@ export const {
   closeTab,
   createFile,
   deleteFile,
-  setError,
+  setLoginStatus,
 } = appSlice.actions;
 
 export default appSlice.reducer;

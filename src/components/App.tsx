@@ -13,7 +13,7 @@ import { setStaticProps, setUserData } from "../store/appSlice";
 // types/files
 import { ClickEvent } from "../types/ReactTypes";
 import { File } from "../types/FileTypes";
-import { fileSys } from "../lib/starterFiles";
+import { fileSys } from "../lib/fileSys";
 
 // auth
 import SignUp from "./auth/SignUp";
@@ -42,21 +42,23 @@ export default function App() {
 
   // auth
   const { user } = useContext<any>(AuthContext);
-
   const api = useAxios();
 
   const formatFiles = (files: File[]) => {
+    const filesCopy = new Array(...files);
     const fileStructure = [];
 
-    for (const file of files) {
+    for (const file of filesCopy) {
       if (!file.parent) {
         fileStructure.push(file);
       } else {
-        const parent = files.find((findFile) => {
+        const parent = filesCopy.find((findFile) => {
           return findFile.id == file.parent;
         });
 
-        if (parent) {
+        const childIds = parent?.children?.map((child) => child.id);
+
+        if (parent && !childIds?.includes(file.id)) {
           if (parent.children?.length) {
             parent.children.push(file);
           } else {
@@ -80,39 +82,37 @@ export default function App() {
     setLoaded(true); // move to getFiles as it's async
   };
 
+  const fetchFileContents = async (file: File) => {
+    if (!file.is_folder) {
+      try {
+        const fileName = file.title.replace(/\s+/g, "-").toLowerCase();
+        const filePath = `/files/${fileName}.md`;
+        const response = await fetch(filePath);
+        const fileContents = await response.text();
+        return { ...file, content: fileContents };
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        return file; // Return the original file if there's an error
+      }
+    } else {
+      return file;
+    }
+  };
+
+  const updateFileContents = async (files: File[]) => {
+    const updatedFileSys = await Promise.all(
+      files.map((file) => fetchFileContents(file))
+    );
+    const formattedFileSys = formatFiles(updatedFileSys);
+    dispatch(setStaticProps(formattedFileSys));
+    setLoaded(true);
+  };
+
   useEffect(() => {
+    const fileSysCopy = new Array(...fileSys)
+
     if (!user) {
-      const fetchFileContents = async (file: File) => {
-        if (!file.is_folder) {
-          try {
-            const fileName = file.title.replace(/\s+/g, "-").toLowerCase();
-            const filePath = `/files/${fileName}.md`;
-            const response = await fetch(filePath);
-            const fileContents = await response.text();
-            return { ...file, content: fileContents };
-          } catch (error) {
-            console.error("Error fetching data:", error);
-            return file; // Return the original file if there's an error
-          }
-        } else if (file.is_folder && file.children) {
-          const updatedChildren: any = await Promise.all(
-            file.children.map((childFile: File) => fetchFileContents(childFile))
-          );
-          return { ...file, children: updatedChildren };
-        }
-        return file;
-      };
-
-      const updateFileContents = async () => {
-        const updatedFileSys = await Promise.all(
-          fileSys.map((file) => fetchFileContents(file))
-        );
-        const formattedFileSys = formatFiles(updatedFileSys);
-        dispatch(setStaticProps(formattedFileSys));
-        setLoaded(true);
-      };
-
-      updateFileContents();
+      updateFileContents(fileSysCopy);
     } else {
       getFiles();
     }
