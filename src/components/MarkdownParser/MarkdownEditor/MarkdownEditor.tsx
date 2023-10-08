@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useContext } from "react";
+import { useEffect, useMemo, useCallback, useContext, useRef } from "react";
 import { debounce } from "lodash";
 import Editor, { useMonaco, OnMount, Monaco } from "@monaco-editor/react";
 import { IKeyboardEvent } from "monaco-editor-core";
@@ -11,6 +11,7 @@ import {
   updateMarkdown,
   saveFile,
   saveFileContent,
+  setSaveState,
 } from "../../../store/appSlice";
 import { useSelector } from "react-redux";
 import { AppDispatch, type RootState } from "../../../store/store";
@@ -68,15 +69,20 @@ export default function MdEditor(props: MdEditorProps) {
     [dispatch, selectedFile]
   );
 
-  // handle monaco editor changes
+  // handle editor changes
+  const autosaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleInputChange = useMemo(() => {
     return (
       value: string | null | undefined,
       e?: editor.IModelContentChangedEvent
     ) => {
       if (!allowSave) return;
-      dispatch(saveFile(value || ""));
 
+      if (autosaveTimeoutRef.current) {
+        clearTimeout(autosaveTimeoutRef.current);
+      }
+
+      dispatch(saveFile(value || ""));
       // dispatch(setSaveState("modified"));
       if (value && value.length > 500) {
         console.log("running debounced");
@@ -85,30 +91,17 @@ export default function MdEditor(props: MdEditorProps) {
       } else {
         dispatch(updateMarkdown({ value: value, file: selectedFile! }));
       }
+
+      if (user) {
+        dispatch(setSaveState("modified"))
+        autosaveTimeoutRef.current = setTimeout(() => {
+          console.log('sending save...')
+          const updatedFile: File = { ...selectedFile!, content: value };
+          dispatch(saveFileContent(updatedFile));
+        }, 1000);
+      }
     };
   }, [allowSave, debouncedSetMarkdown, dispatch, selectedFile]);
-
-  const updateFile = (content: string) => {
-    const updatedFile: File = { ...selectedFile!, content: content };
-    dispatch(saveFileContent(updatedFile));
-  }
-
-  // trigger autosave after 1 second of inactivity // TODO: async save to db
-  useEffect(() => {
-    if (!allowSave || !user) return;
-    const lastEditTime = Date.now();
-    const timeout = setTimeout(() => {
-      const now = Date.now();
-      const timeSinceLastEdit = now - lastEditTime!;
-      if (timeSinceLastEdit >= 1000) {
-        return;
-      }
-    }, 1000);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [allowSave, dispatch, markdown]);
 
   const MemoizedEditor = useMemo(() => {
     return (
