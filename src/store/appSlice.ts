@@ -99,7 +99,6 @@ export const appSlice = createSlice({
     },
     selectFile: (state, action: PayloadAction<File>) => {
       const file = action.payload;
-      console.log(file);
       state.allowSave = false;
       state.selectedFile = file;
       state.markdown = file.content || "";
@@ -246,7 +245,8 @@ export const appSlice = createSlice({
     })
     .addCase(saveFileContent.fulfilled, (state, action) => {
       state.saveState = "saved";
-      // handle the saved date if needed
+      console.log('accepted change.')
+      // handle the saved data if needed
       const savedFile = action.payload;
       findById(state.files, "update", savedFile, null, savedFile.content);
       findById(state.tabs as File[], "update", savedFile, null, savedFile.content);

@@ -83,10 +83,8 @@ export default function MdEditor(props: MdEditorProps) {
       }
 
       dispatch(saveFile(value || ""));
-      // dispatch(setSaveState("modified"));
+
       if (value && value.length > 500) {
-        console.log("running debounced");
-        // console.log(selectedFile);
         debouncedSetMarkdown(value);
       } else {
         dispatch(updateMarkdown({ value: value, file: selectedFile! }));
