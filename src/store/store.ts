@@ -1,13 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-// import fileReducer from './fileSlice';
-// import fileSysReducer from './fileSysSlice';
-// import markdownReducer from './markdownSlice';
 import appReducer from "./appSlice";
 
 export const store = configureStore({
   reducer: {
     app: appReducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

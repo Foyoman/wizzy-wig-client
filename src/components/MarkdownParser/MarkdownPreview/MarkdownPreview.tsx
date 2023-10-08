@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import "./MdPreview.scss";
+import "./MarkdownPreview.scss";
 import "./github.scss";
 
 import { useSelector } from "react-redux";

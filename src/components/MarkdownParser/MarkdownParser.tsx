@@ -8,8 +8,8 @@ import { KeyboardTab } from "@mui/icons-material";
 import HorizontalSplitIcon from "@mui/icons-material/HorizontalSplit";
 import VerticalSplitIcon from "@mui/icons-material/VerticalSplit";
 
-import MdPreview from "./MdPreview/MdPreview";
-import MdEditor from "./MdEditor/MdEditor";
+import MdPreview from "./MarkdownPreview/MarkdownPreview";
+import MdEditor from "./MarkdownEditor/MarkdownEditor";
 
 import {
   oneDark,

@@ -18,4 +18,4 @@ export type SortFunction = (
   reverse: boolean
 ) => any;
 
-export type SaveStates = "saved" | "modified" | "saving";
+export type SaveStates = "saved" | "modified" | "saving" | "error";

@@ -75,7 +75,7 @@ export const appendChild = (item: File, child: File) => {
 
 export const findById = (
   items: File[],
-  key: "append" | "update" | "delete",
+  key: "append" | "update" | "delete" | "find",
   needle: File,
   child?: File | null,
   updatedContent?: File["content"],
@@ -106,6 +106,7 @@ export const findById = (
         item.content = updatedContent;
         return items;
       } else {
+        console.log('item', item)
         return item;
       }
     };

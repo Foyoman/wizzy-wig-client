@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo, useCallback, useContext } from "react";
 import { debounce } from "lodash";
 import Editor, { useMonaco, OnMount, Monaco } from "@monaco-editor/react";
 import { IKeyboardEvent } from "monaco-editor-core";
@@ -6,10 +6,18 @@ import { IKeyboardEvent } from "monaco-editor-core";
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
 
 import { useDispatch } from "react-redux";
-import { setAllowSave, updateMarkdown } from "../../../store/appSlice";
-import { saveFile } from "../../../store/appSlice";
+import {
+  setAllowSave,
+  updateMarkdown,
+  saveFile,
+  saveFileContent,
+} from "../../../store/appSlice";
 import { useSelector } from "react-redux";
-import type { RootState } from "../../../store/store";
+import { AppDispatch, type RootState } from "../../../store/store";
+
+import AuthContext from "../../../context/AuthContext";
+
+import { File } from "../../../types/FileTypes";
 
 interface MdEditorProps {
   theme: "vs-dark" | "vs-light" | undefined;
@@ -23,9 +31,12 @@ export default function MdEditor(props: MdEditorProps) {
   const selectedFile = useSelector(
     (state: RootState) => state.app.selectedFile
   );
+  const files = useSelector((state: RootState) => state.app.files);
   const allowSave = useSelector((state: RootState) => state.app.allowSave);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const monaco = useMonaco();
+
+  const { user } = useContext<any>(AuthContext);
 
   // no clue what this does
   useEffect(() => {
@@ -52,7 +63,6 @@ export default function MdEditor(props: MdEditorProps) {
   const debouncedSetMarkdown = useCallback(
     debounce((value: string) => {
       console.log("setting debounced");
-      console.log(selectedFile);
       dispatch(updateMarkdown({ value: value, file: selectedFile! }));
     }, 1000),
     [dispatch, selectedFile]
@@ -66,6 +76,7 @@ export default function MdEditor(props: MdEditorProps) {
     ) => {
       if (!allowSave) return;
       dispatch(saveFile(value || ""));
+
       // dispatch(setSaveState("modified"));
       if (value && value.length > 500) {
         console.log("running debounced");
@@ -77,17 +88,20 @@ export default function MdEditor(props: MdEditorProps) {
     };
   }, [allowSave, debouncedSetMarkdown, dispatch, selectedFile]);
 
+  const updateFile = (content: string) => {
+    const updatedFile: File = { ...selectedFile!, content: content };
+    dispatch(saveFileContent(updatedFile));
+  }
+
   // trigger autosave after 1 second of inactivity // TODO: async save to db
   useEffect(() => {
-    if (!allowSave) return;
+    if (!allowSave || !user) return;
     const lastEditTime = Date.now();
     const timeout = setTimeout(() => {
       const now = Date.now();
       const timeSinceLastEdit = now - lastEditTime!;
       if (timeSinceLastEdit >= 1000) {
         return;
-        // console.log('autosaving...');
-        // dispatch(saveFile(markdown));
       }
     }, 1000);
 

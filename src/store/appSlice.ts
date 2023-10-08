@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { File, SortKeys, SaveStates } from "../types/FileTypes";
@@ -31,6 +31,38 @@ const initialState: AppState = {
   selectedFolder: null,
   loginStatus: null,
 };
+
+export const saveFileContent = createAsyncThunk(
+  "app/saveFileContent",
+  async (file: File, { rejectWithValue }) => {
+    let authTokens = localStorage.getItem("authTokens")
+      ? JSON.parse(localStorage.getItem("authTokens")!)
+      : null;
+
+    try {
+      const response = await fetch(`http://localhost:8000/api/files/${file.id}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authTokens.access}`,
+        },
+        body: JSON.stringify({ content: file.content, id: file.id }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to save.");
+      }
+
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Failed to save.");
+    }
+  }
+);
 
 export const appSlice = createSlice({
   name: "app",
@@ -67,6 +99,7 @@ export const appSlice = createSlice({
     },
     selectFile: (state, action: PayloadAction<File>) => {
       const file = action.payload;
+      console.log(file);
       state.allowSave = false;
       state.selectedFile = file;
       state.markdown = file.content || "";
@@ -205,7 +238,23 @@ export const appSlice = createSlice({
     },
     setLoginStatus: (state, action: PayloadAction<number | null>) => {
       state.loginStatus = action.payload;
-    }
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(saveFileContent.pending, (state) => {
+      state.saveState = "saving";
+    })
+    .addCase(saveFileContent.fulfilled, (state, action) => {
+      state.saveState = "saved";
+      // handle the saved date if needed
+      const savedFile = action.payload;
+      findById(state.files, "update", savedFile, null, savedFile.content);
+      findById(state.tabs as File[], "update", savedFile, null, savedFile.content);
+    })
+    .addCase(saveFileContent.rejected, (state, action) => {
+      state.saveState = "error";
+      console.error(action.error.message);
+    });
   },
 });
 
