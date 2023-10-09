@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { saveFileContent } from "./apiSlice";
+import { saveFile, createFile } from "./apiSlice";
 
 import { File, SortKeys } from "../types/FileTypes";
 import { sortFileSystem, findById } from "./helpers";
@@ -92,20 +92,18 @@ export const appSlice = createSlice({
       state.allowSave = action.payload;
     },
     saveFileState: (state, action: PayloadAction<string>) => {
-      findById(
-        state.files,
-        "update",
-        state.selectedFile as File,
-        null,
-        action.payload
-      );
-      findById(
-        state.tabs as File[],
-        "update",
-        state.selectedFile as File,
-        null,
-        action.payload
-      );
+      findById({
+        items: state.files as File[],
+        key: "update",
+        needle: state.selectedFile!.id as File["id"],
+        updatedContent: action.payload,
+      });
+      findById({
+        items: state.tabs as File[],
+        key: "update",
+        needle: state.selectedFile!.id as File["id"],
+        updatedContent: action.payload,
+      });
     },
     // prevents a bug where debounce would run after switching files, overwriting the file switched to and causing infinite loops
     selectTab: (state, action: PayloadAction<number>) => {
@@ -150,24 +148,18 @@ export const appSlice = createSlice({
         state.selectedTab = 0;
       }
     },
-    createFile: (state, action: PayloadAction<[string, "file" | "folder"]>) => {
+    createFileState: (state, action: PayloadAction<File>) => {
       // set up new file
-      const [title, key] = action.payload;
-      // state.selectedFolder will be the parent!
-      const tempId = Math.random(); // obviously replace with a better method of allocating a temp id
-      const newFile: File = {
-        id: tempId,
-        title: title ? title : "Untitled",
-        content: key === "file" ? "" : null,
-        date_created: new Date().toISOString(),
-        last_modified: new Date().toISOString(),
-        is_folder: key === "folder",
-        parent: state.selectedFolder?.id || null,
-        children: key === "folder" ? [] : null,
-      };
+      const newFile = action.payload;
+      state.allowSave = false;
 
       // append new file to the file system
-      findById(state.files, "append", state.selectedFolder as File, newFile);
+      findById({
+        items: state.files,
+        key: "append",
+        needle: state.selectedFolder?.id,
+        child: newFile,
+      });
 
       // sort file system after appendage
       state.files = sortFileSystem(state.files, "title", false);
@@ -175,7 +167,7 @@ export const appSlice = createSlice({
       // update selected item to the newly created file/folder
       state.selectedItem = newFile;
 
-      if (key === "file") {
+      if (!newFile.is_folder) {
         // if the current tab is an open file, open the new file in a new tab
         if (state.tabs[state.selectedTab]) {
           state.tabs.push(newFile as never);
@@ -191,10 +183,11 @@ export const appSlice = createSlice({
         state.selectedFolder = newFile;
       }
     },
-    deleteFile: (state, action: PayloadAction<File>) => {
+    deleteFileState: (state, action: PayloadAction<File>) => {
       const fileToDelete = action.payload;
-      findById(state.files, "delete", fileToDelete);
+      findById({ items: state.files, key: "delete", needle: fileToDelete.id });
       state.selectedFolder = null;
+      if (state.tabs.length <= 1) state.selectedTab = 0;
     },
     setLoginStatus: (state, action: PayloadAction<number | null>) => {
       state.loginStatus = action.payload;
@@ -202,13 +195,47 @@ export const appSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(saveFileContent.fulfilled, (state, action) => {
+      // saving a file
+      .addCase(saveFile.fulfilled, (state, action: PayloadAction<File>) => {
         const savedFile = action.payload;
-        console.log('savedFile: ', savedFile)
-        findById(state.files, "update", savedFile, null, savedFile.content);
-        findById(state.tabs as File[], "update", savedFile, null, savedFile.content);
+        findById({
+          items: state.files,
+          key: "update",
+          needle: savedFile.id,
+          updatedContent: savedFile.content,
+        });
+        findById({
+          items: state.tabs as File[],
+          key: "update",
+          needle: savedFile.id,
+          updatedContent: savedFile.content,
+        });
       })
-  }
+
+      // creating a file
+      .addCase(createFile.fulfilled, (state, action) => {
+        const realFile = action.payload;
+
+        const tempFile = findById({
+          items: state.files,
+          key: "find",
+          needle: realFile.temp_id,
+        });
+
+        const tempTab = findById({
+          items: state.tabs as File[],
+          key: "find",
+          needle: realFile.temp_id,
+        });
+
+        tempFile.id = realFile.id;
+        if (tempTab) tempTab.id = realFile.id;
+        if (state.selectedFile && state.selectedFile?.id === realFile.temp_id) {
+          state.selectedFile.id = realFile.id;
+        }
+        console.log('file created.')
+      });
+  },
 });
 
 export const {
@@ -227,8 +254,8 @@ export const {
   setTabs,
   newTab,
   closeTab,
-  createFile,
-  deleteFile,
+  createFileState,
+  deleteFileState,
   setLoginStatus,
 } = appSlice.actions;
 

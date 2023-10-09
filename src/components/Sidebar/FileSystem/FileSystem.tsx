@@ -15,14 +15,14 @@ import {
   selectFile,
   selectItem,
 } from "../../../store/appSlice";
-import { RootState } from "../../../store/store";
+import { AppDispatch, RootState } from "../../../store/store";
 
 interface FileSystemProps {
   items: File[];
 }
 
 const FileSystem = ({ items }: FileSystemProps) => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
   const handleSelect = (

@@ -7,7 +7,7 @@ import Sidebar from "./Sidebar/Sidebar";
 
 // redux
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../store/store";
+import type { AppDispatch, RootState } from "../store/store";
 import { setStaticProps, setUserData } from "../store/appSlice";
 
 // types/files
@@ -25,7 +25,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import AuthContext from "../context/AuthContext";
 
 export default function App() {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const showSidebar = useSelector((state: RootState) => state.app.showSidebar);
   const selectedFile = useSelector(
     (state: RootState) => state.app.selectedFile

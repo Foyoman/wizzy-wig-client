@@ -6,7 +6,7 @@ import Tabs from "./Tabs/Tabs";
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../../store/appSlice";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
 
 // mui
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
@@ -17,7 +17,7 @@ import AuthContext from "../../context/AuthContext";
 
 export default function Navbar() {
   const saveState = useSelector((state: RootState) => state.api.saveState);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const { user, logoutUser } = useContext<any>(AuthContext);
 
   return (

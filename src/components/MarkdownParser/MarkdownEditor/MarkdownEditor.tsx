@@ -11,7 +11,7 @@ import {
   updateMarkdown,
   saveFileState,
 } from "../../../store/appSlice";
-import { saveFileContent, setSaveState } from "../../../store/apiSlice";
+import { saveFile, setSaveState } from "../../../store/apiSlice";
 import { useSelector } from "react-redux";
 import { AppDispatch, type RootState } from "../../../store/store";
 
@@ -33,7 +33,7 @@ export default function MdEditor(props: MdEditorProps) {
   );
   const files = useSelector((state: RootState) => state.app.files);
   const allowSave = useSelector((state: RootState) => state.app.allowSave);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch: AppDispatch = useDispatch<AppDispatch>();
   const monaco = useMonaco();
 
   const { user } = useContext<any>(AuthContext);
@@ -89,12 +89,12 @@ export default function MdEditor(props: MdEditorProps) {
         dispatch(updateMarkdown({ value: value, file: selectedFile! }));
       }
 
-      if (user) {
-        dispatch(setSaveState("modified"))
+      if (allowSave && user) {
+        dispatch(setSaveState("modified"));
         autosaveTimeoutRef.current = setTimeout(() => {
-          console.log('sending save...')
+          console.log("sending save...");
           const updatedFile: File = { ...selectedFile!, content: value };
-          dispatch(saveFileContent(updatedFile));
+          dispatch(saveFile(updatedFile));
         }, 1000);
       }
     };

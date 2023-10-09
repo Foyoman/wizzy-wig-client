@@ -12,7 +12,7 @@ import { Copyright } from "./Copyright";
 
 // redux
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../../store/store";
+import type { AppDispatch, RootState } from "../../store/store";
 import { setLoginStatus } from "../../store/appSlice";
 
 // mui
@@ -42,7 +42,7 @@ const defaultTheme = createTheme({
 });
 
 export default function Login({ closeModal, switchModal }: LoginProps) {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const loginStatus = useSelector((state: RootState) => state.app.loginStatus);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");

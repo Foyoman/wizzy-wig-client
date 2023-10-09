@@ -5,7 +5,7 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
+import { AppDispatch, RootState } from "../../../store/store";
 import { useDispatch } from "react-redux";
 import {
   selectTab,
@@ -18,10 +18,15 @@ import {
 import { File } from "../../../types/FileTypes";
 
 export default function Tabs() {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const tabs = useSelector((state: RootState) => state.app.tabs);
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
   const tabBarEl: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
+
+
+  const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
+
+
 
   // scroll to end of tab bar if new tab is created
   useEffect(() => {

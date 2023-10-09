@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { File, SaveStates } from "../types/FileTypes";
+import { File, SaveStates, NewFile } from "../types/FileTypes";
 import axios, { isAxiosError } from "axios";
+import { findById } from "./helpers";
 
 const SERVER_URL = "http://localhost:8000/api/files/";
 
@@ -12,8 +13,8 @@ const initialState: ApiState = {
   saveState: "saved",
 };
 
-export const saveFileContent = createAsyncThunk(
-  "api/saveFileContent",
+export const saveFile = createAsyncThunk(
+  "api/saveFile",
   async (file: File, { rejectWithValue }) => {
     let authTokens = localStorage.getItem("authTokens")
       ? JSON.parse(localStorage.getItem("authTokens")!)
@@ -46,7 +47,7 @@ export const saveFileContent = createAsyncThunk(
 
 export const createFile = createAsyncThunk(
   "api/createFile",
-  async (file: File, { rejectWithValue }) => {
+  async (file: NewFile, { rejectWithValue }) => {
     let authTokens = localStorage.getItem("authTokens")
       ? JSON.parse(localStorage.getItem("authTokens")!)
       : null;
@@ -69,6 +70,32 @@ export const createFile = createAsyncThunk(
   }
 );
 
+export const deleteFile = createAsyncThunk(
+  "api/deleteFile",
+  async (fileId: File["id"], { rejectWithValue }) => {
+    let authTokens = localStorage.getItem("authTokens")
+      ? JSON.parse(localStorage.getItem("authTokens")!)
+      : null;
+
+    try {
+      const response = await axios.delete(`${SERVER_URL}${fileId}/`, {
+        headers: {
+          Authorization: `Bearer ${authTokens.access}`,
+        },
+      });
+
+      // Assuming your backend responds with a success message or data related to the deleted file
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.data?.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+
+      return rejectWithValue("Failed to delete.");
+    }
+  }
+);
+
 const apiSlice = createSlice({
   name: "api",
   initialState,
@@ -79,16 +106,26 @@ const apiSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(saveFileContent.pending, (state) => {
+      // saving a file
+      .addCase(saveFile.pending, (state) => {
         state.saveState = "saving";
       })
-      .addCase(saveFileContent.fulfilled, (state, action) => {
+      .addCase(saveFile.fulfilled, (state, action) => {
         state.saveState = "saved";
         console.log("accepted change.");
         // Note: Here you may not want to handle file data, since that might still be handled by appSlice.
       })
-      .addCase(saveFileContent.rejected, (state, action) => {
+      .addCase(saveFile.rejected, (state, action) => {
         state.saveState = "error";
+        console.error(action.error.message);
+      })
+
+      // deleting a file
+      .addCase(deleteFile.fulfilled, (state, action) => {
+        // Here you can update your state after a file was successfully deleted
+        console.log(action);
+      })
+      .addCase(deleteFile.rejected, (state, action) => {
         console.error(action.error.message);
       });
   },

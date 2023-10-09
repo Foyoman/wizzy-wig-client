@@ -14,18 +14,19 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
-import { File, SortKeys, SortFunction } from "../../../types/FileTypes";
+import { File, SortKeys, SortFunction, NewFile } from "../../../types/FileTypes";
 import { useDispatch, useSelector } from "react-redux";
 import {
   sortFs,
-  createFile,
-  deleteFile,
+  createFileState,
+  deleteFileState,
   setTabs,
   selectFile,
   selectTab,
   selectItem,
 } from "../../../store/appSlice";
-import { RootState } from "../../../store/store";
+import { createFile, deleteFile } from "../../../store/apiSlice";
+import { AppDispatch, RootState } from "../../../store/store";
 
 interface ToolbarProps {
   items: File[];
@@ -65,7 +66,7 @@ export default function Toolbar({ items }: ToolbarProps) {
     reverse: false,
   });
 
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const selectedFolder = useSelector(
     (state: RootState) => state.app.selectedFolder
   );
@@ -106,7 +107,8 @@ export default function Toolbar({ items }: ToolbarProps) {
 
   const handleDelete = () => {
     if (!selectedItem) return;
-    dispatch(deleteFile(selectedItem));
+    dispatch(deleteFileState(selectedItem));
+    dispatch(deleteFile(selectedItem.id));
 
     let newTabs: (File | null)[];
     const nestedFiles: File[] = [];
@@ -123,7 +125,7 @@ export default function Toolbar({ items }: ToolbarProps) {
 
       findNestedFiles(selectedItem);
       const nestedFilesIds = nestedFiles.map((file) => file.id);
-      newTabs = tabs.filter((file) => !nestedFilesIds.includes(file!.id));
+      newTabs = tabs.filter((file) => !nestedFilesIds.includes(file?.id));
 
       const tabsIds = tabs.map((tab) => tab?.id);
       const deletedIndices = [];
@@ -142,12 +144,18 @@ export default function Toolbar({ items }: ToolbarProps) {
       }
     } else {
       newTabs = tabs.filter((file) => file?.id !== selectedItem.id);
-      const shift = tabs.length - 1 > selectedTab ? 0 : 1;
-      dispatch(selectTab(selectedTab - shift));
 
-      if (newTabs[selectedTab - shift]) {
-        dispatch(selectFile(newTabs[selectedTab - shift]!));
+      if (newTabs.length > 1) {
+        const shift = tabs.length - 1 > selectedTab ? 0 : 1;
+        dispatch(selectTab(selectedTab - shift));
+
+        if (newTabs[selectedTab - shift]) {
+          dispatch(selectFile(newTabs[selectedTab - shift]!));
+        }
+      } else {
+        dispatch(selectTab(0));
       }
+
     }
 
     if (!newTabs.length) newTabs = [null];
@@ -179,7 +187,30 @@ export default function Toolbar({ items }: ToolbarProps) {
       setCreateFolderEl(null);
       setFolderTitle("");
     }
-    dispatch(createFile([title, key]));
+
+    const tempId = Date.now() + Math.round(Math.random() * 1000);
+    const newFile: Omit<File, 'date_created' | 'last_modified'> = {
+      title: title ? title : "Untitled",
+      content: key === "file" ? "" : null,
+      is_folder: key === "folder",
+      parent: selectedFolder?.id || null,
+      children: key === "folder" ? [] : null,
+    };
+    
+    const newFileState: File = {
+      ...newFile,
+      id: tempId,
+      date_created: new Date().toISOString(),
+      last_modified: new Date().toISOString(),
+    }
+
+    const newFileToPost: NewFile = {
+      ...newFile,
+      temp_id: tempId,
+    }
+
+    dispatch(createFileState(newFileState));
+    dispatch(createFile(newFileToPost));
   };
 
   interface CheckedProps extends JSX.IntrinsicAttributes {

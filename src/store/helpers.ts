@@ -62,7 +62,7 @@ export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
   }
 };
 
-export const appendChild = (item: File, child: File) => {
+const appendChild = (item: File, child: File) => {
   if (!item.is_folder) {
     throw new Error(`Item with id: ${item.id} is not a folder.`);
   }
@@ -73,17 +73,25 @@ export const appendChild = (item: File, child: File) => {
   }
 };
 
-export const findById = (
-  items: File[],
-  key: "append" | "update" | "delete" | "find",
-  needle: File,
-  child?: File | null,
-  updatedContent?: File["content"],
-  emit?: boolean
-): any => {
+export const findById = ({
+  items,
+  key,
+  needle,
+  child,
+  updatedContent,
+  updatedId,
+}: {
+  items: File[];
+  key: "append" | "update" | "delete" | "find";
+  needle: File["id"] | null;
+  child?: File | null;
+  updatedContent?: File["content"];
+  updatedId?: File["id"];
+}): any => {
   const append = key === "append";
   const update = key === "update";
   const destroy = key === "delete";
+  const find = key === "find";
 
   if (append && !needle && child) {
     items.push(child);
@@ -103,31 +111,35 @@ export const findById = (
       } else if (append && child) {
         appendChild(item, child);
       } else if (update) {
-        item.content = updatedContent;
+        if (updatedContent) {
+          item.content = updatedContent;
+        } else if (updatedId) {
+          item.id = updatedId;
+        }
         return items;
       } else {
-        console.log('item', item)
         return item;
       }
     };
 
-    if (item.id === needle.id) {
+    if (item.id === needle) {
+      if (find) return { ...item };
       helper(item);
     }
 
     if (item.is_folder && item.children) {
-      const foundItem = findById(
-        item.children,
-        key,
-        needle,
-        child,
-        updatedContent
-      );
+      const foundItem = findById({
+        items: item.children,
+        key: key,
+        needle: needle,
+        child: child,
+        updatedContent: updatedContent,
+        updatedId: updatedId,
+      });
       if (foundItem) {
+        if (find) return foundItem;
         helper(item);
       }
     }
   }
-
-  if (emit) return items;
 };

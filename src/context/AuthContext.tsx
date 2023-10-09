@@ -3,6 +3,7 @@ import jwt_decode from "jwt-decode";
 
 import { useDispatch } from "react-redux";
 import { setLoginStatus } from "../store/appSlice";
+import { AppDispatch } from "../store/store";
 
 // @ts-ignore
 const AuthContext = createContext();
@@ -12,7 +13,7 @@ export default AuthContext;
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const SERVER_URL = "http://localhost:8000/api/token/";
 
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const [authTokens, setAuthTokens] = useState(() =>
     localStorage.getItem("authTokens")
