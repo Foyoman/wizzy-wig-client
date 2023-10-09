@@ -20,6 +20,8 @@ import SignUp from "./auth/SignUp";
 import Login from "./auth/Login";
 import useAxios from "../utils/useAxios";
 
+import Error from "./Error/Error";
+
 // helpers
 import { getFileDetails } from "../store/helpers";
 
@@ -198,6 +200,7 @@ export default function App() {
     <div className="page">
       <Navbar />
       {/* <SignUp /> */}
+      {/* <Error /> */}
       {showSignUp ? (
         <SignUp closeModal={closeModal} switchModal={switchModal} />
       ) : null}
