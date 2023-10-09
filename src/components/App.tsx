@@ -21,7 +21,7 @@ import Login from "./auth/Login";
 import useAxios from "../utils/useAxios";
 
 // helpers
-import { findById, getFileDetails } from "../store/helpers";
+import { getFileDetails } from "../store/helpers";
 
 // mui
 import CircularProgress from "@mui/material/CircularProgress";

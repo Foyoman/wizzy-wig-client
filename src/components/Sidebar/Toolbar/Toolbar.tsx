@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import "./Toolbar.scss";
 
 import NoteAddOutlinedIcon from "@mui/icons-material/NoteAddOutlined";
@@ -27,7 +27,9 @@ import {
 } from "../../../store/appSlice";
 import { createFile, deleteFile } from "../../../store/apiSlice";
 import { AppDispatch, RootState } from "../../../store/store";
-import { findById, getFileDetails } from "../../../store/helpers";
+import { getFileDetails } from "../../../store/helpers";
+
+import AuthContext from "../../../context/AuthContext";
 
 interface ToolbarProps {
   items: File[];
@@ -59,6 +61,8 @@ export default function Toolbar({ items }: ToolbarProps) {
 
   const [deleteEl, setDeleteEl] = useState<HTMLElement | null>(null);
   const deleteOpen = Boolean(deleteEl);
+
+  const { user } = useContext<any>(AuthContext);
 
   const [sort, setSort] = useState<{
     sortKey: SortKeys;
@@ -110,7 +114,7 @@ export default function Toolbar({ items }: ToolbarProps) {
   const handleDelete = () => {
     if (!selectedItem) return;
     dispatch(deleteFileState(selectedItem));
-    dispatch(deleteFile(selectedItem));
+    if (user) dispatch(deleteFile(selectedItem));
 
     let newTabs: (File["id"] | null)[];
     const nestedFiles: File[] = [];
@@ -214,7 +218,7 @@ export default function Toolbar({ items }: ToolbarProps) {
     }
 
     dispatch(createFileState(newFileState));
-    dispatch(createFile(newFileToPost));
+    if (user) dispatch(createFile(newFileToPost));
   };
 
   interface CheckedProps extends JSX.IntrinsicAttributes {

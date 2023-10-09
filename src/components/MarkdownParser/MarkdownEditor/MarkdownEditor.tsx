@@ -96,7 +96,7 @@ export default function MdEditor(props: MdEditorProps) {
         );
       }
 
-      if (allowSave && user) {
+      if (user) {
         dispatch(setSaveState("modified"));
         autosaveTimeoutRef.current = setTimeout(() => {
           console.log("sending save...");

@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { File, SaveStates, NewFile } from "../types/FileTypes";
-import axios, { isAxiosError } from "axios";
-import { findById } from "./helpers";
+
+import axios from "../utils/axiosInstance";
+import { isAxiosError } from "axios";
+
 import { selectSelectedFile } from "./appSlice";
 import { RootState } from "./store";
 
