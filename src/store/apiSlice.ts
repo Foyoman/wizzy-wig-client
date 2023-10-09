@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { File, SaveStates, NewFile } from "../types/FileTypes";
 import axios, { isAxiosError } from "axios";
 import { findById } from "./helpers";
+import { selectSelectedFile } from "./appSlice";
+import { RootState } from "./store";
 
 const SERVER_URL = "http://localhost:8000/api/files/";
 
@@ -15,10 +17,20 @@ const initialState: ApiState = {
 
 export const saveFile = createAsyncThunk(
   "api/saveFile",
-  async (file: File, { rejectWithValue }) => {
+  async (file: File, { rejectWithValue, getState }) => {
     let authTokens = localStorage.getItem("authTokens")
       ? JSON.parse(localStorage.getItem("authTokens")!)
       : null;
+
+    const state = getState() as RootState;
+    const selectedFile = selectSelectedFile(state);
+    console.log("selectedFile", selectedFile);
+
+    const verified = file.id === selectedFile;
+    if (!verified) {
+      console.log("file verification failed");
+      return;
+    }
 
     try {
       const response = await axios.put(
@@ -123,7 +135,7 @@ const apiSlice = createSlice({
       // deleting a file
       .addCase(deleteFile.fulfilled, (state, action) => {
         // Here you can update your state after a file was successfully deleted
-        console.log(action);
+        // console.log(action);
       })
       .addCase(deleteFile.rejected, (state, action) => {
         console.error(action.error.message);

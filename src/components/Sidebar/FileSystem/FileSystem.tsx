@@ -31,21 +31,18 @@ const FileSystem = ({ items }: FileSystemProps) => {
     parent: File | null
   ) => {
     e.stopPropagation();
-    dispatch(selectItem(item));
+    dispatch(selectItem(item.id));
     if (!item.is_folder) {
-      dispatch(selectFolder(parent));
-      const tabIds = tabs.map((tab) => {
-        return tab ? tab.id : null;
-      });
-      if (tabIds.includes(item.id as never)) {
+      dispatch(selectFolder(parent?.id));
+      if (tabs.includes(item.id as never)) {
         // if open tabs includes file, set tab to that file
-        dispatch(selectTab(tabIds.indexOf(item.id as never)));
+        dispatch(selectTab(tabs.indexOf(item.id as never)));
       } else {
-        dispatch(setTab(item));
+        dispatch(setTab(item.id));
       }
-      dispatch(selectFile(item));
+      dispatch(selectFile(item.id));
     } else {
-      dispatch(selectFolder(item));
+      dispatch(selectFolder(item.id));
     }
   };
 

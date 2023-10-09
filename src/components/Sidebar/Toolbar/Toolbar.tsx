@@ -27,6 +27,7 @@ import {
 } from "../../../store/appSlice";
 import { createFile, deleteFile } from "../../../store/apiSlice";
 import { AppDispatch, RootState } from "../../../store/store";
+import { findById, getFileDetails } from "../../../store/helpers";
 
 interface ToolbarProps {
   items: File[];
@@ -38,6 +39,7 @@ export default function Toolbar({ items }: ToolbarProps) {
   );
   const tabs = useSelector((state: RootState) => state.app.tabs);
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
+  const files = useSelector((state: RootState) => state.app.files);
 
   const [filterEl, setFilterEl] = useState<HTMLElement | null>(null);
   const filterOpen = Boolean(filterEl);
@@ -108,11 +110,14 @@ export default function Toolbar({ items }: ToolbarProps) {
   const handleDelete = () => {
     if (!selectedItem) return;
     dispatch(deleteFileState(selectedItem));
-    dispatch(deleteFile(selectedItem.id));
+    dispatch(deleteFile(selectedItem));
 
-    let newTabs: (File | null)[];
+    let newTabs: (File["id"] | null)[];
     const nestedFiles: File[] = [];
-    if (selectedItem.is_folder) {
+
+    const fileDetails = getFileDetails(files, selectedItem);
+
+    if (fileDetails?.is_folder) {
       const findNestedFiles = (item: File) => {
         item.children?.forEach((child) => {
           if (child.is_folder) {
@@ -123,15 +128,14 @@ export default function Toolbar({ items }: ToolbarProps) {
         });
       };
 
-      findNestedFiles(selectedItem);
+      findNestedFiles(fileDetails);
       const nestedFilesIds = nestedFiles.map((file) => file.id);
-      newTabs = tabs.filter((file) => !nestedFilesIds.includes(file?.id));
+      newTabs = tabs.filter((tab) => !nestedFilesIds.includes(tab!));
 
-      const tabsIds = tabs.map((tab) => tab?.id);
       const deletedIndices = [];
       for (let i = 0; i < nestedFiles.length; i++) {
-        if (tabsIds.includes(nestedFilesIds[i] as never)) {
-          deletedIndices.push(tabsIds.indexOf(nestedFilesIds[i] as never));
+        if (tabs.includes(nestedFilesIds[i] as never)) {
+          deletedIndices.push(tabs.indexOf(nestedFilesIds[i] as never));
         }
       }
 
@@ -143,7 +147,7 @@ export default function Toolbar({ items }: ToolbarProps) {
         dispatch(selectFile(newTabs[indexShift]!));
       }
     } else {
-      newTabs = tabs.filter((file) => file?.id !== selectedItem.id);
+      newTabs = tabs.filter((tab) => tab !== selectedItem);
 
       if (newTabs.length > 1) {
         const shift = tabs.length - 1 > selectedTab ? 0 : 1;
@@ -193,7 +197,7 @@ export default function Toolbar({ items }: ToolbarProps) {
       title: title ? title : "Untitled",
       content: key === "file" ? "" : null,
       is_folder: key === "folder",
-      parent: selectedFolder?.id || null,
+      parent: selectedFolder || null,
       children: key === "folder" ? [] : null,
     };
     
@@ -232,8 +236,8 @@ export default function Toolbar({ items }: ToolbarProps) {
   return (
     <div className="toolbar">
       <div className="selected-folder">
-        <p title={selectedFolder?.title}>
-          dir: {selectedFolder ? selectedFolder.title : "root (~)"}
+        <p title={getFileDetails(files, selectedFolder)?.title || ""}>
+          dir: {selectedFolder ? getFileDetails(files, selectedFolder)?.title : "root (~)"}
         </p>
       </div>
       <div className="tools">
@@ -329,10 +333,10 @@ export default function Toolbar({ items }: ToolbarProps) {
               <div className="delete-confirm">
                 <div className="file-to-delete">
                   <p>
-                    {selectedItem?.is_folder ? "Folder " : "File "}
+                    {getFileDetails(files, selectedItem)?.is_folder ? "Folder " : "File "}
                     to delete:
                   </p>
-                  <p>{selectedItem?.title}</p>
+                  <p>{getFileDetails(files, selectedItem)?.title}</p>
                 </div>
                 <p>Are you sure?</p>
                 <div className="confirm-buttons">

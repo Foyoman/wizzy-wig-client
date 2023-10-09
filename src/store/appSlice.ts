@@ -3,17 +3,18 @@ import { saveFile, createFile } from "./apiSlice";
 
 import { File, SortKeys } from "../types/FileTypes";
 import { sortFileSystem, findById } from "./helpers";
+import { RootState } from "./store";
 
 export interface AppState {
   files: File[];
   markdown: string | null | undefined;
   showSidebar: boolean;
   allowSave: boolean;
-  tabs: Array<File | null>;
+  tabs: Array<File["id"] | null>;
   selectedTab: number;
-  selectedItem: File | null;
-  selectedFile: File | null;
-  selectedFolder: File | null;
+  selectedItem: File["id"] | null;
+  selectedFile: File["id"] | null;
+  selectedFolder: File["id"] | null;
   loginStatus: number | null;
 }
 
@@ -38,10 +39,12 @@ export const appSlice = createSlice({
       const starterFiles = action.payload;
       state.files = sortFileSystem(starterFiles, "title", false);
       const welcomeFile = starterFiles.find((file) => file.id === 1);
-      state.selectedFile = welcomeFile as File;
-      if (welcomeFile?.content) state.markdown = welcomeFile.content;
-      const rootFiles = starterFiles.filter((file) => !file.is_folder);
-      state.tabs = rootFiles;
+      state.selectedFile = welcomeFile?.id || null;
+      const rootFilesIds = starterFiles
+        .filter((file) => !file.is_folder)
+        .map((file) => file.id);
+      state.tabs = rootFilesIds;
+      state.markdown = welcomeFile?.content;
     },
     setUserData: (state, action: PayloadAction<File[] | []>) => {
       const userFiles = action.payload;
@@ -59,18 +62,23 @@ export const appSlice = createSlice({
       const { items, sortKey, reverse } = action.payload;
       state.files = sortFileSystem(items, sortKey, reverse); // or user's sort pref
     },
-    selectFolder: (state, action: PayloadAction<File | null>) => {
+    selectFolder: (state, action: PayloadAction<File["id"] | null>) => {
       const file = action.payload;
-      state.selectedFolder = file;
+      state.selectedFolder = action.payload || null;
     },
-    selectFile: (state, action: PayloadAction<File>) => {
-      const file = action.payload;
+    selectFile: (state, action: PayloadAction<File["id"]>) => {
+      const fileId = action.payload;
       state.allowSave = false;
-      state.selectedFile = file;
-      state.markdown = file.content || "";
+      state.selectedFile = action.payload || null;
+      const fileDetails = findById({
+        items: state.files,
+        key: "find",
+        needle: fileId,
+      });
+      state.markdown = fileDetails?.content || "";
     },
-    selectItem: (state, action: PayloadAction<File | null>) => {
-      state.selectedItem = action.payload;
+    selectItem: (state, action: PayloadAction<File["id"] | null>) => {
+      state.selectedItem = action.payload || null;
     },
     updateMarkdown: (
       state,
@@ -78,7 +86,7 @@ export const appSlice = createSlice({
     ) => {
       const { value, file } = action.payload;
       // prevents a bug where debounce will overwrite between switching files
-      const verified = file.id === state.selectedFile?.id;
+      const verified = file.id === state.selectedFile;
       if (verified && state.allowSave) {
         state.markdown = value;
       } else {
@@ -95,13 +103,7 @@ export const appSlice = createSlice({
       findById({
         items: state.files as File[],
         key: "update",
-        needle: state.selectedFile!.id as File["id"],
-        updatedContent: action.payload,
-      });
-      findById({
-        items: state.tabs as File[],
-        key: "update",
-        needle: state.selectedFile!.id as File["id"],
+        needle: state.selectedFile,
         updatedContent: action.payload,
       });
     },
@@ -112,14 +114,14 @@ export const appSlice = createSlice({
       state.selectedTab = action.payload;
     },
     // TODO: bug - when a file is updated it's not recognised as the same file
-    setTab: (state, action: PayloadAction<File | null>) => {
-      const file = action.payload;
+    setTab: (state, action: PayloadAction<File["id"] | null>) => {
+      const fileId = action.payload;
       state.allowSave = false;
       // set current tab to the selected file
-      state.tabs[state.selectedTab] = file;
-      selectFile(file!);
+      state.tabs[state.selectedTab] = fileId;
+      selectFile(fileId!);
     },
-    setTabs: (state, action: PayloadAction<(File | null)[]>) => {
+    setTabs: (state, action: PayloadAction<(File["id"] | null)[]>) => {
       state.tabs = action.payload;
     },
     newTab: (state) => {
@@ -157,7 +159,7 @@ export const appSlice = createSlice({
       findById({
         items: state.files,
         key: "append",
-        needle: state.selectedFolder?.id,
+        needle: state.selectedFolder,
         child: newFile,
       });
 
@@ -165,27 +167,27 @@ export const appSlice = createSlice({
       state.files = sortFileSystem(state.files, "title", false);
 
       // update selected item to the newly created file/folder
-      state.selectedItem = newFile;
+      state.selectedItem = newFile.id;
 
       if (!newFile.is_folder) {
         // if the current tab is an open file, open the new file in a new tab
         if (state.tabs[state.selectedTab]) {
-          state.tabs.push(newFile as never);
+          state.tabs.push(newFile.id as never);
           state.selectedTab = state.tabs.length - 1;
         } else {
           // if the current tab is null open the new file in the current tab
-          state.tabs[state.selectedTab] = newFile;
+          state.tabs[state.selectedTab] = newFile.id;
         }
-        state.selectedFile = newFile;
+        state.selectedFile = newFile.id;
         // file initialises empty
         state.markdown = "";
       } else {
-        state.selectedFolder = newFile;
+        state.selectedFolder = newFile.id;
       }
     },
-    deleteFileState: (state, action: PayloadAction<File>) => {
+    deleteFileState: (state, action: PayloadAction<File["id"]>) => {
       const fileToDelete = action.payload;
-      findById({ items: state.files, key: "delete", needle: fileToDelete.id });
+      findById({ items: state.files, key: "delete", needle: fileToDelete });
       state.selectedFolder = null;
       if (state.tabs.length <= 1) state.selectedTab = 0;
     },
@@ -198,45 +200,40 @@ export const appSlice = createSlice({
       // saving a file
       .addCase(saveFile.fulfilled, (state, action: PayloadAction<File>) => {
         const savedFile = action.payload;
-        findById({
-          items: state.files,
-          key: "update",
-          needle: savedFile.id,
-          updatedContent: savedFile.content,
-        });
-        findById({
-          items: state.tabs as File[],
-          key: "update",
-          needle: savedFile.id,
-          updatedContent: savedFile.content,
-        });
+        if (savedFile) {
+          findById({
+            items: state.files,
+            key: "update",
+            needle: savedFile.id,
+            updatedContent: savedFile.content,
+          });
+        }
       })
 
       // creating a file
       .addCase(createFile.fulfilled, (state, action) => {
         const realFile = action.payload;
 
-        const tempFile = findById({
+        findById({
           items: state.files,
-          key: "find",
+          key: "update",
           needle: realFile.temp_id,
+          updatedId: realFile.id,
         });
 
-        const tempTab = findById({
-          items: state.tabs as File[],
-          key: "find",
-          needle: realFile.temp_id,
+        const tabs = [...state.tabs];
+        state.tabs = tabs.map((tab) => {
+          if (tab) {
+            return tab === realFile.temp_id ? realFile.id : tab
+          }
         });
-
-        tempFile.id = realFile.id;
-        if (tempTab) tempTab.id = realFile.id;
-        if (state.selectedFile && state.selectedFile?.id === realFile.temp_id) {
-          state.selectedFile.id = realFile.id;
-        }
-        console.log('file created.')
+        if (state.selectedFile === realFile.temp_id) state.selectedFile = realFile.id;
+        console.log("file created.");
       });
   },
 });
+
+export const selectSelectedFile = (state: RootState) => state.app.selectedFile;
 
 export const {
   setStaticProps,

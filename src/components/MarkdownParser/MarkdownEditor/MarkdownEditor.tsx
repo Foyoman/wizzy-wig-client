@@ -18,6 +18,7 @@ import { AppDispatch, type RootState } from "../../../store/store";
 import AuthContext from "../../../context/AuthContext";
 
 import { File } from "../../../types/FileTypes";
+import { findById, getFileDetails } from "../../../store/helpers";
 
 interface MdEditorProps {
   theme: "vs-dark" | "vs-light" | undefined;
@@ -63,7 +64,8 @@ export default function MdEditor(props: MdEditorProps) {
   const debouncedSetMarkdown = useCallback(
     debounce((value: string) => {
       console.log("setting debounced");
-      dispatch(updateMarkdown({ value: value, file: selectedFile! }));
+      const fileDetails = getFileDetails(files, selectedFile!);
+      dispatch(updateMarkdown({ value: value, file: fileDetails! }));
     }, 1000),
     [dispatch, selectedFile]
   );
@@ -86,14 +88,22 @@ export default function MdEditor(props: MdEditorProps) {
       if (value && value.length > 500) {
         debouncedSetMarkdown(value);
       } else {
-        dispatch(updateMarkdown({ value: value, file: selectedFile! }));
+        dispatch(
+          updateMarkdown({
+            value: value,
+            file: getFileDetails(files, selectedFile)!,
+          })
+        );
       }
 
       if (allowSave && user) {
         dispatch(setSaveState("modified"));
         autosaveTimeoutRef.current = setTimeout(() => {
           console.log("sending save...");
-          const updatedFile: File = { ...selectedFile!, content: value };
+          const updatedFile: File = {
+            ...getFileDetails(files, selectedFile)!,
+            content: value,
+          };
           dispatch(saveFile(updatedFile));
         }, 1000);
       }

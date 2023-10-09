@@ -20,9 +20,13 @@ import SignUp from "./auth/SignUp";
 import Login from "./auth/Login";
 import useAxios from "../utils/useAxios";
 
+// helpers
+import { findById, getFileDetails } from "../store/helpers";
+
 // mui
 import CircularProgress from "@mui/material/CircularProgress";
 import AuthContext from "../context/AuthContext";
+
 
 export default function App() {
   const dispatch: AppDispatch = useDispatch();
@@ -31,8 +35,9 @@ export default function App() {
     (state: RootState) => state.app.selectedFile
   );
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
+  const files = useSelector((state: RootState) => state.app.files);
   const [content, setContent] = useState<string | undefined>(
-    selectedFile?.content as string | undefined
+    getFileDetails(files, selectedFile)?.content as string | undefined
   );
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
@@ -119,7 +124,7 @@ export default function App() {
   }, [user]);
 
   useEffect(() => {
-    setContent(selectedFile?.content as string | undefined);
+    setContent(getFileDetails(files, selectedFile)?.content as string | undefined);
   }, [selectedFile]);
 
   const handleLoginClick: ClickEvent = (e) => {

@@ -16,6 +16,7 @@ import {
 } from "../../../store/appSlice";
 
 import { File } from "../../../types/FileTypes";
+import { findById, getFileDetails } from "../../../store/helpers";
 
 export default function Tabs() {
   const dispatch: AppDispatch = useDispatch();
@@ -23,6 +24,8 @@ export default function Tabs() {
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
   const tabBarEl: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
 
+
+  const files = useSelector((state: RootState) => state.app.files);
 
   const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
 
@@ -48,7 +51,7 @@ export default function Tabs() {
 
   const closeHelper = (index: number) => {
     if (tabs.length - 1 === index && tabs[selectedTab - 1]) {
-      dispatch(selectFile(tabs[selectedTab - 1] as File));
+      dispatch(selectFile(tabs[selectedTab - 1]!));
     }
     dispatch(closeTab(index));
   };
@@ -63,18 +66,21 @@ export default function Tabs() {
   };
 
   interface TabProps {
-    file?: File;
+    fileId?: File["id"];
     title?: string;
     selected: boolean;
     index: number;
   }
 
-  const Tab = ({ file, title = "New tab", selected, index }: TabProps) => {
+  const Tab = ({ fileId, title = "New tab", selected, index }: TabProps) => {
     const handleSelect = (index: number) => {
+      console.log('tabs:', tabs);
+      console.log('files:', files)
+      console.log('selectedFile:', selectedFile)
       dispatch(selectTab(index));
-      if (file) {
-        dispatch(selectFile(file));
-        dispatch(selectItem(file));
+      if (fileId) {
+        dispatch(selectFile(fileId));
+        dispatch(selectItem(fileId));
       }
     };
 
@@ -110,12 +116,12 @@ export default function Tabs() {
     <div className="tab-container">
       <div className="tab-bar" ref={tabBarEl} id="tab-bar">
         <div className="tabs">
-          {tabs.map((file, index) => {
-            if (file) {
+          {tabs.map((fileId, index) => {
+            if (fileId) {
               return (
                 <Tab
-                  file={file}
-                  title={file.title}
+                  fileId={fileId}
+                  title={getFileDetails(files, fileId)?.title}
                   selected={index === selectedTab}
                   index={index}
                   key={index}

@@ -143,3 +143,17 @@ export const findById = ({
     }
   }
 };
+
+export const getFileDetails = (items: File[], id: File["id"] | null | undefined): File | null => {
+  const fileDetails = findById({
+    items: items,
+    key: "find",
+    needle: id,
+  })
+
+  if (fileDetails) {
+    return fileDetails;
+  } else {
+    return null;
+  }
+}
