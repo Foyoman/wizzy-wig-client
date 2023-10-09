@@ -9,10 +9,9 @@ import { useDispatch } from "react-redux";
 import {
   setAllowSave,
   updateMarkdown,
-  saveFile,
-  saveFileContent,
-  setSaveState,
+  saveFileState,
 } from "../../../store/appSlice";
+import { saveFileContent, setSaveState } from "../../../store/apiSlice";
 import { useSelector } from "react-redux";
 import { AppDispatch, type RootState } from "../../../store/store";
 
@@ -82,7 +81,7 @@ export default function MdEditor(props: MdEditorProps) {
         clearTimeout(autosaveTimeoutRef.current);
       }
 
-      dispatch(saveFile(value || ""));
+      dispatch(saveFileState(value || ""));
 
       if (value && value.length > 500) {
         debouncedSetMarkdown(value);

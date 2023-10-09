@@ -16,7 +16,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AuthContext from "../../context/AuthContext";
 
 export default function Navbar() {
-  const saveState = useSelector((state: RootState) => state.app.saveState);
+  const saveState = useSelector((state: RootState) => state.api.saveState);
   const dispatch = useDispatch();
   const { user, logoutUser } = useContext<any>(AuthContext);
 

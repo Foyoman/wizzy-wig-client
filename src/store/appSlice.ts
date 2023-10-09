@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { saveFileContent } from "./apiSlice";
 
-import { File, SortKeys, SaveStates } from "../types/FileTypes";
+import { File, SortKeys } from "../types/FileTypes";
 import { sortFileSystem, findById } from "./helpers";
 
 export interface AppState {
@@ -9,7 +9,6 @@ export interface AppState {
   markdown: string | null | undefined;
   showSidebar: boolean;
   allowSave: boolean;
-  saveState: SaveStates;
   tabs: Array<File | null>;
   selectedTab: number;
   selectedItem: File | null;
@@ -23,7 +22,6 @@ const initialState: AppState = {
   markdown: "",
   showSidebar: true,
   allowSave: false,
-  saveState: "saved",
   tabs: [null],
   selectedTab: 0,
   selectedItem: null,
@@ -31,38 +29,6 @@ const initialState: AppState = {
   selectedFolder: null,
   loginStatus: null,
 };
-
-export const saveFileContent = createAsyncThunk(
-  "app/saveFileContent",
-  async (file: File, { rejectWithValue }) => {
-    let authTokens = localStorage.getItem("authTokens")
-      ? JSON.parse(localStorage.getItem("authTokens")!)
-      : null;
-
-    try {
-      const response = await fetch(`http://localhost:8000/api/files/${file.id}/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authTokens.access}`,
-        },
-        body: JSON.stringify({ content: file.content, id: file.id }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to save.");
-      }
-
-      return data;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-      return rejectWithValue("Failed to save.");
-    }
-  }
-);
 
 export const appSlice = createSlice({
   name: "app",
@@ -122,15 +88,10 @@ export const appSlice = createSlice({
     toggleSidebar: (state) => {
       state.showSidebar = !state.showSidebar;
     },
-    setSaveState: (state, action: PayloadAction<SaveStates>) => {
-      state.saveState = action.payload;
-    },
     setAllowSave: (state, action: PayloadAction<boolean>) => {
       state.allowSave = action.payload;
     },
-    saveFile: (state, action: PayloadAction<string>) => {
-      // console.log('saving file...');
-      state.saveState = "saved";
+    saveFileState: (state, action: PayloadAction<string>) => {
       findById(
         state.files,
         "update",
@@ -240,22 +201,14 @@ export const appSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(saveFileContent.pending, (state) => {
-      state.saveState = "saving";
-    })
-    .addCase(saveFileContent.fulfilled, (state, action) => {
-      state.saveState = "saved";
-      console.log('accepted change.')
-      // handle the saved data if needed
-      const savedFile = action.payload;
-      findById(state.files, "update", savedFile, null, savedFile.content);
-      findById(state.tabs as File[], "update", savedFile, null, savedFile.content);
-    })
-    .addCase(saveFileContent.rejected, (state, action) => {
-      state.saveState = "error";
-      console.error(action.error.message);
-    });
-  },
+    builder
+      .addCase(saveFileContent.fulfilled, (state, action) => {
+        const savedFile = action.payload;
+        console.log('savedFile: ', savedFile)
+        findById(state.files, "update", savedFile, null, savedFile.content);
+        findById(state.tabs as File[], "update", savedFile, null, savedFile.content);
+      })
+  }
 });
 
 export const {
@@ -267,9 +220,8 @@ export const {
   selectItem,
   updateMarkdown,
   toggleSidebar,
-  setSaveState,
   setAllowSave,
-  saveFile,
+  saveFileState,
   selectTab,
   setTab,
   setTabs,
