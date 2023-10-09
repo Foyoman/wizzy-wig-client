@@ -14,6 +14,7 @@ import {
   selectTab,
   selectFile,
   selectItem,
+  setAllowSave,
 } from "../../../store/appSlice";
 import { AppDispatch, RootState } from "../../../store/store";
 
@@ -66,6 +67,7 @@ const FileSystem = ({ items }: FileSystemProps) => {
             title={item.title}
             className={`sidebar-item ${nested && "nested"}`}
             onClick={(e) => handleSelect(e, item, parent)}
+            onMouseDown={() => dispatch(setAllowSave(false))}
           >
             {item.children?.length ? (
               mapDirectory(item.children, item, true)

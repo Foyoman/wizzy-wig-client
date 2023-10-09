@@ -63,7 +63,6 @@ export const appSlice = createSlice({
       state.files = sortFileSystem(items, sortKey, reverse); // or user's sort pref
     },
     selectFolder: (state, action: PayloadAction<File["id"] | null>) => {
-      const file = action.payload;
       state.selectedFolder = action.payload || null;
     },
     selectFile: (state, action: PayloadAction<File["id"]>) => {

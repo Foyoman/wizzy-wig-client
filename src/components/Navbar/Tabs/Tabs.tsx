@@ -13,10 +13,11 @@ import {
   closeTab,
   selectFile,
   selectItem,
+  setAllowSave,
 } from "../../../store/appSlice";
 
 import { File } from "../../../types/FileTypes";
-import { findById, getFileDetails } from "../../../store/helpers";
+import { getFileDetails } from "../../../store/helpers";
 
 export default function Tabs() {
   const dispatch: AppDispatch = useDispatch();
@@ -24,10 +25,9 @@ export default function Tabs() {
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
   const tabBarEl: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
 
-
   const files = useSelector((state: RootState) => state.app.files);
-
   const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
+  const allowSave = useSelector((state: RootState) => state.app.allowSave);
 
 
 
@@ -77,6 +77,7 @@ export default function Tabs() {
       console.log('tabs:', tabs);
       console.log('files:', files)
       console.log('selectedFile:', selectedFile)
+      console.log('allowSave:', allowSave)
       dispatch(selectTab(index));
       if (fileId) {
         dispatch(selectFile(fileId));
@@ -96,6 +97,7 @@ export default function Tabs() {
       <div
         onClick={() => handleSelect(index)}
         onAuxClick={(e) => handleAuxClick(e, index)}
+        onMouseDown={() => dispatch(setAllowSave(false))}
         className={`
 					tab  
 					${selected ? "selected" : ""}
