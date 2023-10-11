@@ -4,8 +4,10 @@ import { saveFile, createFile } from "./apiSlice";
 import { File, SortKeys } from "../types/FileTypes";
 import { sortFileSystem, findById } from "./helpers";
 import { RootState } from "./store";
+import { loginUser, register } from "./authSlice";
 
 export interface AppState {
+  user: Boolean;
   files: File[];
   markdown: string | null | undefined;
   showSidebar: boolean;
@@ -18,6 +20,7 @@ export interface AppState {
 }
 
 const initialState: AppState = {
+  user: false,
   files: [],
   markdown: "",
   showSidebar: true,
@@ -29,11 +32,18 @@ const initialState: AppState = {
   selectedFolder: null,
 };
 
+const setLastOpenedTabs = (tabs: Array<number | null | undefined>) => {
+  const stringifiedTabs = JSON.stringify(tabs);
+  localStorage.setItem("lastOpenedTabs", stringifiedTabs);
+}
+
 export const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
     setStaticProps: (state, action: PayloadAction<File[]>) => {
+      localStorage.removeItem("lastOpenedTabs");
+      localStorage.removeItem("lastOpenedTabIndex");
       const starterFiles = action.payload;
       state.files = sortFileSystem(starterFiles, "title", false);
       const welcomeFile = starterFiles.find((file) => file.id === 1);
@@ -45,9 +55,44 @@ export const appSlice = createSlice({
       state.markdown = welcomeFile?.content;
     },
     setUserData: (state, action: PayloadAction<File[] | []>) => {
+      state.user = true;
       const userFiles = action.payload;
       state.files = sortFileSystem(userFiles, "title", false); // use local storage to set user's preferred sort
-      state.tabs = [null]; // use local storage to set user's last opened tabs
+
+      const lastOpenedTabsStringified = localStorage.getItem("lastOpenedTabs");
+      const lastOpenedTabIndexStringified = localStorage.getItem("lastOpenedTabIndex");
+      let lastOpenedTabs = [null];
+      let lastOpenedTabIndex = 0;
+
+      if (lastOpenedTabsStringified) {
+        try {
+          lastOpenedTabs = JSON.parse(lastOpenedTabsStringified);
+        } catch (error) {
+          console.error("Error parsing the stored tabs:", error);
+        }
+      }
+      
+      if (lastOpenedTabIndexStringified) {
+        try {
+          lastOpenedTabIndex = Number(JSON.parse(lastOpenedTabIndexStringified));
+        } catch (error) {
+          console.error("Error parsing the stored tab index:", error);
+        }
+      }
+      
+      state.tabs = lastOpenedTabs;
+      state.selectedTab = lastOpenedTabIndex;
+
+      if (lastOpenedTabs[0] && lastOpenedTabs.length !== 1) {
+        const lastOpenedFile = findById({
+          items: userFiles,
+          key: "find",
+          needle: lastOpenedTabs[lastOpenedTabIndex]
+        });
+        if (lastOpenedFile) {
+          state.markdown = lastOpenedFile.markdown;
+        }
+      }
     },
     sortFs: (
       state,
@@ -73,6 +118,8 @@ export const appSlice = createSlice({
         needle: fileId,
       });
       state.markdown = fileDetails?.content || "";
+
+      if (state.user) setLastOpenedTabs(state.tabs);
     },
     selectItem: (state, action: PayloadAction<File["id"] | null>) => {
       state.selectedItem = action.payload || null;
@@ -109,8 +156,11 @@ export const appSlice = createSlice({
       state.allowSave = false;
       // select tab by index
       state.selectedTab = action.payload;
+
+      if (state.user) {
+        localStorage.setItem("lastOpenedTabIndex", String(action.payload));
+      }
     },
-    // TODO: bug - when a file is updated it's not recognised as the same file
     setTab: (state, action: PayloadAction<File["id"] | null>) => {
       const fileId = action.payload;
       state.allowSave = false;
@@ -125,7 +175,13 @@ export const appSlice = createSlice({
       // push a new tab into the tabs array. null to render it as the `open a file` state
       state.tabs.push(null as never);
       // set the current tab to the newly created tab
-      state.selectedTab = state.tabs.length - 1;
+      const lastIndex = state.tabs.length - 1;
+      state.selectedTab = lastIndex;
+
+      if (state.user) {
+        localStorage.setItem("lastOpenedTabIndex", String(lastIndex));
+        setLastOpenedTabs(state.tabs);
+      }
     },
     closeTab: (state, action: PayloadAction<number>) => {
       const index = action.payload;
@@ -145,6 +201,11 @@ export const appSlice = createSlice({
         // if only one tab remains after closing a tab, make sure the selected tab stays on this last tab
       } else if (state.tabs.length <= 1) {
         state.selectedTab = 0;
+      }
+
+      if (state.user) {
+        localStorage.setItem("lastOpenedTabIndex", String(state.selectedTab));
+        setLastOpenedTabs(state.tabs);
       }
     },
     createFileState: (state, action: PayloadAction<File>) => {
@@ -223,7 +284,34 @@ export const appSlice = createSlice({
         });
         if (state.selectedFile === realFile.temp_id) state.selectedFile = realFile.id;
         console.log("file created.");
-      });
+      })
+
+      // logging in 
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.user = true;
+        const lastOpenedTabsStringified = localStorage.getItem("lastOpenedTabs");
+        let lastOpenedTabs = [null]
+        if (lastOpenedTabsStringified) {
+          try {
+            lastOpenedTabs = JSON.parse(lastOpenedTabsStringified);
+          } catch (error) {
+            console.error("Error parsing the stored tabs:", error);
+          }
+        }
+        state.tabs = lastOpenedTabs;
+      }) 
+
+      // registering a user
+      .addCase(register.fulfilled, (state, action) => {
+        state.user = true;
+        const welcomeFile: File = action.payload.welcome;
+        state.files = [welcomeFile];
+        state.tabs = [welcomeFile.id];
+        state.selectedFile = welcomeFile.id;
+        state.markdown = welcomeFile.content;
+        const stringifiedTabs = JSON.stringify([welcomeFile.id]);
+        localStorage.setItem("lastOpenedTabs", stringifiedTabs);
+      })
   },
 });
 

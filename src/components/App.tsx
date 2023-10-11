@@ -85,7 +85,7 @@ export default function App() {
       dispatch(setUserData(userFileSystem));
     }
 
-    setLoaded(true); // move to getFiles as it's async
+    setLoaded(true);
   };
 
   const fetchFileContents = async (file: File) => {

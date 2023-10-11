@@ -2,6 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { registerUser } from "../utils/axiosInstance";
+import { RootState } from "./store";
 
 const SERVER_URL = "http://localhost:8000/api/token/";
 
@@ -55,8 +56,10 @@ export const loginUser = createAsyncThunk(
 
 export const logoutUser = () => {
   return (dispatch: any) => {
+    localStorage.removeItem("authTokens");
+    localStorage.removeItem("lastOpenedTabs");
+    localStorage.removeItem("lastOpenedTabIndex");
     dispatch(clearAuth());
-    // window.location.reload();
   };
 };
 
@@ -77,7 +80,8 @@ export const register = createAsyncThunk(
         // store tokens and other necessary info if needed in my state
         return {
           tokens: { access: response.access, refresh: response.refresh },
-          user: { ...response },
+          user: response.user,
+          welcome: response.welcome,
         };
       } else {
         return thunkAPI.rejectWithValue("Registration but failed to retrieve tokens.")
@@ -106,7 +110,6 @@ const authSlice = createSlice({
     clearAuth: (state) => {
       state.authTokens = null;
       state.user = null;
-      localStorage.removeItem("authTokens");
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -120,8 +123,6 @@ const authSlice = createSlice({
       // logging in
       .addCase(loginUser.fulfilled, (state, action) => {
         const { status, ...tokens } = action.payload;
-        console.log(tokens);
-        console.log(status);
         state.authTokens = tokens;
         state.user = jwt_decode(tokens.access);
         state.loginStatus = status;
@@ -144,6 +145,7 @@ const authSlice = createSlice({
         const tokens = action.payload.tokens;
         state.authTokens = tokens;
         state.user = jwt_decode(tokens.access);
+        localStorage.setItem("authTokens", JSON.stringify(tokens));
       })
       .addCase(register.rejected, (state, action) => {
         // handle the registration error

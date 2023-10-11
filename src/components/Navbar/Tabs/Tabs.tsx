@@ -29,8 +29,6 @@ export default function Tabs() {
   const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
   const allowSave = useSelector((state: RootState) => state.app.allowSave);
 
-
-
   // scroll to end of tab bar if new tab is created
   useEffect(() => {
     tabBarEl.current!.scrollLeft =

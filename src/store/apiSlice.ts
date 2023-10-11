@@ -26,7 +26,6 @@ export const saveFile = createAsyncThunk(
 
     const state = getState() as RootState;
     const selectedFile = selectSelectedFile(state);
-    console.log("selectedFile", selectedFile);
 
     const verified = file.id === selectedFile;
     if (!verified) {
