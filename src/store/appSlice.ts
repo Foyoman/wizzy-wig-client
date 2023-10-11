@@ -44,14 +44,17 @@ export const appSlice = createSlice({
     setStaticProps: (state, action: PayloadAction<File[]>) => {
       localStorage.removeItem("lastOpenedTabs");
       localStorage.removeItem("lastOpenedTabIndex");
+
       const starterFiles = action.payload;
-      state.files = sortFileSystem(starterFiles, "title", false);
       const welcomeFile = starterFiles.find((file) => file.id === 1);
-      state.selectedFile = welcomeFile?.id || null;
       const rootFilesIds = starterFiles
         .filter((file) => !file.is_folder)
         .map((file) => file.id);
+        
+      state.files = sortFileSystem(starterFiles, "title", false);
+      state.selectedFile = welcomeFile?.id || null;
       state.tabs = rootFilesIds;
+      state.selectedTab = 0;
       state.markdown = welcomeFile?.content;
     },
     setUserData: (state, action: PayloadAction<File[] | []>) => {
@@ -83,14 +86,15 @@ export const appSlice = createSlice({
       state.tabs = lastOpenedTabs;
       state.selectedTab = lastOpenedTabIndex;
 
-      if (lastOpenedTabs[0] && lastOpenedTabs.length !== 1) {
-        const lastOpenedFile = findById({
+      if (lastOpenedTabs.length !== 1 && lastOpenedTabs[0]) {
+        const lastOpenedFile: File = findById({
           items: userFiles,
           key: "find",
           needle: lastOpenedTabs[lastOpenedTabIndex]
         });
         if (lastOpenedFile) {
-          state.markdown = lastOpenedFile.markdown;
+          console.log('lastOpenedFile:', lastOpenedFile);
+          state.markdown = lastOpenedFile.content;
         }
       }
     },
@@ -309,8 +313,10 @@ export const appSlice = createSlice({
         state.tabs = [welcomeFile.id];
         state.selectedFile = welcomeFile.id;
         state.markdown = welcomeFile.content;
+
         const stringifiedTabs = JSON.stringify([welcomeFile.id]);
         localStorage.setItem("lastOpenedTabs", stringifiedTabs);
+        localStorage.setItem("lastOpenedTabIndex", "0")
       })
   },
 });
