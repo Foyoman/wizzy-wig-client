@@ -97,15 +97,13 @@ const MarkdownParser = ({
       >
         <MdPreview theme={markdownTheme} />
         {splitDir === "horizontal" ? (
-          <HorizontalSplitIcon
+          <VerticalSplitIcon
             className="split-icon"
-            titleAccess="Enable vertical split"
             onClick={() => setSplitDir("vertical")}
           />
         ) : (
-          <VerticalSplitIcon
+          <HorizontalSplitIcon
             className="split-icon"
-            titleAccess="Enable horizontal split"
             onClick={() => setSplitDir("horizontal")}
           />
         )}
