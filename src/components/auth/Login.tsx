@@ -4,11 +4,10 @@ import "./auth.scss";
 import { loginUser } from "../../store/authSlice";
 
 // types
-import { ClickEvent } from "../../types/ReactTypes";
+import { ClickEvent } from "../../types/index";
 
 // components
 import Overlay from "./Overlay";
-import { Copyright } from "./Copyright";
 
 // redux
 import { useSelector, useDispatch } from "react-redux";
@@ -49,11 +48,11 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const data = new FormData(e.currentTarget);
     const credentials = {
-      username: data.get('username') as string,
-      password: data.get('password') as string,
+      username: data.get("username") as string,
+      password: data.get("password") as string,
     };
 
     dispatch(setLoginStatus(null));
@@ -66,8 +65,8 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
     if (loginStatus) {
       if (loginStatus === 200) {
         setErrorMessage("");
-        closeModal();
         dispatch(setLoginStatus(null));
+        closeModal();
       }
 
       if (loginStatus === 401) {
@@ -114,7 +113,6 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
           )}
           <Box
             sx={{
-              marginTop: "24px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -189,7 +187,6 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
               </Grid>
             </Box>
           </Box>
-          <Copyright sx={{ mt: 8, mb: 4 }} />
         </Container>
       </ThemeProvider>
     </Overlay>

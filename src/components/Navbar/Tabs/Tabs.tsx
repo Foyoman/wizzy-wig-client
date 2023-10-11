@@ -16,7 +16,7 @@ import {
   setAllowSave,
 } from "../../../store/appSlice";
 
-import { File } from "../../../types/FileTypes";
+import { File } from "../../../types/index";
 import { getFileDetails } from "../../../store/helpers";
 
 export default function Tabs() {
@@ -26,7 +26,9 @@ export default function Tabs() {
   const tabBarEl: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
 
   const files = useSelector((state: RootState) => state.app.files);
-  const selectedFile = useSelector((state: RootState) => state.app.selectedFile);
+  const selectedFile = useSelector(
+    (state: RootState) => state.app.selectedFile
+  );
   const allowSave = useSelector((state: RootState) => state.app.allowSave);
 
   // scroll to end of tab bar if new tab is created
@@ -72,10 +74,10 @@ export default function Tabs() {
 
   const Tab = ({ fileId, title = "New tab", selected, index }: TabProps) => {
     const handleSelect = (index: number) => {
-      console.log('tabs:', tabs);
-      console.log('files:', files)
-      console.log('selectedFile:', selectedFile)
-      console.log('allowSave:', allowSave)
+      console.log("tabs:", tabs);
+      console.log("files:", files);
+      console.log("selectedFile:", selectedFile);
+      console.log("allowSave:", allowSave);
       dispatch(selectTab(index));
       if (fileId) {
         dispatch(selectFile(fileId));

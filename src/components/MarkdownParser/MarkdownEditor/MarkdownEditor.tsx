@@ -15,7 +15,7 @@ import { saveFile, setSaveState } from "../../../store/apiSlice";
 import { useSelector } from "react-redux";
 import { AppDispatch, type RootState } from "../../../store/store";
 
-import { File } from "../../../types/FileTypes";
+import { File } from "../../../types/index";
 import { getFileDetails } from "../../../store/helpers";
 
 interface MdEditorProps {

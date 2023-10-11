@@ -29,6 +29,10 @@
     padding: var(--spacer-xs) var(--spacer-lg);
     border-radius: 0.5rem;
 
+    .MuiBox-root {
+      padding: var(--spacer-md) 0;
+    }
+
     .close-icon {
       @include icon;
       position: absolute;

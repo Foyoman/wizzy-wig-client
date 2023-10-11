@@ -1,8 +1,6 @@
-# `wizzy-wig` - [Create an account](#signupEl) or [Login](#loginEl) (auth inc.)
+# `wizzy-wig` - [Create an account](#signupEl) or [Login](#loginEl)
 
 Welcome! `wizzy-wig` is an in-browser markdown note-taking app featuring syntax highlighted code blocks, a file system, a tab system, and more.
-
-> This site is currently only a frontend demo. Backend integration and account creation coming soon.
 
 ### [The GitHub repo.](https://github.com/Foyoman/wizzy-wig-client)
 

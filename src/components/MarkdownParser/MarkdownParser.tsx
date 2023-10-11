@@ -17,19 +17,18 @@ import {
 } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 interface MarkdownParserProps {
-  content?: string;
   theme?: "light" | "dark" | undefined;
   splitDirection?: "vertical" | "horizontal" | undefined;
   defaultSplit?: [number, number];
 }
 
 const MarkdownParser = ({
-  // content = "",
   theme = "dark",
   splitDirection = "horizontal",
   defaultSplit = [50, 50],
 }: MarkdownParserProps) => {
-  const [split, setSplit] = useState(splitDirection);
+  const [splitDir, setSplitDir] = useState(splitDirection);
+  const [splitSize, setSplitSize] = useState<[number, number] | null>(null);
   const [collapsedIndex, setCollapsedIndex] = useState<number>();
   const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
   const markdownEl = useRef<HTMLDivElement>(null);
@@ -45,6 +44,17 @@ const MarkdownParser = ({
     editorTheme = "vs-dark";
   }
 
+  const handleCollapse = (i: 0 | 1) => {
+    const index = i === 0 ? 1 : 0;
+    if (collapsedIndex === index) {
+      setCollapsedIndex(undefined);
+      setSplitSize([50, 50]);
+    } else {
+      setCollapsedIndex(i);
+      setSplitSize(null);
+    }
+  };
+
   // adjust the resize bar's classes according to split direction
   useEffect(() => {
     if (!componentEl) {
@@ -52,7 +62,7 @@ const MarkdownParser = ({
       setComponentEl(component);
     } else {
       const gutter = componentEl.querySelector(".gutter");
-      if (split === "horizontal") {
+      if (splitDir === "horizontal") {
         gutter?.classList.remove("gutter-vertical");
         gutter?.classList.add("gutter-horizontal");
       } else {
@@ -60,59 +70,59 @@ const MarkdownParser = ({
         gutter?.classList.add("gutter-vertical");
       }
     }
-  }, [componentEl, split]);
+  }, [componentEl, splitDir]);
 
   return (
     <Split
       id="md-parser"
       className={`md-parser ${theme}`}
-      direction={split}
-      sizes={defaultSplit}
+      direction={splitDir}
+      sizes={splitSize || defaultSplit}
       minSize={[0, 0]}
-      snapOffset={split === "horizontal" ? 75 : 55}
+      snapOffset={splitDir === "horizontal" ? 75 : 55}
       collapsed={collapsedIndex}
       onDrag={() => setCollapsedIndex(undefined)} // would set to null or -1 but Split doesn't accept
       gutterSize={16}
       style={{
-        flexDirection: split === "horizontal" ? "row" : "column",
+        flexDirection: splitDir === "horizontal" ? "row" : "column",
       }}
     >
       <div
         ref={markdownEl}
         className="md-preview component"
         style={{
-          height: split === "horizontal" ? "100%" : "",
-          width: split === "horizontal" ? "" : "100%",
+          height: splitDir === "horizontal" ? "100%" : "",
+          width: splitDir === "horizontal" ? "" : "100%",
         }}
       >
         <MdPreview theme={markdownTheme} />
-        {split === "horizontal" ? (
+        {splitDir === "horizontal" ? (
           <HorizontalSplitIcon
-            className="split-icon"
-            titleAccess="Enable vertical split"
-            onClick={() => setSplit("vertical")}
+            className="splitDir-icon"
+            titleAccess="Enable vertical splitDir"
+            onClick={() => setSplitDir("vertical")}
           />
         ) : (
           <VerticalSplitIcon
-            className="split-icon"
-            titleAccess="Enable horizontal split"
-            onClick={() => setSplit("horizontal")}
+            className="splitDir-icon"
+            titleAccess="Enable horizontal splitDir"
+            onClick={() => setSplitDir("horizontal")}
           />
         )}
         <KeyboardTab
           className={`
 						collapse-tab 
-						${split === "horizontal" ? "horizontal" : "vertical"}
+						${splitDir === "horizontal" ? "horizontal" : "vertical"}
 					`}
-          onClick={() => setCollapsedIndex(0)}
+          onClick={() => handleCollapse(0)}
           titleAccess="Collapse"
         />
       </div>
       <div
         className="md-editor component"
         style={{
-          height: split === "horizontal" ? "100%" : "",
-          width: split === "horizontal" ? "" : "100%",
+          height: splitDir === "horizontal" ? "100%" : "",
+          width: splitDir === "horizontal" ? "" : "100%",
         }}
       >
         <div className="padding" />
@@ -120,9 +130,9 @@ const MarkdownParser = ({
         <KeyboardTab
           className={`
 						collapse-tab 
-						${split === "horizontal" ? "horizontal" : "vertical"}
+						${splitDir === "horizontal" ? "horizontal" : "vertical"}
 					`}
-          onClick={() => setCollapsedIndex(1)}
+          onClick={() => handleCollapse(1)}
           titleAccess="Collapse"
         />
       </div>

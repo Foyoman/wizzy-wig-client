@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { saveFile, createFile } from "./apiSlice";
 
-import { File, SortKeys } from "../types/FileTypes";
+import { File, SortKeys } from "../types/index";
 import { sortFileSystem, findById } from "./helpers";
 import { RootState } from "./store";
 import { loginUser, register } from "./authSlice";
@@ -35,7 +35,7 @@ const initialState: AppState = {
 const setLastOpenedTabs = (tabs: Array<number | null | undefined>) => {
   const stringifiedTabs = JSON.stringify(tabs);
   localStorage.setItem("lastOpenedTabs", stringifiedTabs);
-}
+};
 
 export const appSlice = createSlice({
   name: "app",
@@ -50,7 +50,7 @@ export const appSlice = createSlice({
       const rootFilesIds = starterFiles
         .filter((file) => !file.is_folder)
         .map((file) => file.id);
-        
+
       state.files = sortFileSystem(starterFiles, "title", false);
       state.selectedFile = welcomeFile?.id || null;
       state.tabs = rootFilesIds;
@@ -63,7 +63,8 @@ export const appSlice = createSlice({
       state.files = sortFileSystem(userFiles, "title", false); // use local storage to set user's preferred sort
 
       const lastOpenedTabsStringified = localStorage.getItem("lastOpenedTabs");
-      const lastOpenedTabIndexStringified = localStorage.getItem("lastOpenedTabIndex");
+      const lastOpenedTabIndexStringified =
+        localStorage.getItem("lastOpenedTabIndex");
       let lastOpenedTabs = [null];
       let lastOpenedTabIndex = 0;
 
@@ -74,28 +75,28 @@ export const appSlice = createSlice({
           console.error("Error parsing the stored tabs:", error);
         }
       }
-      
+
       if (lastOpenedTabIndexStringified) {
         try {
-          lastOpenedTabIndex = Number(JSON.parse(lastOpenedTabIndexStringified));
+          lastOpenedTabIndex = Number(
+            JSON.parse(lastOpenedTabIndexStringified)
+          );
         } catch (error) {
           console.error("Error parsing the stored tab index:", error);
         }
       }
-      
+
       state.tabs = lastOpenedTabs;
       state.selectedTab = lastOpenedTabIndex;
 
-      if (lastOpenedTabs.length !== 1 && lastOpenedTabs[0]) {
-        const lastOpenedFile: File = findById({
-          items: userFiles,
-          key: "find",
-          needle: lastOpenedTabs[lastOpenedTabIndex]
-        });
-        if (lastOpenedFile) {
-          console.log('lastOpenedFile:', lastOpenedFile);
-          state.markdown = lastOpenedFile.content;
-        }
+      const lastOpenedFile: File = findById({
+        items: userFiles,
+        key: "find",
+        needle: lastOpenedTabs[lastOpenedTabIndex],
+      });
+      if (lastOpenedFile) {
+        console.log("lastOpenedFile:", lastOpenedFile);
+        state.markdown = lastOpenedFile.content;
       }
     },
     sortFs: (
@@ -283,18 +284,20 @@ export const appSlice = createSlice({
         const tabs = [...state.tabs];
         state.tabs = tabs.map((tab) => {
           if (tab) {
-            return tab === realFile.temp_id ? realFile.id : tab
+            return tab === realFile.temp_id ? realFile.id : tab;
           }
         });
-        if (state.selectedFile === realFile.temp_id) state.selectedFile = realFile.id;
+        if (state.selectedFile === realFile.temp_id)
+          state.selectedFile = realFile.id;
         console.log("file created.");
       })
 
-      // logging in 
+      // logging in
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = true;
-        const lastOpenedTabsStringified = localStorage.getItem("lastOpenedTabs");
-        let lastOpenedTabs = [null]
+        const lastOpenedTabsStringified =
+          localStorage.getItem("lastOpenedTabs");
+        let lastOpenedTabs = [null];
         if (lastOpenedTabsStringified) {
           try {
             lastOpenedTabs = JSON.parse(lastOpenedTabsStringified);
@@ -303,7 +306,7 @@ export const appSlice = createSlice({
           }
         }
         state.tabs = lastOpenedTabs;
-      }) 
+      })
 
       // registering a user
       .addCase(register.fulfilled, (state, action) => {
@@ -316,8 +319,8 @@ export const appSlice = createSlice({
 
         const stringifiedTabs = JSON.stringify([welcomeFile.id]);
         localStorage.setItem("lastOpenedTabs", stringifiedTabs);
-        localStorage.setItem("lastOpenedTabIndex", "0")
-      })
+        localStorage.setItem("lastOpenedTabIndex", "0");
+      });
   },
 });
 

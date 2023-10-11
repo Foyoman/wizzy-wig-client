@@ -1,4 +1,4 @@
-import { File } from "../types/FileTypes";
+import { File } from "../types/index";
 
 export const fileSys: File[] = [
   {

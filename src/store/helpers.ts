@@ -1,4 +1,4 @@
-import { SortFunction, File } from "../types/FileTypes";
+import { SortFunction, File } from "../types/index";
 
 export const sortFileSystem: SortFunction = (fileSystem, sortKey, reverse) => {
   const [folders, files] = fileSystem.reduce(
@@ -144,16 +144,19 @@ export const findById = ({
   }
 };
 
-export const getFileDetails = (items: File[], id: File["id"] | null | undefined): File | null => {
+export const getFileDetails = (
+  items: File[],
+  id: File["id"] | null | undefined
+): File | null => {
   const fileDetails = findById({
     items: items,
     key: "find",
     needle: id,
-  })
+  });
 
   if (fileDetails) {
     return fileDetails;
   } else {
     return null;
   }
-}
+};

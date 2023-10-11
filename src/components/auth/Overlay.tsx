@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { ClickEvent } from "../../types/ReactTypes";
+import { ClickEvent } from "../../types/index";
 
 interface OverlayProps {
   closeModal: ClickEvent;

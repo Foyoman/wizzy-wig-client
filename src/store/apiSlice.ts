@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { File, SaveStates, NewFile } from "../types/FileTypes";
+import { File, SaveStates, NewFile } from "../types/index";
 
 import axios from "../utils/axiosInstance";
 import { isAxiosError } from "axios";

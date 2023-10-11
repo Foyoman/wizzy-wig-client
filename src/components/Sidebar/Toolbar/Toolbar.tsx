@@ -14,7 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
-import { File, SortKeys, SortFunction, NewFile } from "../../../types/FileTypes";
+import { File, SortKeys, SortFunction, NewFile } from "../../../types/index";
 import { useDispatch, useSelector } from "react-redux";
 import {
   sortFs,
@@ -161,7 +161,6 @@ export default function Toolbar({ items }: ToolbarProps) {
       } else {
         dispatch(selectTab(0));
       }
-
     }
 
     if (!newTabs.length) newTabs = [null];
@@ -195,25 +194,25 @@ export default function Toolbar({ items }: ToolbarProps) {
     }
 
     const tempId = Date.now() + Math.round(Math.random() * 1000);
-    const newFile: Omit<File, 'date_created' | 'last_modified'> = {
+    const newFile: Omit<File, "date_created" | "last_modified"> = {
       title: title ? title : "Untitled",
       content: key === "file" ? "" : null,
       is_folder: key === "folder",
       parent: selectedFolder || null,
       children: key === "folder" ? [] : null,
     };
-    
+
     const newFileState: File = {
       ...newFile,
       id: tempId,
       date_created: new Date().toISOString(),
       last_modified: new Date().toISOString(),
-    }
+    };
 
     const newFileToPost: NewFile = {
       ...newFile,
       temp_id: tempId,
-    }
+    };
 
     dispatch(createFileState(newFileState));
     if (user) dispatch(createFile(newFileToPost));
@@ -239,7 +238,10 @@ export default function Toolbar({ items }: ToolbarProps) {
     <div className="toolbar">
       <div className="selected-folder">
         <p title={getFileDetails(files, selectedFolder)?.title || ""}>
-          dir: {selectedFolder ? getFileDetails(files, selectedFolder)?.title : "root (~)"}
+          dir:{" "}
+          {selectedFolder
+            ? getFileDetails(files, selectedFolder)?.title
+            : "root (~)"}
         </p>
       </div>
       <div className="tools">
@@ -335,7 +337,9 @@ export default function Toolbar({ items }: ToolbarProps) {
               <div className="delete-confirm">
                 <div className="file-to-delete">
                   <p>
-                    {getFileDetails(files, selectedItem)?.is_folder ? "Folder " : "File "}
+                    {getFileDetails(files, selectedItem)?.is_folder
+                      ? "Folder "
+                      : "File "}
                     to delete:
                   </p>
                   <p>{getFileDetails(files, selectedItem)?.title}</p>

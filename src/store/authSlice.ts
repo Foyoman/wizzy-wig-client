@@ -2,15 +2,15 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { registerUser } from "../utils/axiosInstance";
-import { RootState } from "./store";
+import { RegisterStatus } from "../types";
 
 const SERVER_URL = "http://localhost:8000/api/token/";
 
 type AuthState = {
   authTokens: any | null;
   user: any | null;
-  loading: boolean;
   loginStatus: number | null;
+  registerStatus: RegisterStatus;
 };
 
 const initialState: AuthState = {
@@ -20,8 +20,8 @@ const initialState: AuthState = {
   user: localStorage.getItem("authTokens")
     ? jwt_decode(localStorage.getItem("authTokens")!)
     : null,
-  loading: true,
   loginStatus: null,
+  registerStatus: {},
 };
 
 export const loginUser = createAsyncThunk(
@@ -84,11 +84,16 @@ export const register = createAsyncThunk(
           welcome: response.welcome,
         };
       } else {
-        return thunkAPI.rejectWithValue("Registration but failed to retrieve tokens.")
+        return thunkAPI.rejectWithValue(
+          "Registration but failed to retrieve tokens."
+        );
       }
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data?.message) {
-        return thunkAPI.rejectWithValue(error.response.data.message);
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue({
+          data: error.response.data,
+          status: error.status,
+        });
       }
       return thunkAPI.rejectWithValue("Registration failed");
     }
@@ -111,12 +116,12 @@ const authSlice = createSlice({
       state.authTokens = null;
       state.user = null;
     },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
-    },
     setLoginStatus: (state, action: PayloadAction<number | null>) => {
       state.loginStatus = action.payload;
     },
+    setRegisterStatus: (state, action: PayloadAction<RegisterStatus>) => {
+      state.registerStatus = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -142,6 +147,7 @@ const authSlice = createSlice({
 
       // registering
       .addCase(register.fulfilled, (state, action) => {
+        state.registerStatus = null;
         const tokens = action.payload.tokens;
         state.authTokens = tokens;
         state.user = jwt_decode(tokens.access);
@@ -149,12 +155,21 @@ const authSlice = createSlice({
       })
       .addCase(register.rejected, (state, action) => {
         // handle the registration error
-        console.error(action.error.message);
+        // console.error(action.error.message);
+        console.log(action.payload);
+        const error = action.payload as { data: any, status: number | undefined };
+        // state.registerStatus = error.data
+        console.log(error.data);
+        state.registerStatus = {
+          username: error.data.username,
+          email: error.data.email,
+          password: error.data.password,
+        }
         // you can set some state variable to store the error or handle in some other way
       });
   },
 });
 
-export const { setAuthTokens, setUser, clearAuth, setLoading, setLoginStatus } =
+export const { setAuthTokens, setUser, clearAuth, setLoginStatus, setRegisterStatus } =
   authSlice.actions;
 export default authSlice.reducer;

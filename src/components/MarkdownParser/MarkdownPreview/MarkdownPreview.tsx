@@ -39,7 +39,6 @@ SyntaxHighlighter.registerLanguage("markdown", markdown);
 SyntaxHighlighter.registerLanguage("bash", bash);
 
 interface MdPreviewProps {
-  // content: string | undefined;
   theme: { [key: string]: React.CSSProperties };
 }
 

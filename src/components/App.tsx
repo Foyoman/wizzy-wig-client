@@ -11,8 +11,8 @@ import type { AppDispatch, RootState } from "../store/store";
 import { setStaticProps, setUserData } from "../store/appSlice";
 
 // types/files
-import { ClickEvent } from "../types/ReactTypes";
-import { File } from "../types/FileTypes";
+import { ClickEvent } from "../types/index";
+import { File } from "../types/index";
 import { fileSys } from "../lib/fileSys";
 
 // auth
@@ -22,12 +22,8 @@ import useAxios from "../utils/useAxios";
 
 import Error from "./Error/Error";
 
-// helpers
-import { getFileDetails } from "../store/helpers";
-
 // mui
 import CircularProgress from "@mui/material/CircularProgress";
-
 
 export default function App() {
   const dispatch: AppDispatch = useDispatch();
@@ -36,10 +32,6 @@ export default function App() {
     (state: RootState) => state.app.selectedFile
   );
   const selectedTab = useSelector((state: RootState) => state.app.selectedTab);
-  const files = useSelector((state: RootState) => state.app.files);
-  const [content, setContent] = useState<string | undefined>(
-    getFileDetails(files, selectedFile)?.content as string | undefined
-  );
   const tabs = useSelector((state: RootState) => state.app.tabs);
 
   const [loaded, setLoaded] = useState(false);
@@ -115,7 +107,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    const fileSysCopy = new Array(...fileSys)
+    const fileSysCopy = new Array(...fileSys);
 
     if (!user) {
       updateFileContents(fileSysCopy);
@@ -123,10 +115,6 @@ export default function App() {
       getFiles();
     }
   }, [user]);
-
-  useEffect(() => {
-    setContent(getFileDetails(files, selectedFile)?.content as string | undefined);
-  }, [selectedFile]);
 
   const handleLoginClick: ClickEvent = (e) => {
     e?.preventDefault();
@@ -210,7 +198,7 @@ export default function App() {
         <Sidebar />
         <div className={`md-container ${!showSidebar ? "sidebar-hidden" : ""}`}>
           {tabs[selectedTab] ? (
-            <MarkdownParser content={content} defaultSplit={[55, 45]} />
+            <MarkdownParser defaultSplit={[55, 45]} />
           ) : (
             <NoFile />
           )}

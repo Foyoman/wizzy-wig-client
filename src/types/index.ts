@@ -12,7 +12,7 @@ export interface File {
 }
 
 // This type removes `date_created` and `last_modified` from File.
-type FileWithoutDates = Omit<File, 'date_created' | 'last_modified'>;
+type FileWithoutDates = Omit<File, "date_created" | "last_modified">;
 
 // This type makes those properties optional.
 export type NewFile = Partial<FileWithoutDates> & {
@@ -29,3 +29,13 @@ export type SortFunction = (
 ) => any;
 
 export type SaveStates = "saved" | "modified" | "saving" | "error";
+
+export type RegisterStatus = {
+  username?: Array<string>;
+  email?: Array<string>;
+  password?: Array<string>;
+} | null;
+
+export type ClickEvent = (
+  e?: Event | React.MouseEvent<HTMLElement | HTMLAnchorElement, MouseEvent>
+) => void;

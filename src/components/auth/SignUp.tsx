@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
 import "./auth.scss";
 
-import { ClickEvent } from "../../types/ReactTypes";
+import { ClickEvent } from "../../types/index";
 
 import Overlay from "./Overlay";
-import { Copyright } from "./Copyright";
 
 // mui
 import Avatar from "@mui/material/Avatar";
@@ -18,9 +18,9 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store/store";
-import { register } from "../../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { register, setRegisterStatus } from "../../store/authSlice";
 
 interface SignUpProps {
   closeModal: ClickEvent;
@@ -29,7 +29,11 @@ interface SignUpProps {
 
 export default function SignUp({ closeModal, switchModal }: SignUpProps) {
   const dispatch: AppDispatch = useDispatch();
-  
+  const [loading, setLoading] = useState(false);
+  const registerStatus = useSelector(
+    (state: RootState) => state.auth.registerStatus
+  );
+
   const defaultTheme = createTheme({
     palette: {
       mode: "dark",
@@ -38,6 +42,8 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    setLoading(true);
 
     const data = new FormData(e.currentTarget);
     const credentials = {
@@ -47,17 +53,32 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
     };
 
     if (credentials.password !== data.get("confirm-password")) {
-      window.alert("password don't match")
+      dispatch(setRegisterStatus({...registerStatus, password: ["Passwords do not match."]}));
       return;
+    } else {
+      dispatch(setRegisterStatus({}));
+      setLoading(true);
+      dispatch(register(credentials));
+    }
+  };
+
+  useEffect(() => {
+    if (!registerStatus) {
+      dispatch(setRegisterStatus({}));
+      closeModal();
     }
 
-    dispatch(register(credentials));
-    
+    setLoading(false);
+  }, [registerStatus]);
+
+  const closerModal = () => {
+    if (loading) return;
+    dispatch(setRegisterStatus({}));
     closeModal();
   };
 
   return (
-    <Overlay closeModal={closeModal}>
+    <Overlay closeModal={closerModal}>
       <ThemeProvider theme={defaultTheme}>
         <Container
           className="container"
@@ -65,10 +86,9 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
           maxWidth="xs"
           onClick={(e) => e.stopPropagation()}
         >
-          <CloseIcon className="close-icon" onClick={() => closeModal()} />
+          <CloseIcon className="close-icon" onClick={closerModal} />
           <Box
             sx={{
-              marginTop: "24px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -94,7 +114,11 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
                     id="username"
                     label="Username"
                     name="username"
-                    autoComplete="username"
+                    autoComplete="off"
+                    autoFocus
+                    disabled={loading}
+                    error={Boolean(registerStatus?.username)}
+                    helperText={registerStatus?.username?.join(" ")}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -106,6 +130,9 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
                     type="email"
                     name="email"
                     autoComplete="email"
+                    disabled={loading}
+                    error={Boolean(registerStatus?.email)}
+                    helperText={registerStatus?.email?.join(" ")}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -117,6 +144,8 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
                     type="password"
                     id="password"
                     autoComplete="new-password"
+                    disabled={loading}
+                    error={Boolean(registerStatus?.password?.join(" "))}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -128,6 +157,9 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
                     type="password"
                     id="confirm-password"
                     autoComplete="confirm-password"
+                    disabled={loading}
+                    error={Boolean(registerStatus?.password)}
+                    helperText={registerStatus?.password?.join(" ")}
                   />
                 </Grid>
               </Grid>
@@ -136,6 +168,7 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={loading}
               >
                 Sign Up
               </Button>
@@ -148,7 +181,6 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
               </Grid>
             </Box>
           </Box>
-          <Copyright sx={{ mt: 8, mb: 4 }} />
         </Container>
       </ThemeProvider>
     </Overlay>
