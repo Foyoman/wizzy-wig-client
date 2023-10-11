@@ -49,11 +49,13 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
     const data = new FormData(e.currentTarget);
     const credentials = {
       username: data.get('username') as string,
       password: data.get('password') as string,
     };
+
     dispatch(setLoginStatus(null));
     setErrorMessage("");
     setLoading(true);

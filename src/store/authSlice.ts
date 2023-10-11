@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { registerUser } from "../utils/axiosInstance";
 
 const SERVER_URL = "http://localhost:8000/api/token/";
 
@@ -55,9 +56,40 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = () => {
   return (dispatch: any) => {
     dispatch(clearAuth());
-    window.location.reload();
+    // window.location.reload();
   };
 };
+
+export const register = createAsyncThunk(
+  "auth/register",
+  async (
+    {
+      username,
+      email,
+      password,
+    }: { username: string; email: string; password: string },
+    thunkAPI
+  ) => {
+    try {
+      const response = await registerUser(username, email, password);
+      // check if we received the tokens in the response
+      if (response.access && response.refresh) {
+        // store tokens and other necessary info if needed in my state
+        return {
+          tokens: { access: response.access, refresh: response.refresh },
+          user: { ...response },
+        };
+      } else {
+        return thunkAPI.rejectWithValue("Registration but failed to retrieve tokens.")
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        return thunkAPI.rejectWithValue(error.response.data.message);
+      }
+      return thunkAPI.rejectWithValue("Registration failed");
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -85,6 +117,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // logging in
       .addCase(loginUser.fulfilled, (state, action) => {
         const { status, ...tokens } = action.payload;
         console.log(tokens);
@@ -96,11 +129,26 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         console.log(action.payload);
-        const { message, status } = action.payload as { message: string, status: number };
+        const { message, status } = action.payload as {
+          message: string;
+          status: number;
+        };
         console.error(message);
         console.log(status);
         state.loginStatus = status;
         // Handle the error in state if neccessary
+      })
+
+      // registering
+      .addCase(register.fulfilled, (state, action) => {
+        const tokens = action.payload.tokens;
+        state.authTokens = tokens;
+        state.user = jwt_decode(tokens.access);
+      })
+      .addCase(register.rejected, (state, action) => {
+        // handle the registration error
+        console.error(action.error.message);
+        // you can set some state variable to store the error or handle in some other way
       });
   },
 });

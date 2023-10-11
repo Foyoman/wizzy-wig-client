@@ -182,7 +182,7 @@ export default function App() {
         signupEl.removeEventListener("click", handleSignupClick);
       }
     };
-  }, [selectedFile, selectedTab]);
+  }, [selectedFile, selectedTab, user]);
 
   const NoFile = () => {
     return (

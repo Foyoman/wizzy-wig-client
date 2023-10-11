@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./auth.scss";
 
 import { ClickEvent } from "../../types/ReactTypes";
@@ -19,12 +18,18 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { register } from "../../store/authSlice";
+
 interface SignUpProps {
   closeModal: ClickEvent;
   switchModal: ClickEvent;
 }
 
 export default function SignUp({ closeModal, switchModal }: SignUpProps) {
+  const dispatch: AppDispatch = useDispatch();
+  
   const defaultTheme = createTheme({
     palette: {
       mode: "dark",
@@ -33,12 +38,21 @@ export default function SignUp({ closeModal, switchModal }: SignUpProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
 
+    const data = new FormData(e.currentTarget);
+    const credentials = {
+      username: data.get("username") as string,
+      email: data.get("email") as string,
+      password: data.get("password") as string,
+    };
+
+    if (credentials.password !== data.get("confirm-password")) {
+      window.alert("password don't match")
+      return;
+    }
+
+    dispatch(register(credentials));
+    
     closeModal();
   };
 

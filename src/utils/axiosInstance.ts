@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(async (req) => {
-  console.log('intercepted');
+  console.log("intercepted");
 
   let currentAuthTokens = localStorage.getItem("authTokens")
     ? JSON.parse(localStorage.getItem("authTokens")!)
@@ -31,7 +31,7 @@ axiosInstance.interceptors.request.use(async (req) => {
       refresh: currentAuthTokens.refresh,
     });
 
-    console.log('refreshed')
+    console.log("refreshed");
 
     // If refresh is successful, update local storage and request headers
     localStorage.setItem("authTokens", JSON.stringify(response.data));
@@ -43,5 +43,18 @@ axiosInstance.interceptors.request.use(async (req) => {
 
   return req;
 });
+
+export const registerUser = async (
+  username: string,
+  email: string,
+  password: string
+) => {
+  const response = await axiosInstance.post("/api/users/register/", {
+    username,
+    email,
+    password,
+  });
+  return response.data;
+};
 
 export default axiosInstance;
