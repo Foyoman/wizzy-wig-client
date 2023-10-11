@@ -1,13 +1,15 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
-import { useContext } from "react";
-import AuthContext from "../context/AuthContext";
+import { setAuthTokens, setUser } from "../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 const baseURL = "http://localhost:8000";
 
 const useAxios = () => {
-  const { authTokens, setUser, setAuthTokens } = useContext<any>(AuthContext);
+  const dispatch = useDispatch();
+  const authTokens = useSelector((state: RootState) => state.auth.authTokens);
 
   const axiosInstance = axios.create({
     baseURL,
@@ -30,8 +32,8 @@ const useAxios = () => {
 
     localStorage.setItem("authTokens", JSON.stringify(response.data));
 
-    setAuthTokens(response.data);
-    setUser(jwt_decode(response.data.access));
+    dispatch(setAuthTokens(response.data));
+    dispatch(setUser(jwt_decode(response.data.access)));
 
     req.headers.Authorization = `Bearer ${response.data.access}`;
 

@@ -1,7 +1,7 @@
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./auth.scss";
 
-import AuthContext from "../../context/AuthContext";
+import { loginUser } from "../../store/authSlice";
 
 // types
 import { ClickEvent } from "../../types/ReactTypes";
@@ -13,7 +13,7 @@ import { Copyright } from "./Copyright";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
-import { setLoginStatus } from "../../store/appSlice";
+import { setLoginStatus } from "../../store/authSlice";
 
 // mui
 import Avatar from "@mui/material/Avatar";
@@ -43,22 +43,21 @@ const defaultTheme = createTheme({
 
 export default function Login({ closeModal, switchModal }: LoginProps) {
   const dispatch: AppDispatch = useDispatch();
-  const loginStatus = useSelector((state: RootState) => state.app.loginStatus);
+  const loginStatus = useSelector((state: RootState) => state.auth.loginStatus);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { loginUser } = useContext<any>(AuthContext);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
+    const data = new FormData(e.currentTarget);
+    const credentials = {
+      username: data.get('username') as string,
+      password: data.get('password') as string,
+    };
     dispatch(setLoginStatus(null));
     setErrorMessage("");
     setLoading(true);
-    loginUser(e);
+    dispatch(loginUser(credentials));
   };
 
   useEffect(() => {
@@ -142,7 +141,7 @@ export default function Login({ closeModal, switchModal }: LoginProps) {
                 autoFocus
                 disabled={loading}
                 error={Boolean(loginStatus)}
-                helperText={errorMessage}
+                // helperText={errorMessage}
               />
               <TextField
                 margin="normal"

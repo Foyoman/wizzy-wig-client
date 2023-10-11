@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import "./Toolbar.scss";
 
 import NoteAddOutlinedIcon from "@mui/icons-material/NoteAddOutlined";
@@ -28,8 +28,6 @@ import {
 import { createFile, deleteFile } from "../../../store/apiSlice";
 import { AppDispatch, RootState } from "../../../store/store";
 import { getFileDetails } from "../../../store/helpers";
-
-import AuthContext from "../../../context/AuthContext";
 
 interface ToolbarProps {
   items: File[];
@@ -62,7 +60,7 @@ export default function Toolbar({ items }: ToolbarProps) {
   const [deleteEl, setDeleteEl] = useState<HTMLElement | null>(null);
   const deleteOpen = Boolean(deleteEl);
 
-  const { user } = useContext<any>(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const [sort, setSort] = useState<{
     sortKey: SortKeys;

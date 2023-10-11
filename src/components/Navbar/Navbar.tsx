@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import "./Navbar.scss";
 import Tabs from "./Tabs/Tabs";
 
@@ -13,12 +12,13 @@ import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import LinearProgress from "@mui/joy/LinearProgress";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-import AuthContext from "../../context/AuthContext";
+import { logoutUser } from "../../store/authSlice";
 
 export default function Navbar() {
   const saveState = useSelector((state: RootState) => state.api.saveState);
   const dispatch: AppDispatch = useDispatch();
-  const { user, logoutUser } = useContext<any>(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
+
 
   return (
     <div className="navbar">
@@ -31,7 +31,7 @@ export default function Navbar() {
           {user ? (
             <AccountCircleIcon
               className="profile"
-              onClick={() => logoutUser()}
+              onClick={() => dispatch(logoutUser())}
             />
           ) : null}
         </div>

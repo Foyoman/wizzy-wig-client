@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useContext, useRef } from "react";
+import { useEffect, useMemo, useCallback, useRef } from "react";
 import { debounce } from "lodash";
 import Editor, { useMonaco, OnMount, Monaco } from "@monaco-editor/react";
 import { IKeyboardEvent } from "monaco-editor-core";
@@ -15,10 +15,8 @@ import { saveFile, setSaveState } from "../../../store/apiSlice";
 import { useSelector } from "react-redux";
 import { AppDispatch, type RootState } from "../../../store/store";
 
-import AuthContext from "../../../context/AuthContext";
-
 import { File } from "../../../types/FileTypes";
-import { findById, getFileDetails } from "../../../store/helpers";
+import { getFileDetails } from "../../../store/helpers";
 
 interface MdEditorProps {
   theme: "vs-dark" | "vs-light" | undefined;
@@ -37,7 +35,7 @@ export default function MdEditor(props: MdEditorProps) {
   const dispatch: AppDispatch = useDispatch<AppDispatch>();
   const monaco = useMonaco();
 
-  const { user } = useContext<any>(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   // no clue what this does
   useEffect(() => {

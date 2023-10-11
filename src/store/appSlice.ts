@@ -15,7 +15,6 @@ export interface AppState {
   selectedItem: File["id"] | null;
   selectedFile: File["id"] | null;
   selectedFolder: File["id"] | null;
-  loginStatus: number | null;
 }
 
 const initialState: AppState = {
@@ -28,7 +27,6 @@ const initialState: AppState = {
   selectedItem: null,
   selectedFile: null,
   selectedFolder: null,
-  loginStatus: null,
 };
 
 export const appSlice = createSlice({
@@ -190,9 +188,6 @@ export const appSlice = createSlice({
       state.selectedFolder = null;
       if (state.tabs.length <= 1) state.selectedTab = 0;
     },
-    setLoginStatus: (state, action: PayloadAction<number | null>) => {
-      state.loginStatus = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -252,7 +247,6 @@ export const {
   closeTab,
   createFileState,
   deleteFileState,
-  setLoginStatus,
 } = appSlice.actions;
 
 export default appSlice.reducer;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import MarkdownParser from "./MarkdownParser/MarkdownParser";
 import Navbar from "./Navbar/Navbar";
 import "./App.scss";
@@ -27,7 +27,6 @@ import { getFileDetails } from "../store/helpers";
 
 // mui
 import CircularProgress from "@mui/material/CircularProgress";
-import AuthContext from "../context/AuthContext";
 
 
 export default function App() {
@@ -48,7 +47,7 @@ export default function App() {
   const [showSignUp, setShowSignUp] = useState(false);
 
   // auth
-  const { user } = useContext<any>(AuthContext);
+  const user = useSelector((state: RootState) => state.auth.user);
   const api = useAxios();
 
   const formatFiles = (files: File[]) => {
