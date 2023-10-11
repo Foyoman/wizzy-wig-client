@@ -282,13 +282,18 @@ export const appSlice = createSlice({
         });
 
         const tabs = [...state.tabs];
-        state.tabs = tabs.map((tab) => {
+        const newTabs = tabs.map((tab) => {
           if (tab) {
             return tab === realFile.temp_id ? realFile.id : tab;
           }
         });
-        if (state.selectedFile === realFile.temp_id)
-          state.selectedFile = realFile.id;
+        state.tabs = newTabs;
+
+        if (state.selectedFile === realFile.temp_id) state.selectedFile = realFile.id;
+
+        localStorage.setItem("lastOpenedTabs", JSON.stringify(newTabs));
+        localStorage.setItem("lastOpenedTabIndex", String(state.selectedTab));
+
         console.log("file created.");
       })
 
