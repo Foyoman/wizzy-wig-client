@@ -74,10 +74,8 @@ export default function Tabs() {
 
   const Tab = ({ fileId, title = "New tab", selected, index }: TabProps) => {
     const handleSelect = (index: number) => {
-      console.log("tabs:", tabs);
-      console.log("files:", files);
-      console.log("selectedFile:", selectedFile);
-      console.log("allowSave:", allowSave);
+      if (allowSave) return;
+      console.log(fileId);
       dispatch(selectTab(index));
       if (fileId) {
         dispatch(selectFile(fileId));
@@ -93,17 +91,21 @@ export default function Tabs() {
       closeHelper(index);
     };
 
+    const handleMouseDown = () => {
+      dispatch(setAllowSave(false));
+    };
+
     return (
       <div
-        onClick={() => handleSelect(index)}
+        title={title}
+        onMouseUp={() => handleSelect(index)}
+        onMouseDown={handleMouseDown}
         onAuxClick={(e) => handleAuxClick(e, index)}
-        onMouseDown={() => dispatch(setAllowSave(false))}
         className={`
 					tab  
 					${selected ? "selected" : ""}
 					${index >= tabs.length - 1 ? "last-index" : ""}
 				`}
-        title={title}
       >
         <p>{title}</p>
         <CloseOutlinedIcon

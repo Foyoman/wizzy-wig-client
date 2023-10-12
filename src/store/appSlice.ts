@@ -96,6 +96,7 @@ export const appSlice = createSlice({
       });
       if (lastOpenedFile) {
         console.log("lastOpenedFile:", lastOpenedFile);
+        state.selectedFile = lastOpenedFile.id;
         state.markdown = lastOpenedFile.content;
       }
     },
@@ -115,7 +116,6 @@ export const appSlice = createSlice({
     },
     selectFile: (state, action: PayloadAction<File["id"]>) => {
       const fileId = action.payload;
-      state.allowSave = false;
       state.selectedFile = action.payload || null;
       const fileDetails = findById({
         items: state.files,
@@ -158,7 +158,6 @@ export const appSlice = createSlice({
     },
     // prevents a bug where debounce would run after switching files, overwriting the file switched to and causing infinite loops
     selectTab: (state, action: PayloadAction<number>) => {
-      state.allowSave = false;
       // select tab by index
       state.selectedTab = action.payload;
 
@@ -168,7 +167,6 @@ export const appSlice = createSlice({
     },
     setTab: (state, action: PayloadAction<File["id"] | null>) => {
       const fileId = action.payload;
-      state.allowSave = false;
       // set current tab to the selected file
       state.tabs[state.selectedTab] = fileId;
       selectFile(fileId!);

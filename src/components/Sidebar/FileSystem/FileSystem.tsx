@@ -25,6 +25,7 @@ interface FileSystemProps {
 const FileSystem = ({ items }: FileSystemProps) => {
   const dispatch: AppDispatch = useDispatch();
   const tabs = useSelector((state: RootState) => state.app.tabs);
+  const allowSave = useSelector((state: RootState) => state.app.allowSave);
 
   const handleSelect = (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>,
@@ -32,6 +33,7 @@ const FileSystem = ({ items }: FileSystemProps) => {
     parent: File | null
   ) => {
     e.stopPropagation();
+    if (allowSave) return;
     dispatch(selectItem(item.id));
     if (!item.is_folder) {
       dispatch(selectFolder(parent?.id));
@@ -67,7 +69,7 @@ const FileSystem = ({ items }: FileSystemProps) => {
             title={item.title}
             className={`sidebar-item ${nested && "nested"}`}
             onClick={(e) => handleSelect(e, item, parent)}
-            onMouseDown={() => dispatch(setAllowSave(false))}
+            onClickCapture={() => dispatch(setAllowSave(false))}
           >
             {item.children?.length ? (
               mapDirectory(item.children, item, true)
@@ -85,6 +87,7 @@ const FileSystem = ({ items }: FileSystemProps) => {
             title={item.title}
             className={`sidebar-item ${nested && "nested"}`}
             onClick={(e) => handleSelect(e, item, parent)}
+            onClickCapture={() => dispatch(setAllowSave(false))}
           />
         );
       }
