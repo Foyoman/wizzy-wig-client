@@ -251,6 +251,11 @@ export const appSlice = createSlice({
       findById({ items: state.files, key: "delete", needle: fileToDelete });
       state.selectedFolder = null;
       if (state.tabs.length <= 1) state.selectedTab = 0;
+
+      if (state.user) {
+        setLastOpenedTabs(state.tabs);
+        localStorage.setItem("lastOpenedTabIndex", String(state.selectedTab));
+      }
     },
   },
   extraReducers: (builder) => {
@@ -289,8 +294,10 @@ export const appSlice = createSlice({
 
         if (state.selectedFile === realFile.temp_id) state.selectedFile = realFile.id;
 
-        localStorage.setItem("lastOpenedTabs", JSON.stringify(newTabs));
-        localStorage.setItem("lastOpenedTabIndex", String(state.selectedTab));
+        if (state.user) {
+          localStorage.setItem("lastOpenedTabs", JSON.stringify(newTabs));
+          localStorage.setItem("lastOpenedTabIndex", String(state.selectedTab));
+        }
 
         console.log("file created.");
       })
