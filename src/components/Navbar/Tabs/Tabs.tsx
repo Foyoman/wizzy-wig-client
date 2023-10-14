@@ -50,8 +50,12 @@ export default function Tabs() {
   };
 
   const closeHelper = (index: number) => {
-    if (tabs.length - 1 === index && tabs[selectedTab - 1]) {
-      dispatch(selectFile(tabs[selectedTab - 1]!));
+    if (selectedTab === index) {
+      if (index === tabs.length - 1) {
+        dispatch(selectFile(tabs[selectedTab - 1]!));
+      } else {
+        dispatch(selectFile(tabs[index + 1]!));
+      }
     }
     dispatch(closeTab(index));
   };
@@ -60,6 +64,7 @@ export default function Tabs() {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number
   ) => {
+    e.stopPropagation();
     if (e.button === 1) {
       closeHelper(index);
     }
@@ -88,6 +93,7 @@ export default function Tabs() {
       index: number
     ) => {
       e.stopPropagation();
+      console.log('close')
       closeHelper(index);
     };
 
@@ -98,8 +104,8 @@ export default function Tabs() {
     return (
       <div
         title={title}
-        onMouseUp={() => handleSelect(index)}
-        onMouseDown={handleMouseDown}
+        onClick={() => handleSelect(index)}
+        onClickCapture={handleMouseDown}
         onAuxClick={(e) => handleAuxClick(e, index)}
         className={`
 					tab  

@@ -206,6 +206,13 @@ export const appSlice = createSlice({
         state.selectedTab = 0;
       }
 
+      // const newFile = findById({items: state.files, key: "find", needle: state.selectedTab});
+
+      // if (newFile) {
+      //   console.log('yes')
+      //   state.markdown = newFile.content || "";
+      // }
+
       if (state.user) {
         localStorage.setItem("lastOpenedTabIndex", String(state.selectedTab));
         setLastOpenedTabs(state.tabs);
