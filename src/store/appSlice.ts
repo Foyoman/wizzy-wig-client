@@ -282,7 +282,7 @@ export const appSlice = createSlice({
 
       // creating a file
       .addCase(createFile.fulfilled, (state, action) => {
-        const realFile = action.payload;
+        const realFile: File = action.payload;
 
         findById({
           items: state.files,
@@ -300,6 +300,7 @@ export const appSlice = createSlice({
         state.tabs = newTabs;
 
         if (state.selectedFile === realFile.temp_id) state.selectedFile = realFile.id;
+        if (realFile.is_folder) state.selectedFolder = realFile.id; 
 
         if (state.user) {
           localStorage.setItem("lastOpenedTabs", JSON.stringify(newTabs));

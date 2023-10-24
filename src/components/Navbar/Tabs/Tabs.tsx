@@ -26,9 +26,6 @@ export default function Tabs() {
   const tabBarEl: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
 
   const files = useSelector((state: RootState) => state.app.files);
-  const selectedFile = useSelector(
-    (state: RootState) => state.app.selectedFile
-  );
   const allowSave = useSelector((state: RootState) => state.app.allowSave);
 
   // scroll to end of tab bar if new tab is created
@@ -104,8 +101,8 @@ export default function Tabs() {
     return (
       <div
         title={title}
-        onClick={() => handleSelect(index)}
-        onClickCapture={handleMouseDown}
+        onMouseUp={() => handleSelect(index)}
+        onMouseDown={handleMouseDown}
         onAuxClick={(e) => handleAuxClick(e, index)}
         className={`
 					tab  
