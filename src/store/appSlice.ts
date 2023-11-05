@@ -10,6 +10,7 @@ export interface AppState {
   user: Boolean;
   files: File[];
   markdown: string | null | undefined;
+  sort: { sortKey: SortKeys; reverse: boolean };
   showSidebar: boolean;
   allowSave: boolean;
   tabs: Array<File["id"] | null>;
@@ -23,6 +24,7 @@ const initialState: AppState = {
   user: false,
   files: [],
   markdown: "",
+  sort: { sortKey: "title", reverse: false },
   showSidebar: true,
   allowSave: false,
   tabs: [null],
@@ -60,13 +62,22 @@ export const appSlice = createSlice({
     setUserData: (state, action: PayloadAction<File[] | []>) => {
       state.user = true;
       const userFiles = action.payload;
-      state.files = sortFileSystem(userFiles, "title", false); // use local storage to set user's preferred sort
 
+      const lastSortStringified = localStorage.getItem("sort");
       const lastOpenedTabsStringified = localStorage.getItem("lastOpenedTabs");
       const lastOpenedTabIndexStringified =
         localStorage.getItem("lastOpenedTabIndex");
+      let lastSort: { sortKey: SortKeys, reverse: boolean } = { sortKey: "title", reverse: false };
       let lastOpenedTabs = [null];
       let lastOpenedTabIndex = 0;
+
+      if (lastSortStringified) {
+        try {
+          lastSort = JSON.parse(lastSortStringified);
+        } catch (error) {
+          console.error("Error parsing the stored sort:", error)
+        }
+      }
 
       if (lastOpenedTabsStringified) {
         try {
@@ -86,6 +97,8 @@ export const appSlice = createSlice({
         }
       }
 
+      state.sort = lastSort;
+      state.files = sortFileSystem(userFiles, lastSort.sortKey, lastSort.reverse);
       state.tabs = lastOpenedTabs;
       state.selectedTab = lastOpenedTabIndex;
 
@@ -94,6 +107,7 @@ export const appSlice = createSlice({
         key: "find",
         needle: lastOpenedTabs[lastOpenedTabIndex],
       });
+
       if (lastOpenedFile) {
         console.log("lastOpenedFile:", lastOpenedFile);
         state.selectedFile = lastOpenedFile.id;
@@ -109,7 +123,15 @@ export const appSlice = createSlice({
       }>
     ) => {
       const { items, sortKey, reverse } = action.payload;
+      state.sort = { sortKey: sortKey, reverse: reverse };
       state.files = sortFileSystem(items, sortKey, reverse); // or user's sort pref
+
+      if (state.user) {
+        localStorage.setItem(
+          "sort",
+          JSON.stringify({ sortKey: sortKey, reverse: reverse })
+        );
+      }
     },
     selectFolder: (state, action: PayloadAction<File["id"] | null>) => {
       state.selectedFolder = action.payload || null;
@@ -136,8 +158,13 @@ export const appSlice = createSlice({
       const { value, file } = action.payload;
       // prevents a bug where debounce will overwrite between switching files
       const verified = file.id === state.selectedFile;
+
       if (verified && state.allowSave) {
         state.markdown = value;
+
+        if (state.sort.sortKey === "last_modified") {
+          state.files = sortFileSystem(state.files, state.sort.sortKey, state.sort.reverse);
+        }
       } else {
         console.log("file verification failed");
       }
@@ -173,6 +200,29 @@ export const appSlice = createSlice({
     },
     setTabs: (state, action: PayloadAction<(File["id"] | null)[]>) => {
       state.tabs = action.payload;
+    },
+    openInNewTab: (state, action: PayloadAction<File>) => {
+      const file = action.payload;
+
+      if (state.tabs.includes(file.id)) {
+        state.selectedTab = state.tabs.indexOf(file.id);
+        state.selectedFile = file.id;
+        state.selectedItem = file.id;
+        state.markdown = file.content;
+      } else {
+        state.tabs.push(file.id);
+
+        // whether i want a file opened in a new tab to be focused or not
+        // state.selectedFile = file.id;
+        // state.selectedItem = file.id;
+        // state.selectedTab = state.tabs.length - 1;
+        // state.markdown = file.content;
+      }
+
+      if (state.user) {
+        setLastOpenedTabs(state.tabs);
+        localStorage.setItem("lastOpenedTabIndex", String(state.selectedTab));
+      }
     },
     newTab: (state) => {
       // push a new tab into the tabs array. null to render it as the `open a file` state
@@ -232,7 +282,11 @@ export const appSlice = createSlice({
       });
 
       // sort file system after appendage
-      state.files = sortFileSystem(state.files, "title", false);
+      state.files = sortFileSystem(
+        state.files,
+        state.sort.sortKey,
+        state.sort.reverse
+      );
 
       // update selected item to the newly created file/folder
       state.selectedItem = newFile.id;
@@ -275,8 +329,14 @@ export const appSlice = createSlice({
             items: state.files,
             key: "update",
             needle: savedFile.id,
-            updatedContent: savedFile.content,
+            updatedFile: savedFile,
           });
+
+          if (state.sort.sortKey === "last_modified") {
+            console.log('hello there')
+            console.log(savedFile.last_modified);
+            state.files = sortFileSystem(state.files, state.sort.sortKey, state.sort.reverse);
+          }
         }
       })
 
@@ -299,8 +359,9 @@ export const appSlice = createSlice({
         });
         state.tabs = newTabs;
 
-        if (state.selectedFile === realFile.temp_id) state.selectedFile = realFile.id;
-        if (realFile.is_folder) state.selectedFolder = realFile.id; 
+        if (state.selectedFile === realFile.temp_id)
+          state.selectedFile = realFile.id;
+        if (realFile.is_folder) state.selectedFolder = realFile.id;
 
         if (state.user) {
           localStorage.setItem("lastOpenedTabs", JSON.stringify(newTabs));
@@ -358,6 +419,7 @@ export const {
   selectTab,
   setTab,
   setTabs,
+  openInNewTab,
   newTab,
   closeTab,
   createFileState,

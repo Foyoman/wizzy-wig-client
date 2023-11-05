@@ -47,23 +47,14 @@ export default function Tabs() {
   };
 
   const closeHelper = (index: number) => {
+    dispatch(closeTab(index));
+    console.log("closing");
     if (selectedTab === index) {
       if (index === tabs.length - 1) {
         dispatch(selectFile(tabs[selectedTab - 1]!));
       } else {
         dispatch(selectFile(tabs[index + 1]!));
       }
-    }
-    dispatch(closeTab(index));
-  };
-
-  const handleAuxClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number
-  ) => {
-    e.stopPropagation();
-    if (e.button === 1) {
-      closeHelper(index);
     }
   };
 
@@ -75,13 +66,22 @@ export default function Tabs() {
   }
 
   const Tab = ({ fileId, title = "New tab", selected, index }: TabProps) => {
-    const handleSelect = (index: number) => {
-      if (allowSave) return;
-      console.log(fileId);
-      dispatch(selectTab(index));
-      if (fileId) {
-        dispatch(selectFile(fileId));
-        dispatch(selectItem(fileId));
+    const handleSelect = (
+      e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+      index: number
+    ) => {
+      e.stopPropagation();
+      console.log(e.button);
+      if (e.button === 1) {
+        closeHelper(index);
+      } else {
+        if (allowSave) return;
+        console.log(fileId);
+        dispatch(selectTab(index));
+        if (fileId) {
+          dispatch(selectFile(fileId));
+          dispatch(selectItem(fileId));
+        }
       }
     };
 
@@ -90,7 +90,7 @@ export default function Tabs() {
       index: number
     ) => {
       e.stopPropagation();
-      console.log('close')
+      console.log("close");
       closeHelper(index);
     };
 
@@ -101,9 +101,8 @@ export default function Tabs() {
     return (
       <div
         title={title}
-        onMouseUp={() => handleSelect(index)}
+        onMouseUp={(e) => handleSelect(e, index)}
         onMouseDown={handleMouseDown}
-        onAuxClick={(e) => handleAuxClick(e, index)}
         className={`
 					tab  
 					${selected ? "selected" : ""}

@@ -78,6 +78,7 @@ export const findById = ({
   key,
   needle,
   child,
+  updatedFile,
   updatedContent,
   updatedId,
 }: {
@@ -85,6 +86,7 @@ export const findById = ({
   key: "append" | "update" | "delete" | "find";
   needle: File["id"] | null;
   child?: File | null;
+  updatedFile?: File;
   updatedContent?: File["content"];
   updatedId?: File["id"];
 }): any => {
@@ -111,7 +113,9 @@ export const findById = ({
       } else if (append && child) {
         appendChild(item, child);
       } else if (update) {
-        if (updatedContent) {
+        if (updatedFile) {
+          item = updatedFile;
+        } else if (updatedContent) {
           item.content = updatedContent;
         } else if (updatedId) {
           item.id = updatedId;

@@ -1,24 +1,132 @@
-.sidebar-item {
+@mixin icon {
   color: var(--gh-lighter-grey);
-  cursor: default;
-  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0.8;
+  width: 20px;
 
-  .MuiTreeItem-content {
-    cursor: default;
-
-    &:hover {
-      background: var(--color-canvas-default);;
-    }
-
-    .MuiTreeItem-label {
-      font-size: var(--text-sm);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  &:hover {
+    opacity: 1;
   }
+}
 
-  &.nested {
-    padding-left: var(--spacer-sm);
+.file-system {
+  .wrapper {
+    position: relative;
+
+    .file {
+      color: var(--gh-lighter-grey);
+      cursor: default;
+      width: 100%;
+      position: relative;
+      z-index: 10;
+
+      .MuiTreeItem-content {
+        cursor: default;
+
+        .MuiTreeItem-label {
+          font-size: var(--text-sm);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      &.nested {
+        padding-left: var(--spacer-sm);
+      }
+    }
+
+    // &.folder-wrapper:hover {
+    //   .dots:last-of-type {
+    //     display: block;
+    //   }
+    // }
+
+    &.file-wrapper:hover {
+      // background: var(--color-canvas-default);
+
+      .dots {
+        display: block;
+
+        .dots {
+          display: none;
+        }
+      }
+    }
+
+    .dots {
+      @include icon;
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 21px; // 100%
+      width: 1rem;
+      z-index: 50;
+      display: none;
+    }
+
+  }
+}
+
+.dot-menu {
+  color: var(--gh-lighter-grey-80);
+
+  .MuiMenu-paper {
+    background-color: #1e1e1e;
+    color: var(--gh-lighter-grey);
+
+    .menu-item {
+      background-color: #1e1e1e;
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacer-xs) var(--spacer-sm);
+
+      // &:hover {
+      //   background: var(--color-canvas-default);
+      // }
+
+      .delete-confirm {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        font-size: var(--text-sm);
+
+        p {
+          margin-bottom: var(--spacer-sm);
+        }
+
+        .file-to-delete {
+          margin-bottom: var(--spacer-xs);
+
+          p {
+            margin-bottom: 0;
+          }
+        }
+
+        .confirm-buttons {
+          display: flex;
+          gap: var(--spacer-sm);
+
+          button {
+            padding: var(--spacer-xxs) var(--spacer-xs);
+            font-size: var(--text-xs);
+          }
+        }
+      }
+    }
+
+    svg {
+      color: var(--gh-lighter-grey);
+    }
+
+    hr {
+      background: var(--gh-neutral-grey);
+      margin: var(--spacer-xxs) 0;
+    }
+
+    .MuiListItemIcon-root {
+      min-width: 30px;
+    }
   }
 }

@@ -62,12 +62,13 @@ export default function Toolbar({ items }: ToolbarProps) {
 
   const user = useSelector((state: RootState) => state.auth.user);
 
+  const storeSort = useSelector((state: RootState) => state.app.sort);
   const [sort, setSort] = useState<{
     sortKey: SortKeys;
     reverse: boolean;
   } | null>({
-    sortKey: "title",
-    reverse: false,
+    sortKey: storeSort.sortKey || "title",
+    reverse: storeSort.reverse || false,
   });
 
   const dispatch: AppDispatch = useDispatch();
@@ -170,7 +171,7 @@ export default function Toolbar({ items }: ToolbarProps) {
     setDeleteEl(null);
   };
 
-  const handleSelect: SortFunction = (items, sortKey, reverse) => {
+  const handleSortSelect: SortFunction = (items, sortKey, reverse) => {
     dispatch(sortFs({ items, sortKey, reverse }));
     setSort({ sortKey: sortKey, reverse: reverse });
     setFilterEl(null);
@@ -390,14 +391,14 @@ export default function Toolbar({ items }: ToolbarProps) {
           <MenuList id="menu-list" dense>
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "title", false)}
+              onClick={() => handleSortSelect(items, "title", false)}
             >
               <Checked visible={sort?.sortKey === "title" && !sort?.reverse} />
               <ListItemText>File Name (A - Z)</ListItemText>
             </MenuItem>
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "title", true)}
+              onClick={() => handleSortSelect(items, "title", true)}
             >
               <Checked visible={sort?.sortKey === "title" && sort?.reverse} />
               <ListItemText>File Name (Z - A)</ListItemText>
@@ -405,7 +406,7 @@ export default function Toolbar({ items }: ToolbarProps) {
             <Divider />
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "last_modified", false)}
+              onClick={() => handleSortSelect(items, "last_modified", false)}
             >
               <Checked
                 visible={sort?.sortKey === "last_modified" && !sort?.reverse}
@@ -414,7 +415,7 @@ export default function Toolbar({ items }: ToolbarProps) {
             </MenuItem>
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "last_modified", true)}
+              onClick={() => handleSortSelect(items, "last_modified", true)}
             >
               <Checked
                 visible={sort?.sortKey === "last_modified" && sort?.reverse}
@@ -424,7 +425,7 @@ export default function Toolbar({ items }: ToolbarProps) {
             <Divider />
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "date_created", false)}
+              onClick={() => handleSortSelect(items, "date_created", false)}
             >
               <Checked
                 visible={sort?.sortKey === "date_created" && !sort?.reverse}
@@ -433,7 +434,7 @@ export default function Toolbar({ items }: ToolbarProps) {
             </MenuItem>
             <MenuItem
               className="menu-item"
-              onClick={() => handleSelect(items, "date_created", true)}
+              onClick={() => handleSortSelect(items, "date_created", true)}
             >
               <Checked
                 visible={sort?.sortKey === "date_created" && sort?.reverse}
